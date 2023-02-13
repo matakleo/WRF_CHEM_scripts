@@ -158,7 +158,7 @@ plt.plot(three_to_five_vert_exch,eleven,marker='o',label='3 - 4')
 plt.plot(five_to_six_vert_exch,eleven,marker='o',label='5 - 6')
 plt.plot(seven_to_eight_vert_exch,eleven,marker='o',label='7 - 8')
 plt.plot(eight_to_nine_vert_exch,eleven,marker='o',label='8 - 9')
-plt.plot(nine_to_ten_vert_exch,eleven,marker='o',label='9 - 10')
+plt.plot(nine_to_ten_vert_exch,eleven,marker='x',label='9 - 10')
 plt.legend()
 plt.show()
 
