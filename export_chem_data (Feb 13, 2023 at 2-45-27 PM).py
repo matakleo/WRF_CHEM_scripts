@@ -17,7 +17,7 @@ Output_Dir = '/project/momen/Lmatak/WRF_CHEM/output_files/'
 Input_Dir = '/project/momen/Lmatak/WRF_CHEM/Jun_No_urb_3_dom/'
 #what you wanna get:?
 #at what altitude?
-alt=13
+alt=30
 
 ## SELECT DOMAIN ##
 domain=3
@@ -38,9 +38,6 @@ elif domain == 3:
     CAMS35_pos=([55],[80])
     CAMS695_pos=([59],[63])
     CAMS416_pos=([56],[67])
-    CAMS53_pos= ([57],[51])
-    CAMS169_pos=([58],[70])
-    CAMS1052_pos=([68],[60])
 
 elif domain ==1:
     CAMS1_pos=([49],[49])
@@ -60,18 +57,8 @@ elif domain == 2:
 
 ##for three domain run ##
 
-measuring_stations=[CAMS1_pos] #,CAMS55_pos,CAMS35_pos,CAMS695_pos,CAMS416_pos,CAMS53_pos,CAMS169_pos,CAMS1052_pos]
+measuring_stations=[CAMS1_pos,CAMS55_pos,CAMS35_pos,CAMS695_pos,CAMS416_pos]
 
-stations_dict={}
-keys_for_dict = ['CAMS1','CAMS55','CAMS35','CAMS695','CAMS416','CAMS53','CAMS169','CAMS1052']
-stations_dict['CAMS1']=[]
-stations_dict['CAMS55']=[]
-stations_dict['CAMS35']=[]
-stations_dict['CAMS695']=[]
-stations_dict['CAMS416']=[]
-stations_dict['CAMS53']=[]
-stations_dict['CAMS169']=[]
-stations_dict['CAMS1052']=[]
 
 time_idx=0
 os.chdir(Input_Dir)
@@ -144,6 +131,7 @@ for ncfile in ncfiles:
                 for measur_station in measuring_stations:
 
                     wspd=math.sqrt(u10[measur_station]**2+v10[measur_station]**2)
+                    dom_avg_wspd=math.sqrt(np.mean(u10)**2+np.mean(v10)**2)
 
                     pm_per_file.append(float(pm_2_5[measur_station]))
                 #     ##1000 multiplier to go from ppm to ppb
@@ -156,6 +144,7 @@ for ncfile in ncfiles:
 
 
 
+                    dom_avg_wspd_per_file.append(2.23693629*float(dom_avg_wspd))
                     dom_avg_surface_temperature_per_file.append(float(np.mean(outdoor_temperature)*9/5-459.67))
                 print('temp =',(np.mean(surface_temperature_per_file)))
                 surface_temperature_list.append(np.mean(surface_temperature_per_file))  
