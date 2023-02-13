@@ -95,7 +95,7 @@ urb=['MYJ_Default_No_Urb','MYJ_Default_BEM','MYJ_Default_SLUC','MYJ_Ustar_10_SLU
 
 # urb=['MYJ_Default_No_Urb','MYJ_Default_BEM','MYJ_Default_SLUC','MYJ_Ustar_10_SLUC', \
     # 'MYJ_Increased_Buildings','MYJ_Decreased_Buildings','MYJ_cd_0.5','MYJ_cd_2.0','MYJ_cd_3.0','MYJ_cd_4.0',]
-months = 1
+months = 2
 mae_list = []
 
 cams_stations=['CAMS35_WSPD','CAMS416_WSPD','CAMS1_WSPD','CAMS55_WSPD','CAMS169_WSPD','CAMS53_WSPD','CAMS1052_WSPD']
@@ -129,12 +129,12 @@ error_dict['CAMS1052']=[]
 
 
 #dictionary used for plotting the averaged error over all the cams
-dict_for_averaging_all_cams = error_dict.copy()
+dict_for_averaging_all_cams = {}
 
 
 
 bar_increse_counter=0
-
+### the loop goes like this: MYJ_Default_No_Urb --> each month --> each cams station
 for urban_simulation in urb:
 
 
@@ -200,17 +200,26 @@ for urban_simulation in urb:
             #append the mae seperately to different keys, for each month!
             error_dict[cams_name_for_real_data].append(mae)
 
+            print(urban_simulation,month_number,cams_station,mae)
+            if urban_simulation in dict_for_averaging_all_cams:
+                dict_for_averaging_all_cams[urban_simulation].append(mae)
+            else:
+                dict_for_averaging_all_cams[urban_simulation]=[]
+                dict_for_averaging_all_cams[urban_simulation].append(mae)
+
+            
+
     # print(month_number,cams_station,urban_simulation, (error_dict['CAMS1'],error_dict['CAMS55']))
 
 
     #each run number is for different urban category, so based on that you should make a dict that will collect data
     #seperately for each urb run and average them all out then.
-    for key in cams_stations:
-        key=key[0:-5]
-        print(key,error_dict[key])
+    # for key in cams_stations:
+    #     key=key[0:-5]
+    #     print(key,error_dict[key])
 
-        dict_for_averaging_all_cams[key].append(error_dict[key])
-    print('---------------')
+    #     dict_for_averaging_all_cams[key].append(error_dict[key])
+    # print('---------------')
     ##plotting
     #some x axis value
     bar_x = 0
@@ -299,10 +308,22 @@ for urban_simulation in urb:
     
     print(run_number)
     run_number+=1
+bar_x = 0
+for_plot_counter=0    
+for urban_sim in urb:
+    if for_plot_counter==0:
+        ax[1,2].bar(bar_x,avg_values(dict_for_averaging_all_cams,urban_sim),width=0.4,edgecolor='black')
+    else:
+        bar_x_offset = [bar_x + for_plot_counter]
+        ax[1,2].bar(bar_x_offset,avg_values(dict_for_averaging_all_cams,urban_sim),width=0.4,edgecolor='black')
+            
+    for_plot_counter+=1
 
+ax[1,2].axhline(y = avg_values(dict_for_averaging_all_cams,'MYJ_Default_No_Urb'), color = 'b', linestyle = '--')
+ax[1,2].axhline(y = avg_values(dict_for_averaging_all_cams,'MYJ_Default_BEM'), color = 'orange', linestyle = ':')
+ax[1,2].axhline(y = avg_values(dict_for_averaging_all_cams,'MYJ_Default_SLUC'), color = 'green', linestyle = '-.')  
+ax[1,2].set_title('all stations AVERAGE',size=15)    
 
-
-print(dict_for_averaging_all_cams)
 
 h, l = ax[0,0].get_legend_handles_labels()
 plt.rc('legend',fontsize=13)

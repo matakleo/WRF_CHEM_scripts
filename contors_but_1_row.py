@@ -27,7 +27,7 @@ my_cmap1.set_bad((0,0,0))
 
 
 # dirs=['BEM_default','BEP_default',]#'clz_1000','clz_100']
-dirs=['MURAD_GUSTAV_CK_0.2'] #,'WRF_LES_domain_4','BEM_default'] #,'BEM_ust_10_in_LSM',]#'clz_1000','clz_100']
+dirs=['SLUCM_default'] #,'WRF_LES_domain_4','BEM_default'] #,'BEM_ust_10_in_LSM',]#'clz_1000','clz_100']
 # dirs=['BEM_default','BEM_change_tke_100','BEM_change_mom_5',]
 dir_num=0
 i=0
@@ -66,7 +66,7 @@ for dir in dirs:
     ZNT=np.array(getvar(Data, "U10", timeidx = idx))
 
     # TKE=np.array(getvar(Data, "TKE_PBL", timeidx = idx))
-    # z0=np.array(getvar(Data, "Z0", timeidx = idx))
+    z0=np.array(getvar(Data, "Z0", timeidx = idx))
     wspd=np.array(getvar(Data, "wspd", timeidx = idx))
     # ust=np.array(getvar(Data, "tke", timeidx = idx))
     MASKING=np.array(getvar(Data, "LU_INDEX", timeidx = idx))
@@ -75,28 +75,29 @@ for dir in dirs:
     something=getvar(Data, "EXCH_M", timeidx = idx)
     something=something[4,:,:]
 
+    z0[MASKING!=13]=0
 
     ##time of the day$$
     # time_of_the_day=(int(ncfiles[file_in_dir][-8:-6])-5)
     # if time_of_the_day<0:
     #     time_of_the_day=24-abs(time_of_the_day)
 
-    if var_to_plot =='TKE':
-        total_wind=np.log(TKE[height_lvl])
-        vmin_set=total_wind.min()
-        vmax_set=total_wind.max()
-        label='log of TKE [m^2/s^2]'
-    else:
-        total_wind=wspd[height_lvl]
-        total_wind_one_lvl_higher=wspd[1]
-        vmin_set=0
-        vmin_one_lvl_higher=1
-        vmax_one_lvl_higher=13
-        vmax_set=20
-        label='WSPD [m/s]'
+
+    total_wind=wspd[height_lvl]
+    total_wind_one_lvl_higher=wspd[1]
+
+    vmin_set=0.01
+    vmin_one_lvl_higher=1
+    vmax_one_lvl_higher=13
+    vmax_set=0.3
+    label='WSPD [m/s]'
 
     height = (getvar(Data, "height_agl",timeidx = idx))
-
+    
+    
+    inter_height=interplevel(height,height,73)
+    inter_wind=interplevel(wspd,height,73)
+    print(inter_height)
     height_one_lvl_more=int(np.mean(height[height_lvl+1]))
 
     lats1, lons1 = latlon_coords(height[0])
@@ -114,7 +115,7 @@ for dir in dirs:
 
     
 
-    ax[0,col].contourf(to_np(lons1),to_np(lats1), (something), 250,  vmin=vmin_set,vmax=vmax_set,     transform=crs.PlateCarree(), 
+    ax[0,col].contourf(to_np(lons1),to_np(lats1), (z0), 250,  vmin=vmin_set,vmax=vmax_set,     transform=crs.PlateCarree(), 
         cmap=my_cmap1)    
 
     # ax[0,col].scatter(mid_downtown_lon,mid_downtown_lat,s=15,c='black',transform=crs.PlateCarree())    
@@ -149,4 +150,4 @@ cbar1=fig.colorbar(mpl.cm.ScalarMappable(norm=norm1, cmap=my_cmap1),
 cax=cax, orientation='vertical',  extend='max', fraction=0.03,
 label=var_to_plot)
 
-plt.show()
+# plt.show()
