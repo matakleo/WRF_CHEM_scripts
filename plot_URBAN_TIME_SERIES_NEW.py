@@ -6,7 +6,7 @@ import glob
 import os
 import pandas as pd
 
-urban_names=['MYJ_Default_BEM','MYJ_Default_BEM']
+urban_names=['MYJ_Default_No_Urb','MYJ_Default_BEM','MYJ_cd_2.0']
 PBLS=["MYJ"]
 simulations_dir='/Users/lmatak/Downloads/URBAN_TIME_SERIES_MAE/'
 
@@ -71,8 +71,8 @@ def get_real_data(cams_station,month):
 
 
 # months=['Jan','Feb']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-# months=['Jan','Feb','Mar','Apr','May','Jun']
-months=['Jul','Aug','Sep','Oct','Nov','Dec']
+months=['Jan','Feb','Mar','Apr','May','Jun']
+# months=['Jul','Aug','Sep','Oct','Nov','Dec']
 
 fig, axes = plt.subplots(nrows=2, ncols=3,figsize=(16,10)) 
 
@@ -81,7 +81,7 @@ real_data = []
 row=0
 col=0
 
-cams='CAMS169_WSPD'
+cams='CAMS35_WSPD'
 
 for month in months:
         real_winds=get_real_data(cams[0:-5],month)

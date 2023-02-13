@@ -93,10 +93,11 @@ fig, ax = plt.subplots(nrows=3, ncols=3,figsize=(19.3, 9.7))
 simulations_dir='/Users/lmatak/Downloads/URBAN_TIME_SERIES_MAE/'
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
 urb=['MYJ_Default_No_Urb','MYJ_Default_BEM','MYJ_Default_SLUC','MYJ_Ustar_10_SLUC', \
-    'MYJ_Increased_Buildings','MYJ_Decreased_Buildings','MYJ_cd_0.5','MYJ_cd_2.0','MYJ_cd_3.0','MYJ_cd_4.0', ]
+     'MYJ_Increased_Buildings','MYJ_Decreased_Buildings','MYJ_cd_0.5','MYJ_cd_2.0','MYJ_cd_3.0','MYJ_cd_4.0',\
+        'MYJ_Mom_0.2','MYJ_Mom_0.5','MYJ_Mom_2.0','MYJ_Mom_5.0' ]
 
 # HOW MANY MONTHS IN CALCULATION, SHOULD ALWAYS BE 12, UNLESS DEBUGGING !!!
-months = 2
+months = 12
 
 # CAMS stations taken into consideration
 cams_stations=['CAMS35_WSPD','CAMS416_WSPD','CAMS1_WSPD','CAMS55_WSPD','CAMS169_WSPD','CAMS53_WSPD','CAMS1052_WSPD']
@@ -177,25 +178,30 @@ for urban_simulation in urb:
             real_data=get_real_data(cams_name_for_real_data,month_name_for_real_data)
 
             
-            #calculate the MAE between sim and real data
-            mae=calculate_mae(simulation_month, real_data)
-
-
             #append the mae seperately to different keys, for each month!
             #this is what will be getting plotted!!
-            error_dict[cams_name_for_real_data].append(mae)
+            # error_dict[cams_name_for_real_data].append(mae)
 
             #for debugging, this print line is very useful
             # print(urban_simulation,month_number,cams_station,mae)
+
+            #calculate the CORRCOEFF
+            p,corr= np.corrcoef(simulation_month, real_data.tolist())
+            #manipulate a little to get a single numbber
+            corr=corr[0]
+
+            error_dict[cams_name_for_real_data].append(float(corr))
+
+      
 
 
             ##THIS IS USED FOR AVERAGING OUT ALL THE CAMS STATIONS!!##
             #if the key exists, e.g. MYJ_Increased_Buildings, just append the mae, if not create the key and append the mae
             if urban_simulation in dict_for_averaging_all_cams:
-                dict_for_averaging_all_cams[urban_simulation].append(mae)
+                dict_for_averaging_all_cams[urban_simulation].append(corr)
             else:
                 dict_for_averaging_all_cams[urban_simulation]=[]
-                dict_for_averaging_all_cams[urban_simulation].append(mae)
+                dict_for_averaging_all_cams[urban_simulation].append(corr)
 
             
 
@@ -297,6 +303,8 @@ ax[1,2].set_title('all stations AVERAGE',size=15)
 h, l = ax[0,0].get_legend_handles_labels()
 plt.rc('legend',fontsize=13)
 # legend_names1=legend_names
+
+fig.suptitle('CORRELATION COEFFICIENT',size=20)
 
 ax[0,2].axis("off")
 ax[0,2].legend(h, l,ncol=2,frameon=False) 
