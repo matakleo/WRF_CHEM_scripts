@@ -6,12 +6,17 @@ import glob
 import os
 import pandas as pd
 
-urban_names=['MYJ_Default_No_Urb','MYJ_Default_BEM','MYJ_cd_2.0']
+urban_names=['MYJ_Default_BEM'] #,'MYJ_Default_BEM','MYJ_cd_2.0']
 PBLS=["MYJ"]
 simulations_dir='/Users/lmatak/Downloads/URBAN_TIME_SERIES_MAE/'
 
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
-
+os.environ["PATH"]+=":/Library/TeX/texbin/"
+print(os.environ["PATH"])
+plt.rcParams.update({
+    "text.usetex":True,
+    "font.family":'Times New Roman'
+})
 
 
 def get_real_data(cams_station,month):
@@ -72,9 +77,10 @@ def get_real_data(cams_station,month):
 
 # months=['Jan','Feb']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 # months=['Jan','Feb','Mar','Apr','May','Jun']
-months=['Jul','Aug','Sep','Oct','Nov','Dec']
+months=['Jul'] #,'Aug','Sep','Oct','Nov','Dec']
 
-fig, axes = plt.subplots(nrows=2, ncols=3,figsize=(16,10)) 
+fig, ax = plt.subplots(nrows=1, ncols=1,figsize=(18,2),dpi=500) 
+fig.subplots_adjust(bottom=0.2)
 
 real_data = []
 
@@ -85,7 +91,7 @@ cams='CAMS695_WSPD'
 
 for month in months:
         real_winds=get_real_data(cams[0:-5],month)
-        axes[row,col].plot(np.arange(0,len(real_winds),1),real_winds,label='obs',linewidth=3,color='black')
+        ax.plot(np.arange(0,len(real_winds),1),real_winds,label='Observed',linewidth=5,color='black')
         for urban in urban_names:
             print(urban)
 
@@ -111,8 +117,8 @@ for month in months:
             # if month == 'Feb' and urban=='BEP':
             #     continue
 
-            axes[row,col].plot(np.arange(0,len(wspd_sim),1),wspd_sim,label=urban[4:],linewidth=2,)
-            axes[row,col].set_title(month)
+            ax.plot(np.arange(0,len(wspd_sim),1),wspd_sim,color='lightseagreen',label='Simulated',linewidth=5,)
+            # ax.set_title(month)
 
         col+=1
         if col==3:
@@ -124,8 +130,19 @@ for month in months:
     
 
             print('REAL DATA:',real_data)
+ax.grid(visible=True,color='grey', linestyle='--', linewidth=2,alpha=0.3,dash_capstyle='round',zorder=1)  
+ax.set_xlabel(r'Time (h)',size=25)
+ax.set_ylabel(r'Wind intensity\\  \hphantom{xyz} $\mathrm{(m\,s^{-1}) \,}$',size=25)
+
+ax.set_yticks(np.arange(0,28,8))
+ax.set_yticklabels(np.arange(0,28,8),size=25)
+ax.set_xticks(np.arange(0,73,12))
+ax.set_xticklabels(np.arange(0,73,12),size=25)
+plt.tick_params(bottom = False, left=False)
+
 
 # plt.legend(['BEM','cd_2.0'])
-fig.suptitle(cams,size=20)
-plt.legend()
-plt.show()
+# fig.suptitle(cams,size=25)
+ax.legend(loc='upper left',fontsize=20,bbox_to_anchor=(0.3,1.45),ncol=2,frameon=False)
+# plt.show()
+plt.savefig('/Users/lmatak/Desktop/building_website/Images/time_series.jpg',bbox_inches='tight')

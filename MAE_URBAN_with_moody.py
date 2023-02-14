@@ -254,6 +254,7 @@ for urban_simulation in urb:
         
         ax[0,0].set_title('CAMS1')
         ax[0,1].set_title('CAMS55')
+        ax[0,2].set_title('CAMS695 - Moody')
         ax[1,0].set_title('CAMS35')
         ax[1,1].set_title('CAMS416')
         ax[2,0].set_title('CAMS169')
@@ -339,7 +340,7 @@ plt.rc('legend',fontsize=13)
 # ax[0,2].axis("off")
 # ax[0,2].legend(h, l,ncol=2,frameon=False) 
 
-ax[0,1].legend(h, l,ncol=7,frameon=False,loc='upper center',bbox_to_anchor=(-.55, 1.45))
+ax[0,1].legend(h, l,ncol=7,frameon=False,loc='upper center',bbox_to_anchor=(0.4, 1.45))
 plt.show()
 
 
