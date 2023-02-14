@@ -5,6 +5,18 @@ from all_functions import Extract_by_name, Extract_the_shit2
 import glob
 import os
 import pandas as pd
+from sklearn.metrics import mean_absolute_error
+
+
+def check_numbers(lst):
+    indices = []
+    for index, item in enumerate(lst):
+        if not isinstance(item, (int, float)):
+            indices.append(index)
+    return indices
+
+
+
 
 
 
@@ -78,8 +90,23 @@ def calculate_mae(simulation, real):
     Returns:
         mae (float): The mean absolute error
     """
-    mae = sum(abs(s - r) for s, r in zip(simulation, real)) / len(simulation)
-    return mae
+    error=0
+    count=0
+
+    for index, a in enumerate(real):
+        print(index,a)
+        if index in check_numbers(real):
+            print('Im skipping?')
+            continue
+        p = simulation[index]
+        error += abs(a - p)
+        count += 1
+
+    
+
+
+
+    return error / count
 
 
 
@@ -92,14 +119,15 @@ fig, ax = plt.subplots(nrows=3, ncols=3,figsize=(19.3, 9.7))
 
 simulations_dir='/Users/lmatak/Downloads/URBAN_TIME_SERIES_MAE/'
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
-urb=['MYJ_Default_No_Urb','MYJ_Default_BEM','MYJ_Default_SLUC'] #'MYJ_Ustar_10_SLUC', \
-    #'MYJ_Increased_Buildings','MYJ_Decreased_Buildings','MYJ_cd_0.5','MYJ_cd_2.0','MYJ_cd_3.0','MYJ_cd_4.0', ]
+urb=['MYJ_Default_No_Urb','MYJ_Default_BEM','MYJ_Default_SLUC','MYJ_Ustar_10_SLUC', \
+     'MYJ_Increased_Buildings','MYJ_Decreased_Buildings','MYJ_cd_0.5','MYJ_cd_2.0','MYJ_cd_3.0','MYJ_cd_4.0',\
+         'MYJ_Mom_0.2','MYJ_Mom_0.5','MYJ_Mom_2.0','MYJ_Mom_5.0' ]
 
 # HOW MANY MONTHS IN CALCULATION, SHOULD ALWAYS BE 12, UNLESS DEBUGGING !!!
-months = 2
+months = 12
 
 # CAMS stations taken into consideration
-cams_stations=['CAMS35_WSPD','CAMS416_WSPD','CAMS1_WSPD','CAMS55_WSPD','CAMS169_WSPD','CAMS53_WSPD','CAMS1052_WSPD']
+cams_stations=['CAMS695_WSPD','CAMS35_WSPD','CAMS416_WSPD','CAMS1_WSPD','CAMS55_WSPD','CAMS169_WSPD','CAMS53_WSPD','CAMS1052_WSPD',]
 
 #lists needed for gathering data of observed and simulated
 wspd_sim=[]
@@ -127,7 +155,7 @@ for urban_simulation in urb:
     error_dict['CAMS1']=[]
     error_dict['CAMS55']=[]
     error_dict['CAMS35']=[]
-    # error_dict['CAMS695']=[]
+    error_dict['CAMS695']=[]
     error_dict['CAMS416']=[]
     error_dict['CAMS169']=[]
     error_dict['CAMS53']=[]
@@ -174,11 +202,15 @@ for urban_simulation in urb:
                 simulation_month=simulation_month[5:-1]
 
             #get the real data
+            # print(cams_station)
             real_data=get_real_data(cams_name_for_real_data,month_name_for_real_data)
+            # print(real_data)
 
             
-            #calculate the MAE between sim and real data
+#             #calculate the MAE between sim and real data
             mae=calculate_mae(simulation_month, real_data)
+
+            print(mae)
 
 
             #append the mae seperately to different keys, for each month!
@@ -211,6 +243,9 @@ for urban_simulation in urb:
           
         ax[0,0].bar(bar_x,avg_values(error_dict,'CAMS1'),width=0.3,label=urb[run_number][4:],edgecolor='black')
         ax[0,1].bar(bar_x,avg_values(error_dict,'CAMS55'),width=0.3,edgecolor='black')
+
+        ax[0,2].bar(bar_x,avg_values(error_dict,'CAMS695'),width=0.3,edgecolor='black')
+
         ax[1,0].bar(bar_x,avg_values(error_dict,'CAMS35'),width=0.3,edgecolor='black')
         ax[1,1].bar(bar_x,avg_values(error_dict,'CAMS416'),width=0.3,edgecolor='black')
         ax[2,0].bar(bar_x,avg_values(error_dict,'CAMS169'),width=0.3,edgecolor='black')
@@ -232,6 +267,9 @@ for urban_simulation in urb:
         bar_x_offset = [bar_x + run_number]  
         ax[0,0].bar(bar_x_offset,avg_values(error_dict,'CAMS1'),width=0.3,label=urb[run_number][4:],edgecolor='black')
         ax[0,1].bar(bar_x_offset,avg_values(error_dict,'CAMS55'),width=0.3,edgecolor='black')
+
+        ax[0,2].bar(bar_x_offset,avg_values(error_dict,'CAMS695'),width=0.3,edgecolor='black')
+
         ax[1,0].bar(bar_x_offset,avg_values(error_dict,'CAMS35'),width=0.3,edgecolor='black')
         ax[1,1].bar(bar_x_offset,avg_values(error_dict,'CAMS416'),width=0.3,edgecolor='black')
         ax[2,0].bar(bar_x_offset,avg_values(error_dict,'CAMS169'),width=0.3,edgecolor='black')
@@ -301,7 +339,7 @@ plt.rc('legend',fontsize=13)
 # ax[0,2].axis("off")
 # ax[0,2].legend(h, l,ncol=2,frameon=False) 
 
-ax[0,1].legend(h, l,ncol=4,frameon=False,loc='upper center',bbox_to_anchor=(-.55, 1.45))
+ax[0,1].legend(h, l,ncol=7,frameon=False,loc='upper center',bbox_to_anchor=(-.55, 1.45))
 plt.show()
 
 

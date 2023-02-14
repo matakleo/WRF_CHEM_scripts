@@ -75,7 +75,7 @@ def get_real_data_chem(cams_station,month,chem_name):
 
 
 
-fig, axes = plt.subplots(nrows=3, ncols=2,figsize=(17,8)) 
+fig, axes = plt.subplots(nrows=1, ncols=1,figsize=(17,8)) 
 fig.subplots_adjust(hspace=0.5)
 row=0
 col=0
@@ -114,8 +114,6 @@ for sim_file in sim_files:
         
         tmp_list=[]
         tmp_list=Extract_by_name(sim_file,tmp_list,tmp_var)
-
-
         tmp_list=tmp_list[5:-2]
 
         if tmp_var in dict_for_error_sims:
@@ -126,16 +124,7 @@ for sim_file in sim_files:
 
 
         print(len(tmp_list))
-        axes[row,col].plot(tmp_list,label=sims_to_plot[sim_file_number])
-        axes[row,col].set_title(tmp_var)
-        axes[row,col].set_xticks(ticks=np.arange(0,72,4))
-        axes[row,col].set_xticklabels(np.arange(0,72,4))
-        col+=1
-        if col>1:
-            row+=1
-            col=0
-        if row>2:
-            row=0
+
     sim_file_number+=1
 
 
@@ -148,11 +137,11 @@ print(dict_for_error_sims.keys())
 for real_data_var in real_data_vars_to_plot:
     tmp_list=[]
     tmp_list=get_real_data_chem('CAMS1','Jun',real_data_var)
-    axes[row,col].plot(tmp_list,label='OBS data', linewidth=3,color='black')
     print(real_data_var)
     print(len(tmp_list.tolist()))
     print(len(dict_for_error_sims[real_data_var][0]))
-    # print(calculate_mae(dict_for_error_sims[real_data_var][0],tmp_list.tolist()))
+    print(calculate_mae(dict_for_error_sims[real_data_var][0],tmp_list.tolist()))
+    plt.bar(real_data_var,dict_for_error_sims[real_data_var][0])
 
     col+=1
     if col>1:
@@ -161,7 +150,6 @@ for real_data_var in real_data_vars_to_plot:
     if row>2:
         row=0
         col=0    
-
 
 
 plt.legend()
