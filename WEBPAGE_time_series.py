@@ -79,7 +79,7 @@ def get_real_data(cams_station,month):
 # months=['Jan','Feb','Mar','Apr','May','Jun']
 months=['Jul'] #,'Aug','Sep','Oct','Nov','Dec']
 
-fig, ax = plt.subplots(nrows=1, ncols=1,figsize=(18,2),dpi=500) 
+fig, ax = plt.subplots(nrows=1, ncols=1,figsize=(16,2),dpi=350) 
 fig.subplots_adjust(bottom=0.2)
 
 real_data = []

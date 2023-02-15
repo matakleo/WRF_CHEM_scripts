@@ -6,7 +6,7 @@ import glob
 import os
 import pandas as pd
 
-urban_names=['MYJ_Default_No_Urb','MYJ_Default_BEM','MYJ_cd_2.0']
+urban_names=['MYJ_Default_BEM','MYJ_Default_BEM_logarithm_formula']
 PBLS=["MYJ"]
 simulations_dir='/Users/lmatak/Downloads/URBAN_TIME_SERIES_MAE/'
 
@@ -81,7 +81,7 @@ real_data = []
 row=0
 col=0
 
-cams='CAMS695_WSPD'
+cams='CAMS53_WSPD'
 
 for month in months:
         real_winds=get_real_data(cams[0:-5],month)
