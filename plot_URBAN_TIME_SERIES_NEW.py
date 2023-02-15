@@ -12,6 +12,15 @@ simulations_dir='/Users/lmatak/Downloads/URBAN_TIME_SERIES_MAE/'
 
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
 
+def moving_average(arr, window_size):
+    """
+    Calculates the moving average of an array with a given window size.
+    """
+    weights = np.repeat(1.0, window_size) / window_size
+    ma = np.convolve(arr, weights, 'valid')
+    return ma
+
+# Example usage:
 
 
 def get_real_data(cams_station,month):
@@ -71,8 +80,8 @@ def get_real_data(cams_station,month):
 
 
 # months=['Jan','Feb']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-# months=['Jan','Feb','Mar','Apr','May','Jun']
-months=['Jul','Aug','Sep','Oct','Nov','Dec']
+months=['Jan','Feb','Mar','Apr','May','Jun']
+# months=['Jul','Aug','Sep','Oct','Nov','Dec']
 
 fig, axes = plt.subplots(nrows=2, ncols=3,figsize=(16,10)) 
 
@@ -85,7 +94,7 @@ cams='CAMS53_WSPD'
 
 for month in months:
         real_winds=get_real_data(cams[0:-5],month)
-        axes[row,col].plot(np.arange(0,len(real_winds),1),real_winds,label='obs',linewidth=3,color='black')
+        axes[row,col].plot(moving_average(real_winds,6),label='obs',linewidth=3,color='black')
         for urban in urban_names:
             print(urban)
 
@@ -111,7 +120,7 @@ for month in months:
             # if month == 'Feb' and urban=='BEP':
             #     continue
 
-            axes[row,col].plot(np.arange(0,len(wspd_sim),1),wspd_sim,label=urban[4:],linewidth=2,)
+            axes[row,col].plot(moving_average(wspd_sim,6),label=urban[4:],linewidth=2,)
             axes[row,col].set_title(month)
 
         col+=1
