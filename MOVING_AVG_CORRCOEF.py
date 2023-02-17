@@ -5,7 +5,7 @@ from all_functions import Extract_by_name, Extract_the_shit2
 import glob
 import os
 import pandas as pd
-
+# from numpy.core.defchararray import isnumeric, isalpha
 import numpy as np
 
 def moving_average(arr, window_size):
@@ -18,7 +18,41 @@ def moving_average(arr, window_size):
 
 # Example usage:
 
+def check_numbers(lst):
+    indices = []
+    for index, item in enumerate(lst):
+        if not isinstance(item, (int, float)):
+            indices.append(index)
+    return indices
 
+def calculate_corrcoef(simulation, real):
+    """
+    Calculates the corrcoeff between simulation and real data
+
+    Parameters:
+        simulation (list): A list of simulated data
+        real (list): A list of real data
+
+    Returns:
+        mae (float): The corrcoeff
+    """
+    error=0
+    count=0
+
+    for index, a in enumerate(real):
+        print(index,a)
+        if index in check_numbers(real):
+            print('Im skipping?')
+            continue
+        p = simulation[index]
+        error += abs(a - p)
+        count += 1
+
+    
+
+
+
+    return error / count    
 
 
 def avg_values(d, key):
@@ -36,7 +70,7 @@ def get_real_data(cams_station,month):
     # Set the date column as the index of the DataFrame
     df = df.set_index('Date')
     # Specify the date for which you want to retrieve data
-   
+    print(month)
     if month =='Jan':
         month_num='01'
     elif month=='Feb':
@@ -105,15 +139,15 @@ fig, ax = plt.subplots(nrows=3, ncols=3,figsize=(19.3, 9.7))
 
 simulations_dir='/Users/lmatak/Downloads/URBAN_TIME_SERIES_MAE/'
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
-urb=['MYJ_Default_No_Urb','MYJ_Default_BEM','MYJ_Default_SLUC','MYJ_Ustar_10_SLUC'] #, \ 
-    #  'MYJ_Increased_Buildings','MYJ_Decreased_Buildings','MYJ_cd_0.5','MYJ_cd_2.0','MYJ_cd_3.0','MYJ_cd_4.0',\
-    #     'MYJ_Mom_0.2','MYJ_Mom_0.5','MYJ_Mom_2.0','MYJ_Mom_5.0' ]
+urb=['MYJ_Default_No_Urb','MYJ_Default_BEM','MYJ_Default_SLUC','MYJ_Ustar_10_SLUC', 'MYJ_Ustar_20_SLUC','MYJ_Ustar_5_SLUC',
+     'MYJ_Increased_Buildings','MYJ_Decreased_Buildings','MYJ_cd_0.5','MYJ_cd_2.0','MYJ_cd_3.0','MYJ_cd_4.0',
+        'MYJ_Mom_0.2','MYJ_Mom_0.5','MYJ_Mom_2.0','MYJ_Mom_5.0' ]
 
 # HOW MANY MONTHS IN CALCULATION, SHOULD ALWAYS BE 12, UNLESS DEBUGGING !!!
-months = 1
+months = 12
 
 # CAMS stations taken into consideration
-cams_stations=['CAMS35_WSPD','CAMS416_WSPD','CAMS1_WSPD','CAMS55_WSPD','CAMS169_WSPD','CAMS53_WSPD','CAMS1052_WSPD']
+cams_stations=['CAMS35_WSPD','CAMS416_WSPD','CAMS1_WSPD','CAMS55_WSPD','CAMS169_WSPD','CAMS53_WSPD','CAMS1052_WSPD',]
 
 #lists needed for gathering data of observed and simulated
 wspd_sim=[]
@@ -163,9 +197,11 @@ for urban_simulation in urb:
 
             ################################################################
             ###### to test out some specific month, set the variable 'months' to 1, and then edit here:####
-                                    # month_number=11
-
-
+            # month_number=6
+            
+            # if month_number==6:
+            #     break    
+            print('month number:',month_number)
             # empty the list for winds for each iteration
             wspd_sim=[]
             
@@ -187,10 +223,19 @@ for urban_simulation in urb:
 
                 simulation_month=simulation_month[5:-1]
 
+            print(month_name_for_real_data)
             #get the real data
             real_data=get_real_data(cams_name_for_real_data,month_name_for_real_data)
+            string_indices = [i for i, x in enumerate(real_data) if isinstance(x, str)]
+
+            real_data[string_indices] = np.nan
+            # np.corrcoef(x[mask], y[mask], rowvar=False)[0, 1]
+            # real_data=np.ma.masked_invalid(real_data.astype(np.nan))
+            # real_data = np.where(mask, np.nan)
 
             moving_avg_real = moving_average(real_data, 6)
+
+            # print(len(moving_avg_real))
             moving_avg_sim=moving_average(simulation_month,6)
 
 
@@ -203,7 +248,8 @@ for urban_simulation in urb:
             # print(urban_simulation,month_number,cams_station,mae)
 
             #calculate the CORRCOEFF
-            p,corr= np.corrcoef(moving_avg_sim, moving_avg_real.tolist())
+            # ma.corrcoef(ma.masked_invalid(A), ma.masked_invalid(B)))
+            p,corr= np.ma.corrcoef((moving_avg_sim, moving_avg_real.tolist()))
             #manipulate a little to get a single numbber
             corr=corr[0]
 
@@ -234,6 +280,9 @@ for urban_simulation in urb:
           
         ax[0,0].bar(bar_x,avg_values(error_dict,'CAMS1'),width=0.3,label=urb[run_number][4:],edgecolor='black')
         ax[0,1].bar(bar_x,avg_values(error_dict,'CAMS55'),width=0.3,edgecolor='black')
+
+        # ax[0,2].bar(bar_x,avg_values(error_dict,'CAMS695'),width=0.3,edgecolor='black')
+
         ax[1,0].bar(bar_x,avg_values(error_dict,'CAMS35'),width=0.3,edgecolor='black')
         ax[1,1].bar(bar_x,avg_values(error_dict,'CAMS416'),width=0.3,edgecolor='black')
         ax[2,0].bar(bar_x,avg_values(error_dict,'CAMS169'),width=0.3,edgecolor='black')
@@ -242,6 +291,7 @@ for urban_simulation in urb:
         
         ax[0,0].set_title('CAMS1')
         ax[0,1].set_title('CAMS55')
+        # ax[0,2].set_title('CAMS695 - Moody')
         ax[1,0].set_title('CAMS35')
         ax[1,1].set_title('CAMS416')
         ax[2,0].set_title('CAMS169')
@@ -255,6 +305,9 @@ for urban_simulation in urb:
         bar_x_offset = [bar_x + run_number]  
         ax[0,0].bar(bar_x_offset,avg_values(error_dict,'CAMS1'),width=0.3,label=urb[run_number][4:],edgecolor='black')
         ax[0,1].bar(bar_x_offset,avg_values(error_dict,'CAMS55'),width=0.3,edgecolor='black')
+
+        # ax[0,2].bar(bar_x_offset,avg_values(error_dict,'CAMS695'),width=0.3,edgecolor='black')
+
         ax[1,0].bar(bar_x_offset,avg_values(error_dict,'CAMS35'),width=0.3,edgecolor='black')
         ax[1,1].bar(bar_x_offset,avg_values(error_dict,'CAMS416'),width=0.3,edgecolor='black')
         ax[2,0].bar(bar_x_offset,avg_values(error_dict,'CAMS169'),width=0.3,edgecolor='black')
@@ -321,12 +374,10 @@ h, l = ax[0,0].get_legend_handles_labels()
 plt.rc('legend',fontsize=13)
 # legend_names1=legend_names
 
-fig.suptitle('CORRELATION COEFFICIENT',size=20)
+# ax[0,2].axis("off")
+# ax[0,2].legend(h, l,ncol=2,frameon=False) 
 
-ax[0,2].axis("off")
-ax[0,2].legend(h, l,ncol=2,frameon=False) 
-
-# fig.legend()
+ax[0,1].legend(h, l,ncol=7,frameon=False,loc='upper center',bbox_to_anchor=(0.4, 1.45))
 plt.show()
 
 

@@ -97,7 +97,7 @@ sim_files.sort()
 print(sim_files)
 
 ##PLOTTING ##
-sims_to_plot=['single_domain','three_dom','207_12','without_dry_dep',]
+sims_to_plot=['BEM','No_URB','SLUC'] #,'without_dry_dep',]
 vars_to_plot=real_data_vars_to_plot
 
 

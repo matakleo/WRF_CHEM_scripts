@@ -120,7 +120,7 @@ fig, ax = plt.subplots(nrows=3, ncols=3,figsize=(19.3, 9.7))
 simulations_dir='/Users/lmatak/Downloads/URBAN_TIME_SERIES_MAE/'
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
 urb=['MYJ_Default_No_Urb','MYJ_Default_BEM','MYJ_Default_SLUC','MYJ_Ustar_10_SLUC', \
-     'MYJ_Increased_Buildings','MYJ_Decreased_Buildings','MYJ_cd_0.5','MYJ_cd_2.0','MYJ_cd_3.0','MYJ_cd_4.0',\
+     'MYJ_Ustar_20_SLUC','MYJ_Ustar_5_SLUC','MYJ_Increased_Buildings','MYJ_Decreased_Buildings','MYJ_cd_0.5','MYJ_cd_2.0','MYJ_cd_3.0','MYJ_cd_4.0',\
          'MYJ_Mom_0.2','MYJ_Mom_0.5','MYJ_Mom_2.0','MYJ_Mom_5.0' ]
 
 # HOW MANY MONTHS IN CALCULATION, SHOULD ALWAYS BE 12, UNLESS DEBUGGING !!!
