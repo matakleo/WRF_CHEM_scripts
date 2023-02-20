@@ -94,31 +94,76 @@ for file in glob.glob(Input_Dir+'wrfout_d03*'):
 
 
 
-cams1_long=-95.220582
-cams1_lat=29.767996
-cams55_long=-95.257605
-cams55_lat=	29.733741
-cams35_long=-95.12851
-cams35_lat=	29.670058
-cams695_long=-95.3414
-cams695_lat=29.7176
-cams416_long=-95.294722
-cams416_lat=29.686389
-mid_downtown_lon=-95.3621823
-mid_downtown_lat=29.7585786
-
-cams53_lat=29.695747
-cams53_lon=-95.499222
-cams169_lat=29.706111
-cams169_lon=-95.261111
+cams404_lat=29.807438
+cams404_lon=-95.293630
 
 cams1052_lat=29.814390
 cams1052_lon=-95.387817
 
+cams695_lat=29.7176
+cams695_lon=-95.3414
+
+cams53_lat=29.695747
+cams53_lon=-95.499222
+
+cams409_lat=29.623961
+cams409_lon=-95.474341
+
+cams8_lat=29.901036
+cams8_lon=-95.326137
+
+cams416_lat=29.686389
+cams416_lon=-95.294722
+
+cams1_lat=29.767996
+cams1_lon=-95.220582
+
+
+cams603_lat=29.764788
+cams603_lon=-95.178538
+
+cams403_lat=29.733741
+cams403_lon=-95.257605
+
+cams167_lat=29.734281
+cams167_lon=-95.238417
+
+cams1029_lat=29.719358
+cams1029_lon=-95.259497
+
+cams169_lat=29.706111
+cams169_lon=-95.261111
+
+cams670_lat=29.701944
+cams670_lon=-95.257222
+
+cams1020_lat=29.684360
+cams1020_lon=-95.253598
+
+cams1049_lat=29.703208
+cams1049_lon=-95.221947
+
 cams=3
 cams_names=['cams1','cams55','cams35','cams695','cams416','cams53','cams169','cams1052'] #
-cams_lats=[cams1_lat,cams55_lat,cams35_lat,cams695_lat,cams416_lat,cams53_lat,cams169_lat,cams1052_lat]
-cams_longs=[cams1_long,cams55_long,cams35_long,cams695_long,cams416_long,cams53_lon,cams169_lon,cams1052_lon]#
+cams_lats=[cams404_lat,cams1052_lat,cams695_lat,cams53_lat,cams409_lat,cams8_lat,cams416_lat,cams1_lat,\
+    cams603_lat,cams403_lat,cams167_lat,cams1029_lat,cams169_lat,cams670_lat,cams1020_lat,cams1049_lat]
+cams_longs=[cams404_lon,cams1052_lon,cams695_lon,cams53_lon,cams409_lon,cams8_lon,cams416_lon,cams1_lon,\
+    cams603_lon,cams403_lon,cams167_lon,cams1029_lon,cams169_lon,cams670_lon,cams1020_lon,cams1049_lon]#
+
+
+
+mid_downtown_lon=-95.3621823
+mid_downtown_lat=29.7585786
+
+
+
+
+
+
+
+
+
+
 
 for ncfile in ncfiles:
     print('ncfile = '+ncfile)
