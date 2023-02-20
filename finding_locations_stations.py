@@ -60,16 +60,32 @@ cams403_pos=([49],[49])
 # CAMS416_pos=([83],[43])
 
 # theser are for three domain run:
-
-CAMS1_pos=([64],[73])
-CAMS55_pos=([61],[70])
-CAMS35_pos=([55],[80])
-CAMS695_pos=([59],[63])
-CAMS416_pos=([56],[67])
-# downtown_pos=([63],[62])
-cams53_pos= ([57],[51])
-cams169_pos=([58],[70])
+CAMS404_pos=( [67] , [67] )
 cams1052_pos=([68],[60])
+CAMS695_pos=([59],[63])
+cams53_pos= ([57],[51])
+CAMS409_pos=( [50] , [53] )
+CAMS8_pos=( [76] , [65] )
+CAMS416_pos=([56],[67])
+CAMS1_pos=([64],[73])
+CAMS603_pos=( [63] , [76] )
+CAMS403_pos=( [61] , [70] )
+CAMS167_pos=( [61] , [72] )
+CAMS1029_pos=( [59] , [70] )
+cams169_pos=([58],[70])
+cams670_pos=( [58] , [70] )
+cams1020_pos=( [56] , [70] )
+CAMS1049_pos=( [58] , [73] )
+
+CAMS_POSITIONS=[CAMS404_pos,cams1052_pos,CAMS695_pos,cams53_pos,CAMS409_pos,CAMS8_pos,CAMS416_pos,CAMS1_pos,\
+    CAMS603_pos,CAMS403_pos,CAMS167_pos,CAMS1029_pos,cams670_pos,cams1020_pos,CAMS1049_pos] 
+
+
+
+# downtown_pos=([63],[62])
+
+
+
 
 # these are for two domain run
 
@@ -81,8 +97,6 @@ cams1052_pos=([68],[60])
 # cams53_pos= ([66],[65])
 # cams169_pos=([66],[69])
 # cams403_pos=([67],[69])
-
-CAMS_POSITIONS=[CAMS1_pos,CAMS55_pos,CAMS35_pos,CAMS695_pos,CAMS416_pos,cams53_pos,cams169_pos,cams1052_pos] 
 
 
 time_idx=0
@@ -144,7 +158,8 @@ cams1049_lat=29.703208
 cams1049_lon=-95.221947
 
 cams=3
-cams_names=['cams1','cams55','cams35','cams695','cams416','cams53','cams169','cams1052'] #
+cams_names=['cams404','cams1052','cams695','cams53','cams409','cams8','cams416','cams1','cams603','cams403','cams167','cams1029','cams169',\
+    'cams670','cams1020','cams1049'] #
 cams_lats=[cams404_lat,cams1052_lat,cams695_lat,cams53_lat,cams409_lat,cams8_lat,cams416_lat,cams1_lat,\
     cams603_lat,cams403_lat,cams167_lat,cams1029_lat,cams169_lat,cams670_lat,cams1020_lat,cams1049_lat]
 cams_longs=[cams404_lon,cams1052_lon,cams695_lon,cams53_lon,cams409_lon,cams8_lon,cams416_lon,cams1_lon,\
@@ -183,8 +198,9 @@ for ncfile in ncfiles:
     ## The positioning is right, so left column is left column and right column is right column!
     for cams in range(len(cams_lats)):
         print(cams_names[cams]+' lat=',int(find_nearest(T2.XLAT,cams_lats[cams])/len(T2.XLAT)), cams_names[cams]+' lon=',find_nearest(T2.XLONG[10],cams_longs[cams])) 
-
-        print(cams_names[cams],np.array(ll_to_xy(data,cams_lats[cams],cams_longs[cams]))[1],np.array(ll_to_xy(data,cams_lats[cams],cams_longs[cams]))[0])
+        lat=np.array(ll_to_xy(data,cams_lats[cams],cams_longs[cams]))[1]
+        lon=np.array(ll_to_xy(data,cams_lats[cams],cams_longs[cams]))[0]
+        print(cams_names[cams],'(',[lat],',',[lon],')')
     # print(cams_names[cams]+' lon=',find_nearest(T2.XLONG[10],cams_longs[cams]))
     
     #THIS print statement is optional, if you wanna comapre with excel positions

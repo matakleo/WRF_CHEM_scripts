@@ -67,8 +67,6 @@ stations_dict={}
 keys_for_dict = ['CAMS404','CAMS1052','CAMS695','CAMS53','CAMS409','CAMS8','CAMS416','CAMS1','CAMS603','CAMS403','CAMS167','CAMS1029',\
     'CAMS169','CAMS670','CAMS1020','CAMS1049']
 
-
-
 time_idx=0
 
 
@@ -82,11 +80,10 @@ urban='BEM'
 #for BEM uncomment this:
 #Input_Dir = '/project/momen/Lmatak/WRF_CHEM/SLUCM_SCHEME_RUNS/simulation_runs/'
 
-Input_Dir='/project/momen/Lmatak/WRF_CHEM/URBAN_SCHEME_RUNS/simulation_runs/'
+Input_Dir='/project/momen/Lmatak/WRF_CHEM/SLUCM_SCHEME_RUNS/simulation_runs/'
 
-dir_names=['cd_0.5','cd_2.0','cd_3.0','cd_4.0','Mom_0.2','Mom_5.0','Mom_2.0','Mom_0.5']
+dir_names=['Default_SLUC','Ustar_10_SLUC','Ustar_20_SLUC','Ustar_5_SLUC' ]#,'WRF_BEM_change_momentum_1.5','WRF_BEM_change_tke_0.5','WRF_BEM_change_tke_1.5','WRF_BEM_change_momentum_0.5']
 months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-#dir_names=['Default_BEM','Decreased_Buildings','Default_No_Urb','Increased_Buildings'] #,'Mom_0.2','Mom_5.0','Mom_2.0','Mom_0.5']
 #at what altitude?
 alt=50
 
@@ -95,16 +92,17 @@ for dir_name in dir_names:
     ##create file is for creating a directory
     create_file(Output_Dir,PBL+"_"+dir_name)
     for month in months:
-        
+       
+
         for d in keys_for_dict:
             #initialize the dictionary with keys as empty lists
             stations_dict[d]=[]
 
 
-
             ## UNCOMMENT FOR DEFAULT  ##
         
         #working_dir=Input_Dir+PBL+  "/" +dir_name + "/" +PBL+"_"+dir_name+"_"+month 
+        
         working_dir=Input_Dir+  "/" +dir_name + "/" +PBL+"/"+month
         print('working dir = '+working_dir)
 
@@ -167,18 +165,26 @@ for dir_name in dir_names:
             stations_counter=0
             for measur_station in measuring_stations:
                 
+                    
                     # wspd is U10 V10 squared at monitoring site
                     wspd=math.sqrt(u10[measur_station]**2+v10[measur_station]**2)
          #           print('at surface wspd is ',float(wspd))
                     #404 19m
                     if measur_station==CAMS404_pos:
-                        wspd=wspd*np.log(19/0.14)/np.log(10/0.14)
+                        wspd=getvar(data, "wspd",time_idx)
+                        wspd=wspd[0]
+                        wspd=wspd[measur_station]*np.log(19/0.14)/np.log(10/0.14)
                     #409 18m
                     elif measur_station==CAMS409_pos:
-                        wspd=wspd*np.log(18/0.14)/np.log(10/0.14)
+                        
+                        wspd=getvar(data, "wspd",time_idx)
+                        wspd=wspd[0]
+                        wspd=wspd[measur_station]*np.log(18/0.14)/np.log(10/0.14)
                         #8 24m
                     elif measur_station==CAMS8_pos:
-                        wspd=wspd*np.log(24/0.14)/np.log(10/0.14)
+                        wspd=getvar(data, "wspd",time_idx)
+                        wspd=wspd[0]
+                        wspd=wspd[measur_station]=wspd*np.log(24/0.14)/np.log(10/0.14)
                         #603 13m
                     elif measur_station==CAMS603_pos:
                         wspd=wspd*np.log(13/0.14)/np.log(10/0.14)
@@ -199,6 +205,9 @@ for dir_name in dir_names:
                         wspd=wspd*np.log(11/0.14)/np.log(10/0.14)
                         #1049 20m
                     elif measur_station==CAMS1049_pos:
+                        wspd=getvar(data, "wspd",time_idx)
+                        wspd=wspd[0]
+                        wspd=wspd[measur_station]
                         wspd=wspd*np.log(20/0.14)/np.log(10/0.14)
 
                    # CAMS 1, 9m elevation
@@ -216,10 +225,11 @@ for dir_name in dir_names:
                     # CAMS 53, at 20m elevation
                     elif measur_station==([57],[51]):
                         wspd=getvar(data, "wspd",time_idx)
-                        wspd= interplevel(wspd, height, 20)
+                        wspd=wspd[0]
                         wspd=wspd[measur_station]
+                        wspd=wspd*np.log(20/0.14)/np.log(10/0.14)
                 #       print('m here at cams 53')
-               #        wspd=wspd*np.log(20/0.14)/np.log(10/0.14)
+                      
                     # CAMS 169, elevation 6m
                     elif measur_station==([58],[70]):
                         wspd=wspd*np.log(6/0.14)/np.log(10/0.14)    
@@ -228,7 +238,6 @@ for dir_name in dir_names:
                         wspd=getvar(data, "wspd",time_idx)
                         wspd= interplevel(wspd, height, 14)
                         wspd=wspd[measur_station]
-                    
 
 
                     wspd_per_file.append(2.23693629*float(wspd))
@@ -237,7 +246,6 @@ for dir_name in dir_names:
 
 
                     
-                    #stations_dict[keys_for_dict[stations_counter]].append(2.23693629*float(wspd))
                     stations_dict[keys_for_dict[stations_counter]].append(2.23693629*float(wspd))
                     stations_counter+=1
 
@@ -248,16 +256,14 @@ for dir_name in dir_names:
             WSPD_list.append(np.mean(wspd_per_file))  
 
         print(month)
-        print(stations_dict['CAMS53'])
+        print(stations_dict['CAMS1'])
         var=dir_name+"_"+month
         os.chdir(Output_Dir+PBL+"_"+dir_name)
         MyFile=open('%s.csv' %var,'w')
         ##write the var name, top left corner
         MyFile.write ("Urban_schemes_"+str(domain)+ "\n")
         # MyFile.write ("Temperature,PM2_5,NO,NO2,WSPD\n")
-
         MyFile.write ("Temperature,CAMS404_WSPD,CAMS1052_WSPD,CAMS695_WSPD,CAMS53_WSPD,CAMS409_WSPD,CAMS8_WSPD,CAMS416_WSPD,CAMS1_WSPD,CAMS603_WSPD,CAMS403_WSPD,CAMS167_WSPD,CAMS1029_WSPD,CAMS169_WSPD,CAMS670_WSPD,CAMS1020_WSPD,CAMS1049_WSPD,ALL_CAMS_AVG\n")  
-
         ##write longitudes in first row
         for hour in range(len(ncfiles)-1):
 
