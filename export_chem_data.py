@@ -13,11 +13,11 @@ from all_functions import list_ncfiles, create_file
 import glob
 
 #check the output folder!!!!
-Output_Dir = '/project/momen/Lmatak/WRF_CHEM/output_files/'
-Input_Dir = '/project/momen/Lmatak/WRF_CHEM/Jun_No_urb_3_dom/'
+Output_Dir = '/project/momen/Lmatak/WRF_CHEM/output_files/CHEM_TIME_SERIES/'
+
 #what you wanna get:?
 #at what altitude?
-alt=13
+alt=28
 
 ## SELECT DOMAIN ##
 domain=3
@@ -33,14 +33,22 @@ if domain == 4:
     CAMS416_pos=([83],[43])
 # theser are for three domain run:
 elif domain == 3:
-    CAMS1_pos=([64],[73])
-    CAMS55_pos=([61],[70])
-    CAMS35_pos=([55],[80])
-    CAMS695_pos=([59],[63])
-    CAMS416_pos=([56],[67])
-    CAMS53_pos= ([57],[51])
-    CAMS169_pos=([58],[70])
+    CAMS404_pos=( [67] , [67] )
     CAMS1052_pos=([68],[60])
+    CAMS695_pos=([59],[63])
+    CAMS53_pos= ([57],[51])
+    CAMS409_pos=( [50] , [53] )
+    CAMS8_pos=( [76] , [65] )
+    CAMS416_pos=([56],[67])
+    CAMS1_pos=([64],[73])
+    CAMS603_pos=( [63] , [76] )
+    CAMS403_pos=( [61] , [70] )
+    CAMS167_pos=( [61] , [72] )
+    CAMS1029_pos=( [59] , [70] )
+    CAMS169_pos=([58],[70])
+    CAMS670_pos=( [58] , [70] )
+    CAMS1020_pos=( [56] , [70] )
+    CAMS1049_pos=( [58] , [73] )
 
 elif domain ==1:
     CAMS1_pos=([49],[49])
@@ -60,29 +68,24 @@ elif domain == 2:
 
 ##for three domain run ##
 
-measuring_stations=[CAMS1_pos] #,CAMS55_pos,CAMS35_pos,CAMS695_pos,CAMS416_pos,CAMS53_pos,CAMS169_pos,CAMS1052_pos]
+measuring_stations=[CAMS1052_pos,CAMS695_pos,CAMS53_pos,CAMS409_pos,CAMS416_pos,CAMS8_pos,CAMS1_pos,CAMS603_pos,CAMS403_pos,] #,CAMS55_pos,CAMS35_pos,CAMS695_pos,CAMS416_pos,CAMS53_pos,CAMS169_pos,CAMS1052_pos]
 
 stations_dict={}
-keys_for_dict = ['CAMS1','CAMS55','CAMS35','CAMS695','CAMS416','CAMS53','CAMS169','CAMS1052']
-stations_dict['CAMS1']=[]
-stations_dict['CAMS55']=[]
-stations_dict['CAMS35']=[]
-stations_dict['CAMS695']=[]
-stations_dict['CAMS416']=[]
-stations_dict['CAMS53']=[]
-stations_dict['CAMS169']=[]
-stations_dict['CAMS1052']=[]
+keys_for_dict = ['CAMS1052','CAMS695','CAMS53','CAMS409','CAMS416','CAMS8','CAMS1','CAMS603','CAMS403']
+keys_for_chems=['WSPD','pm25','ozone','nitric_oxide','nitrogen_dioxide','carbon_monoxide']
+
+months=['Oct','Feb','May'] #,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+urb_dirs=['BEM','No_Urb']
+
 
 time_idx=0
-os.chdir(Input_Dir)
+
 ncfiles = []
 
 #name of the excel output file#
 #var="pbl_pbl_LES_chem_d"+str(domain)
 ########## list to hold the wrfout files ##########
-for file in glob.glob(Input_Dir+'wrfout_d0'+str(domain)+'*'):
-    ncfiles.append(file)
-ncfiles.sort()
+
 
 ### this is for what I find real data ##
 surface_temperature_list=[]
@@ -100,128 +103,124 @@ dom_avg_NO2_list=[]
 dom_avg_Ozone_list=[]
 dom_avg_WSPD_list=[]
 
+for month in months:
+
+    for urb in urb_dirs:
+        # clean it every time, ncfiles
+        ncfiles=[]
+        Input_Dir='/project/momen/Lmatak/WRF_CHEM/C_RUNS/'+month+'_'+urb+'/'
+        os.chdir(Input_Dir)
+
+        for file in glob.glob(Input_Dir+'wrfout_d0'+str(domain)+'*'):
+            ncfiles.append(file)
+        ncfiles.sort()
+        #initialize the dictionary with each station having each of the chems as empty lists, double nested   
+        for d in keys_for_dict:
+            # print('d',d)
+            stations_dict[d]={}
+            for c in keys_for_chems:
+                # print('c',c)
+            
+                stations_dict[d][c]=[]
+
+        for ncfile in ncfiles:
+            print('workin on: ',ncfile)
+            # surface_temperature_per_file=[]
+            # pm_per_file=[]
+            # no_per_file=[]
+            # no2_per_file=[]
+            # wspd_per_file=[]
+            # ozone_per_file=[]
 
 
+            ########## load the data ##########
+            data = Dataset(ncfile)
 
-for ncfile in ncfiles:
-                print('workin on: ',ncfile)
-                surface_temperature_per_file=[]
-                pm_per_file=[]
-                no_per_file=[]
-                no2_per_file=[]
-                wspd_per_file=[]
-                ozone_per_file=[]
+            height = getvar(data, "height_agl",time_idx)
 
-                dom_avg_surface_temperature_per_file=[]
-                dom_avg_pm_per_file=[]
-                dom_avg_no_per_file=[]
-                dom_avg_no2_per_file=[]
-                dom_avg_ozone_per_file=[]
-                dom_avg_wspd_per_file=[]
+            carbon_monoxide=(data, "co",time_idx)
+            carbon_monoxide=carbon_monoxide[0]
+
+            #chem variabsl#
+            pm_2_5 = getvar(data, "PM2_5_DRY",time_idx)
+            pm_2_5=pm_2_5[0]
+
+            ozone=getvar(data, "o3",time_idx)
+            ozone=ozone[0]
+
+            nitric_oxide=getvar(data, "no",time_idx)
+            nitric_oxide=nitric_oxide[0]
+
+            nitric_dioxide=getvar(data, "no2",time_idx)
+            nitric_dioxide=nitric_dioxide[0]
+            #met variabls#
+
+            u10=getvar(data, "U10",time_idx)
+            v10=getvar(data, "V10",time_idx)
+            outdoor_temperature=getvar(data, "T2",time_idx)
+            stations_counter=0
+            for measur_station in measuring_stations:
+
+                wspd=math.sqrt(u10[measur_station]**2+v10[measur_station]**2)
+
+                pm_per_file=(float(pm_2_5[measur_station]))
+            #     ##1000 multiplier to go from ppm to ppb
+                no_per_file=(1000*float(nitric_oxide[measur_station]))
+                no2_per_file=(1000*float(nitric_dioxide[measur_station]))
+                ozone_per_file=(1000*float(ozone[measur_station]))
+                # print('ozone',1000*float(ozone[measur_station]))
+                wspd_per_file=(2.23693629*float(wspd))
+                ## CO IS WRONG!!!
+                carbon_monoxide_per_file=(1000*float(ozone[measur_station]))
+
+                surface_temperature_per_file=(float(outdoor_temperature[measur_station]*9/5-459.67))
+# keys_for_chems=['WSPD','pm25','ozone','nitric_oxide','nitrogen_dioxide','carbon_monoxide']
+                # print('this is dict val',stations_dict[keys_for_dict[stations_counter]]['WSPD'])
+                stations_dict[keys_for_dict[stations_counter]]['WSPD'].append(wspd_per_file)
+                stations_dict[keys_for_dict[stations_counter]]['pm25'].append(pm_per_file)
+                stations_dict[keys_for_dict[stations_counter]]['ozone'].append(ozone_per_file)
+                stations_dict[keys_for_dict[stations_counter]]['nitric_oxide'].append(no_per_file)
+                stations_dict[keys_for_dict[stations_counter]]['nitrogen_dioxide'].append(no2_per_file)
+                stations_dict[keys_for_dict[stations_counter]]['carbon_monoxide'].append(carbon_monoxide_per_file)
+
+
+                stations_counter+=1
+       
+    # print(stations_dict[d])
+
+
+                 ##############################
+                # Exporting the simulated data #
+                ##############################
+        print('##########################################################################################')
+        print('                                   FINISHED EXTRACTION!')
+        print('##########################################################################################')
+
+
+        ########### create the output file      ###################
+        ######################################
+        create_file (Output_Dir,urb)
+        var=urb+'_'+month
+        print('var',var)
+        # Path = os.getcwd()
+        os.chdir(Output_Dir+'/'+urb)
+        MyFile=open('%s.csv' %var,'w')
+        ##write the var name, top left corner
+        MyFile.write (var+ "\n")
+        # MyFile.write ("Temperature,PM2_5,NO,NO2,WSPD\n")
+        # MyFile.write ("pm25,nitric_oxide,nitrogen_dioxide,ozone,dom_avg_pm25,dom_avg_no,dom_avg_no2,dom_avg_ozone,wind,Temperature,dom_avg_Temperature,dom_avg_WSPD\n")
         
-
-                ########## load the data ##########
-                data = Dataset(ncfile)
-
-                height = getvar(data, "height_agl",time_idx)
-
-                #chem variabsl#
-                pm_2_5 = getvar(data, "PM2_5_DRY",time_idx)
-                pm_2_5=interplevel(pm_2_5,height,alt)
-                
-                ozone=getvar(data, "o3",time_idx)
-                ozone=interplevel(ozone,height,alt)
-                nitric_oxide=getvar(data, "no",time_idx)
-                nitric_oxide=interplevel(nitric_oxide,height,alt)
-                nitric_dioxide=getvar(data, "no2",time_idx)
-                nitric_dioxide=interplevel(nitric_dioxide,height,alt)
-                #met variabls#
-
-                u10=getvar(data, "U10",time_idx)
-                v10=getvar(data, "V10",time_idx)
-                outdoor_temperature=getvar(data, "T2",time_idx)
-
-                for measur_station in measuring_stations:
-
-                    wspd=math.sqrt(u10[measur_station]**2+v10[measur_station]**2)
-
-                    pm_per_file.append(float(pm_2_5[measur_station]))
-                #     ##1000 multiplier to go from ppm to ppb
-                    no_per_file.append(1000*float(nitric_oxide[measur_station]))
-                    no2_per_file.append(1000*float(nitric_dioxide[measur_station]))
-                    ozone_per_file.append(1000*float(ozone[measur_station]))
-
-                    wspd_per_file.append(2.23693629*float(wspd))
-                    surface_temperature_per_file.append(float(outdoor_temperature[measur_station]*9/5-459.67))
-
-
-
-                    dom_avg_surface_temperature_per_file.append(float(np.mean(outdoor_temperature)*9/5-459.67))
-                print('temp =',(np.mean(surface_temperature_per_file)))
-                surface_temperature_list.append(np.mean(surface_temperature_per_file))  
-                WSPD_list.append(np.mean(wspd_per_file)) 
-
-                #chem vars  
-                PM_list.append(np.mean(pm_per_file))  
-                NO_list.append(np.mean(no_per_file))  
-                NO2_list.append(np.mean(no2_per_file))  
-                Ozone_list.append(np.mean(ozone_per_file))
-                #domain averages
-                dom_avg_PM_list.append(float(np.mean(pm_2_5)))
-                dom_avg_NO_list.append(float(np.mean(nitric_oxide)))
-                dom_avg_NO2_list.append(float(np.mean(nitric_dioxide)))
-                dom_avg_Ozone_list.append(float(np.mean(ozone)))
-
-                dom_avg_surface_temperature_list.append(np.mean(dom_avg_surface_temperature_per_file))    
-                dom_avg_WSPD_list.append(np.mean(dom_avg_wspd_per_file))  
-
-                
-
-
-
-
-
-
-
-        ##############################
-        # Exporting the simulated data #
-        ##############################
-print('##########################################################################################')
-print('                                   FINISHED EXTRACTION!')
-print('##########################################################################################')
-
-
-########### create the output file      ###################
-######################################
-# create_file (Output_Dir,"LES_outputs_hourly_domain_"+str(domain))
-# Path = os.getcwd()
-os.chdir(Output_Dir)
-MyFile=open('%s.csv' %var,'w')
-##write the var name, top left corner
-MyFile.write (var+ "\n")
-# MyFile.write ("Temperature,PM2_5,NO,NO2,WSPD\n")
-MyFile.write ("pm25,no,no2,ozone,dom_avg_pm25,dom_avg_no,dom_avg_no2,dom_avg_ozone,WSPD,Temperature,dom_avg_Temperature,dom_avg_WSPD\n")
-
-##write longitudes in first row
-for hour in range(len(ncfiles)):
-
-##CHEMICAL VARS##
-        
-        MyFile.write(str(PM_list[hour])+",")
-        MyFile.write(str(NO_list[hour])+",")
-        MyFile.write(str(NO2_list[hour])+",")
-        MyFile.write(str(Ozone_list[hour])+",")
-        MyFile.write(str(dom_avg_PM_list[hour])+",")
-        MyFile.write(str(dom_avg_NO_list[hour])+",")
-        MyFile.write(str(dom_avg_NO2_list[hour])+",")
-        MyFile.write(str(dom_avg_Ozone_list[hour])+",")
-        
-##MET VARS##
-        MyFile.write(str(WSPD_list[hour])+",")
-        MyFile.write(str(surface_temperature_list[hour])+",")
-        MyFile.write(str(dom_avg_surface_temperature_list[hour])+",")
-        MyFile.write(str(dom_avg_WSPD_list[hour])+"\n")
-
-                      
-
-MyFile.close()
+        for d in keys_for_dict:
+            for c in keys_for_chems:
+                MyFile.write((d+'_'+c)+",")
+                # print(d+'_'+c)
+        MyFile.write("\n")
+        print('ncfiles len',len(ncfiles))
+        for hour in range(len(ncfiles)-1):
+            for d in keys_for_dict:
+                for c in keys_for_chems:
+                    print('hour',hour,'station',d,'compound',c)
+                    MyFile.write(str(stations_dict[d][c][hour])+",")
+            MyFile.write("\n")        
+                             
+        MyFile.close()

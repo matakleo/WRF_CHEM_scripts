@@ -180,7 +180,7 @@ mid_downtown_lat=29.7585786
 
 
 
-for ncfile in ncfiles:
+for ncfile in ncfiles[0:1]:
     print('ncfile = '+ncfile)
 
     ########## load the data ##########
@@ -198,16 +198,18 @@ for ncfile in ncfiles:
     ## The positioning is right, so left column is left column and right column is right column!
     for cams in range(len(cams_lats)):
         print(cams_names[cams]+' lat=',int(find_nearest(T2.XLAT,cams_lats[cams])/len(T2.XLAT)), cams_names[cams]+' lon=',find_nearest(T2.XLONG[10],cams_longs[cams])) 
+        # print(height[0][cams_names[cams]])
         lat=np.array(ll_to_xy(data,cams_lats[cams],cams_longs[cams]))[1]
         lon=np.array(ll_to_xy(data,cams_lats[cams],cams_longs[cams]))[0]
-        print(cams_names[cams],'(',[lat],',',[lon],')')
+        # print(cams_names[cams],'(',[lat],',',[lon],')')
     # print(cams_names[cams]+' lon=',find_nearest(T2.XLONG[10],cams_longs[cams]))
     
     #THIS print statement is optional, if you wanna comapre with excel positions
 i=0
 for cams_pos in CAMS_POSITIONS:
+    print(float(height[0][cams_pos]))
     # print(cams_pos)
-    print(float(T2[cams_pos].XLONG)-cams_longs[i],float(T2[cams_pos].XLAT-cams_lats[i]))
+    # print(float(T2[cams_pos].XLONG)-cams_longs[i],float(T2[cams_pos].XLAT-cams_lats[i]))
     # print(float(T2[cams_pos].XLONG),',',float(T2[cams_pos].XLAT))
     i+=1
 

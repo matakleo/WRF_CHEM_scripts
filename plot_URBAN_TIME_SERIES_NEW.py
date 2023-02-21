@@ -6,7 +6,7 @@ import glob
 import os
 import pandas as pd
 
-urban_names=['MYJ_Default_BEM','MYJ_Default_BEM_logarithm_formula']
+urban_names=['MYJ_Ustar_20_SLUC','MYJ_Default_SLUC']
 PBLS=["MYJ"]
 simulations_dir='/Users/lmatak/Downloads/URBAN_TIME_SERIES_MAE/'
 
@@ -21,6 +21,41 @@ def moving_average(arr, window_size):
     return ma
 
 # Example usage:
+
+def check_numbers(lst):
+    indices = []
+    for index, item in enumerate(lst):
+        if not isinstance(item, (int, float)):
+            indices.append(index)
+    return indices
+
+def calculate_mae(simulation, real):
+    """
+    Calculates the mean absolute error between simulation and real data
+
+    Parameters:
+        simulation (list): A list of simulated data
+        real (list): A list of real data
+
+    Returns:
+        mae (float): The mean absolute error
+    """
+    error=0
+    count=0
+
+    for index, a in enumerate(real):
+        # print(index,a)
+        if index in check_numbers(real):
+            # print('Im skipping?')
+            continue
+        p = simulation[index]
+        error += abs(a - p)
+        count += 1
+
+        if count==0:
+            return
+    return error / count
+
 
 
 def get_real_data(cams_station,month):
@@ -80,8 +115,8 @@ def get_real_data(cams_station,month):
 
 
 # months=['Jan','Feb']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-months=['Jan','Feb','Mar','Apr','May','Jun']
-# months=['Jul','Aug','Sep','Oct','Nov','Dec']
+# months=['Jan','Feb','Mar','Apr','May','Jun']
+months=['Jul','Aug','Sep','Oct','Nov','Dec']
 
 fig, axes = plt.subplots(nrows=2, ncols=3,figsize=(16,10)) 
 
@@ -89,11 +124,12 @@ real_data = []
 
 row=0
 col=0
-
-cams='CAMS53_WSPD'
+for_mae=[]
+cams='CAMS416_WSPD'
 
 for month in months:
         real_winds=get_real_data(cams[0:-5],month)
+        # axes[row,col].plot(moving_average(real_winds,6),label='obs',linewidth=3,color='black')
         axes[row,col].plot(moving_average(real_winds,6),label='obs',linewidth=3,color='black')
         for urban in urban_names:
             print(urban)
@@ -119,8 +155,11 @@ for month in months:
 
             # if month == 'Feb' and urban=='BEP':
             #     continue
-
+            # print(real_winds,wspd_sim)
+            for_mae.append(calculate_mae(wspd_sim,real_winds))
+            # axes[row,col].plot(moving_average(wspd_sim,6),label=urban[4:],linewidth=2,)
             axes[row,col].plot(moving_average(wspd_sim,6),label=urban[4:],linewidth=2,)
+
             axes[row,col].set_title(month)
 
         col+=1
@@ -132,9 +171,12 @@ for month in months:
         ### THIS IS FOR CALCULATION, THE UPPER PART IS ONLY PLOTTING###
     
 
-            print('REAL DATA:',real_data)
+            # print('REAL DATA:',real_data)
 
 # plt.legend(['BEM','cd_2.0'])
+print(np.mean(for_mae))
 fig.suptitle(cams,size=20)
+
+# plt.bar(['wrf','log'],[2.827,2.9043])
 plt.legend()
 plt.show()

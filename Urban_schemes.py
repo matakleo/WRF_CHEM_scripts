@@ -172,19 +172,32 @@ for dir_name in dir_names:
          #           print('at surface wspd is ',float(wspd))
                     #404 19m
                     if measur_station==CAMS404_pos:
-                        wspd=wspd*np.log(19/0.14)/np.log(10/0.14)
+                        wspd=getvar(data, "wspd",time_idx)
+                        wspd= interplevel(wspd, height, 19)
+                        wspd=wspd[measur_station]
                     #409 18m
                     elif measur_station==CAMS409_pos:
-                        wspd=wspd*np.log(18/0.14)/np.log(10/0.14)
+                        wspd=getvar(data, "wspd",time_idx)
+                        wspd= interplevel(wspd, height, 18)
+                        wspd=wspd[measur_station]
                         #8 24m
                     elif measur_station==CAMS8_pos:
-                        wspd=wspd*np.log(24/0.14)/np.log(10/0.14)
+                        #wspd=wspd*np.log(24/0.14)/np.log(10/0.14)
+                        wspd=getvar(data, "wspd",time_idx)
+                        wspd= interplevel(wspd, height, 24)
+                        wspd=wspd[measur_station]
                         #603 13m
                     elif measur_station==CAMS603_pos:
-                        wspd=wspd*np.log(13/0.14)/np.log(10/0.14)
+                        #wspd=wspd*np.log(13/0.14)/np.log(10/0.14)
+                        wspd=getvar(data, "wspd",time_idx)
+                        wspd= interplevel(wspd, height, 13)
+                        wspd=wspd[measur_station]
                         #403 13m
                     elif measur_station==CAMS403_pos:
-                        wspd=wspd*np.log(13/0.14)/np.log(10/0.14)
+                        #wspd=wspd*np.log(13/0.14)/np.log(10/0.14)
+                        wspd=getvar(data, "wspd",time_idx)
+                        wspd= interplevel(wspd, height, 13)
+                        wspd=wspd[measur_station]
                         #167 7m
                     elif measur_station==CAMS167_pos:
                         wspd=wspd*np.log(7/0.14)/np.log(10/0.14)
@@ -199,8 +212,10 @@ for dir_name in dir_names:
                         wspd=wspd*np.log(11/0.14)/np.log(10/0.14)
                         #1049 20m
                     elif measur_station==CAMS1049_pos:
-                        wspd=wspd*np.log(20/0.14)/np.log(10/0.14)
-
+                        #wspd=wspd*np.log(20/0.14)/np.log(10/0.14)
+                        wspd=getvar(data, "wspd",time_idx)
+                        wspd= interplevel(wspd, height, 20)
+                        wspd=wspd[measur_station]
                    # CAMS 1, 9m elevation
                     elif measur_station==([64],[73]):
                         wspd=wspd*np.log(9/0.14)/np.log(10/0.14)
@@ -247,8 +262,8 @@ for dir_name in dir_names:
             # NO2_list.append(np.mean(no2_per_file))  
             WSPD_list.append(np.mean(wspd_per_file))  
 
-        print(month)
-        print(stations_dict['CAMS53'])
+#        print(month)
+#        print(stations_dict['CAMS53'])
         var=dir_name+"_"+month
         os.chdir(Output_Dir+PBL+"_"+dir_name)
         MyFile=open('%s.csv' %var,'w')

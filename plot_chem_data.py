@@ -7,6 +7,13 @@ import os
 import pandas as pd
 
 
+def check_numbers(lst):
+    indices = []
+    for index, item in enumerate(lst):
+        if not isinstance(item, (int, float)):
+            indices.append(index)
+    return indices
+
 def calculate_mae(simulation, real):
     """
     Calculates the mean absolute error between simulation and real data
@@ -80,11 +87,11 @@ fig.subplots_adjust(hspace=0.5)
 row=0
 col=0
 #REAL DATA
-dir='/Users/lmatak/Desktop/WRF_chem_scripts/wrf_chem_real_data/real_data_per_month/'
-real_data = dir+'all_cams_Jun.csv'
-real_data_vars_to_plot=["pm25","Temperature","nitric_oxide","nitrogen_dioxide","wind","ozone"]
 
 
+real_data_vars_to_plot=["pm25","nitric_oxide","nitrogen_dioxide","wind","ozone"]
+
+CAMS='CAMS8'
     
 
 
@@ -113,7 +120,7 @@ for sim_file in sim_files:
         
         
         tmp_list=[]
-        tmp_list=Extract_by_name(sim_file,tmp_list,tmp_var)
+        tmp_list=Extract_by_name(sim_file,tmp_list,CAMS+'_'+tmp_var)
 
 
         tmp_list=tmp_list[5:-2]
@@ -125,18 +132,20 @@ for sim_file in sim_files:
             dict_for_error_sims[tmp_var].append(tmp_list)
 
 
-        print(len(tmp_list))
+        print(len(tmp_list))    
         axes[row,col].plot(tmp_list,label=sims_to_plot[sim_file_number])
         axes[row,col].set_title(tmp_var)
         axes[row,col].set_xticks(ticks=np.arange(0,72,4))
         axes[row,col].set_xticklabels(np.arange(0,72,4))
+        print('row',row,'col',col)
         col+=1
-        if col>1:
+        if col==2:
             row+=1
             col=0
-        if row>2:
+        if row==2 and col==1:
             row=0
-    sim_file_number+=1
+            col=0
+            sim_file_number+=1
 
 
 
@@ -146,23 +155,41 @@ print(dict_for_error_sims.keys())
 
 
 for real_data_var in real_data_vars_to_plot:
-    tmp_list=[]
-    tmp_list=get_real_data_chem('CAMS1','Jun',real_data_var)
-    axes[row,col].plot(tmp_list,label='OBS data', linewidth=3,color='black')
-    print(real_data_var)
-    print(len(tmp_list.tolist()))
-    print(len(dict_for_error_sims[real_data_var][0]))
-    # print(calculate_mae(dict_for_error_sims[real_data_var][0],tmp_list.tolist()))
+    print('real data var',real_data_var)
+    try:
+        tmp_list=[]
+        tmp_list=get_real_data_chem(CAMS,'Jun',real_data_var)
 
-    col+=1
-    if col>1:
-        row+=1
-        col=0
-    if row>2:
-        row=0
-        col=0    
+        a=check_numbers(tmp_list)
+        tmp_list[a]=None
 
 
+        axes[row,col].plot(tmp_list,label='OBS data', linewidth=3,color='black')
+        print(real_data_var)
+        col+=1
+        if col==2:
+            row+=1
+            col=0
+        if row==2 and col==1:
+            row=0
+            col=0
+            sim_file_number+=1  
+        # print(len(tmp_list.tolist()))
+        # print(len(dict_for_error_sims[real_data_var][0]))
+        # print(calculate_mae(dict_for_error_sims[real_data_var][0],tmp_list.tolist()))
 
-plt.legend()
+        
+    except:
+        col+=1
+        if col==2:
+            row+=1
+            col=0
+        if row==2 and col==1:
+            row=0
+            col=0
+            sim_file_number+=1   
+
+
+fig.suptitle(CAMS,size=20)
+fig.legend(['BEM','No_URB','SLUCM'])
 plt.show()
