@@ -75,7 +75,7 @@ time_idx=0
 
 #check the output folder!!!!
 
-Output_Dir = '/project/momen/Lmatak/WRF_CHEM/output_files/URBAN_SIMS/Time_Series/'
+Output_Dir = '/project/momen/Lmatak/WRF_CHEM/output_files/URBAN_SIMS/Time_Series_Temperature/'
 
 PBL="MYJ"
 urban='BEM'
@@ -84,7 +84,7 @@ urban='BEM'
 
 Input_Dir='/project/momen/Lmatak/WRF_CHEM/URBAN_SCHEME_RUNS/simulation_runs/'
 
-dir_names=['cd_0.5','cd_2.0','cd_3.0','cd_4.0','Mom_0.2','Mom_5.0','Mom_2.0','Mom_0.5']
+dir_names=['Default_BEM','Decreased_Buildings','Default_No_Urb','Increased_Buildings','cd_0.5','cd_2.0','cd_3.0','cd_4.0','Mom_0.2','Mom_5.0','Mom_2.0','Mom_0.5']
 months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 #dir_names=['Default_BEM','Decreased_Buildings','Default_No_Urb','Increased_Buildings'] #,'Mom_0.2','Mom_5.0','Mom_2.0','Mom_0.5']
 #at what altitude?
@@ -168,12 +168,9 @@ for dir_name in dir_names:
             for measur_station in measuring_stations:
                 
                                      
+                    surface_temperature_per_file=(float(outdoor_temperature[measur_station]*9/5-459.67))
 
-
-
-                    surface_temperature_per_file.append(float(outdoor_temperature[measur_station]*9/5-459.67))
-
-
+                    print('value to be appended:',surface_temperature_per_file)
 
                     
                     #stations_dict[keys_for_dict[stations_counter]].append(2.23693629*float(wspd))
