@@ -6,7 +6,7 @@ import glob
 import os
 import pandas as pd
 
-urban_names=['MYJ_Ustar_20_SLUC','MYJ_Default_SLUC']
+urban_names=['MYJ_Default_No_Urb','MYJ_Default_SLUC','MYJ_Default_BEM']
 PBLS=["MYJ"]
 simulations_dir='/Users/lmatak/Downloads/URBAN_TIME_SERIES_MAE/'
 
@@ -125,12 +125,12 @@ real_data = []
 row=0
 col=0
 for_mae=[]
-cams='CAMS416_WSPD'
+cams='CAMS8_WSPD'
 
 for month in months:
         real_winds=get_real_data(cams[0:-5],month)
         # axes[row,col].plot(moving_average(real_winds,6),label='obs',linewidth=3,color='black')
-        axes[row,col].plot(moving_average(real_winds,6),label='obs',linewidth=3,color='black')
+        axes[row,col].plot(real_winds,label='obs',linewidth=3,color='black')
         for urban in urban_names:
             print(urban)
 
@@ -158,7 +158,7 @@ for month in months:
             # print(real_winds,wspd_sim)
             for_mae.append(calculate_mae(wspd_sim,real_winds))
             # axes[row,col].plot(moving_average(wspd_sim,6),label=urban[4:],linewidth=2,)
-            axes[row,col].plot(moving_average(wspd_sim,6),label=urban[4:],linewidth=2,)
+            axes[row,col].plot(wspd_sim,label=urban[4:],linewidth=2,)
 
             axes[row,col].set_title(month)
 

@@ -136,6 +136,7 @@ def calculate_mae(simulation, real):
 ## figure definition
 
 fig, ax = plt.subplots(nrows=3, ncols=3,figsize=(19.3, 9.7))
+fig.subplots_adjust(top=0.85,hspace=0.2)
 
 
 # Calculate the mean absolute error for each month
@@ -269,21 +270,27 @@ for urban_simulation in urb:
     if run_number==0:
           
         ax[0,0].bar(bar_x,avg_values(error_dict,'CAMS1'),width=0.3,label=urb[run_number][4:],edgecolor='black')
+        ax[0,1].bar(bar_x,avg_values(error_dict,'CAMS403'),width=0.3,edgecolor='black')
+
 
 
         ax[0,2].bar(bar_x,avg_values(error_dict,'CAMS695'),width=0.3,edgecolor='black')
 
 
         ax[1,1].bar(bar_x,avg_values(error_dict,'CAMS416'),width=0.3,edgecolor='black')
+        ax[1,0].bar(bar_x,avg_values(error_dict,'CAMS8'),width=0.3,edgecolor='black')
+
         ax[2,0].bar(bar_x,avg_values(error_dict,'CAMS169'),width=0.3,edgecolor='black')
         ax[2,1].bar(bar_x,avg_values(error_dict,'CAMS53'),width=0.3,edgecolor='black')
         ax[2,2].bar(bar_x,avg_values(error_dict,'CAMS1052'),width=0.3,edgecolor='black')
         
         ax[0,0].set_title('CAMS1')
+        ax[0,1].set_title('CAMS403')
 
         ax[0,2].set_title('CAMS695 - Moody')
 
         ax[1,1].set_title('CAMS416')
+        ax[1,0].set_title('CAMS8')
         ax[2,0].set_title('CAMS169')
         ax[2,1].set_title('CAMS53')
         ax[2,2].set_title('CAMS1052')
@@ -295,40 +302,52 @@ for urban_simulation in urb:
         bar_x_offset = [bar_x + run_number]  
         ax[0,0].bar(bar_x_offset,avg_values(error_dict,'CAMS1'),width=0.3,label=urb[run_number][4:],edgecolor='black')
 
-
+        ax[0,1].bar(bar_x_offset,avg_values(error_dict,'CAMS403'),width=0.3,edgecolor='black')
         ax[0,2].bar(bar_x_offset,avg_values(error_dict,'CAMS695'),width=0.3,edgecolor='black')
 
 
         ax[1,1].bar(bar_x_offset,avg_values(error_dict,'CAMS416'),width=0.3,edgecolor='black')
+        ax[1,0].bar(bar_x_offset,avg_values(error_dict,'CAMS8'),width=0.3,edgecolor='black')
+
         ax[2,0].bar(bar_x_offset,avg_values(error_dict,'CAMS169'),width=0.3,edgecolor='black')
         ax[2,1].bar(bar_x_offset,avg_values(error_dict,'CAMS53'),width=0.3,edgecolor='black')
         ax[2,2].bar(bar_x_offset,avg_values(error_dict,'CAMS1052'),width=0.3,edgecolor='black')
+        # plt.tick_params(left = False, right = False , labelleft = False ,
+        #         labelbottom = False, bottom = False)
 
 
     # put the horizontal lines
     if urban_simulation =='MYJ_Default_No_Urb':
         ax[0,0].axhline(y = avg_values(error_dict,'CAMS1'), color = 'b', linestyle = '--')
+        ax[0,1].axhline(y = avg_values(error_dict,'CAMS403'), color = 'b', linestyle = '--')
 
 
         ax[1,1].axhline(y = avg_values(error_dict,'CAMS416'), color = 'b', linestyle = '--')
+        ax[1,0].axhline(y = avg_values(error_dict,'CAMS8'), color = 'b', linestyle = '--')
         ax[2,0].axhline(y = avg_values(error_dict,'CAMS169'), color = 'b', linestyle = '--')
         ax[2,1].axhline(y = avg_values(error_dict,'CAMS53'), color = 'b', linestyle = '--')
         ax[2,2].axhline(y = avg_values(error_dict,'CAMS1052'), color = 'b', linestyle = '--')
     elif urban_simulation =='MYJ_Default_BEM':
 
         ax[0,0].axhline(y = avg_values(error_dict,'CAMS1'), color = 'orange', linestyle = ':')
+        ax[0,1].axhline(y = avg_values(error_dict,'CAMS403'), color = 'orange', linestyle = ':')
 
 
         ax[1,1].axhline(y = avg_values(error_dict,'CAMS416'), color = 'orange', linestyle = ':')
+        ax[1,0].axhline(y = avg_values(error_dict,'CAMS8'), color = 'orange', linestyle = ':')
+
         ax[2,0].axhline(y = avg_values(error_dict,'CAMS169'), color = 'orange', linestyle = ':')
         ax[2,1].axhline(y = avg_values(error_dict,'CAMS53'), color = 'orange', linestyle = ':')
         ax[2,2].axhline(y = avg_values(error_dict,'CAMS1052'), color = 'orange', linestyle = ':')
     elif urban_simulation =='MYJ_Default_SLUC':
 
         ax[0,0].axhline(y = avg_values(error_dict,'CAMS1'), color = 'g', linestyle = '-.')
-
+        ax[0,1].axhline(y = avg_values(error_dict,'CAMS403'), color = 'g', linestyle = '-.')
 
         ax[1,1].axhline(y = avg_values(error_dict,'CAMS416'), color = 'g', linestyle = '-.')
+        ax[1,0].axhline(y = avg_values(error_dict,'CAMS8'), color = 'g', linestyle = '-.')
+
+
         ax[2,0].axhline(y = avg_values(error_dict,'CAMS169'), color = 'g', linestyle = '-.')
         ax[2,1].axhline(y = avg_values(error_dict,'CAMS53'), color = 'g', linestyle = '-.')
         ax[2,2].axhline(y = avg_values(error_dict,'CAMS1052'), color = 'g', linestyle = '-.')
@@ -353,12 +372,12 @@ for urban_sim in urb:
     for_plot_counter+=1
 #add the horizontal lines
 
-# ax[1,2].axhline(y = avg_values(dict_for_averaging_all_cams,'MYJ_Default_No_Urb'), color = 'b', linestyle = '--')
-# ax[1,2].axhline(y = avg_values(dict_for_averaging_all_cams,'MYJ_Default_BEM'), color = 'orange', linestyle = ':')
-# ax[1,2].axhline(y = avg_values(dict_for_averaging_all_cams,'MYJ_Default_SLUC'), color = 'green', linestyle = '-.')  
+ax[1,2].axhline(y = avg_values(dict_for_averaging_all_cams,'MYJ_Default_No_Urb'), color = 'b', linestyle = '--')
+ax[1,2].axhline(y = avg_values(dict_for_averaging_all_cams,'MYJ_Default_BEM'), color = 'orange', linestyle = ':')
+ax[1,2].axhline(y = avg_values(dict_for_averaging_all_cams,'MYJ_Default_SLUC'), color = 'green', linestyle = '-.')  
 ax[1,2].set_title('all stations AVERAGE',size=15)    
 
-
+plt.setp(plt.gcf().get_axes(), xticks=[])
 #get the legend values from one of the axis
 h, l = ax[0,0].get_legend_handles_labels()
 plt.rc('legend',fontsize=13)
@@ -367,7 +386,7 @@ plt.rc('legend',fontsize=13)
 # ax[0,2].axis("off")
 # ax[0,2].legend(h, l,ncol=2,frameon=False) 
 
-ax[0,1].legend(h, l,ncol=7,frameon=False,loc='upper center',bbox_to_anchor=(0.4, 1.45))
+ax[0,1].legend(h, l,ncol=7,frameon=False,loc='upper center',bbox_to_anchor=(0.4, 1.55))
 plt.show()
 
 

@@ -75,7 +75,7 @@ time_idx=0
 
 #check the output folder!!!!
 
-Output_Dir = '/project/momen/Lmatak/WRF_CHEM/output_files/URBAN_SIMS/Time_Series_Winds/'
+Output_Dir = '/project/momen/Lmatak/WRF_CHEM/output_files/URBAN_SIMS/Time_Series/'
 
 PBL="MYJ"
 urban='BEM'
@@ -167,100 +167,19 @@ for dir_name in dir_names:
             stations_counter=0
             for measur_station in measuring_stations:
                 
-                    # wspd is U10 V10 squared at monitoring site
-                    wspd=math.sqrt(u10[measur_station]**2+v10[measur_station]**2)
-         #           print('at surface wspd is ',float(wspd))
-                    #404 19m
-                    if measur_station==CAMS404_pos:
-                        wspd=getvar(data, "wspd",time_idx)
-                        wspd= interplevel(wspd, height, 19)
-                        wspd=wspd[measur_station]
-                    #409 18m
-                    elif measur_station==CAMS409_pos:
-                        wspd=getvar(data, "wspd",time_idx)
-                        wspd= interplevel(wspd, height, 18)
-                        wspd=wspd[measur_station]
-                        #8 24m
-                    elif measur_station==CAMS8_pos:
-                        #wspd=wspd*np.log(24/0.14)/np.log(10/0.14)
-                        wspd=getvar(data, "wspd",time_idx)
-                        wspd= interplevel(wspd, height, 24)
-                        wspd=wspd[measur_station]
-                        #603 13m
-                    elif measur_station==CAMS603_pos:
-                        #wspd=wspd*np.log(13/0.14)/np.log(10/0.14)
-                        wspd=getvar(data, "wspd",time_idx)
-                        wspd= interplevel(wspd, height, 13)
-                        wspd=wspd[measur_station]
-                        #403 13m
-                    elif measur_station==CAMS403_pos:
-                        #wspd=wspd*np.log(13/0.14)/np.log(10/0.14)
-                        wspd=getvar(data, "wspd",time_idx)
-                        wspd= interplevel(wspd, height, 13)
-                        wspd=wspd[measur_station]
-                        #167 7m
-                    elif measur_station==CAMS167_pos:
-                        wspd=wspd*np.log(7/0.14)/np.log(10/0.14)
-                        #1029 7m
-                    elif measur_station==CAMS1029_pos:
-                        wspd=wspd*np.log(7/0.14)/np.log(10/0.14)
-                        #670 10m
-                    elif measur_station==CAMS670_pos:
-                        wspd=wspd
-                        #1020 11m
-                    elif measur_station==CAMS1020_pos:
-                        wspd=wspd*np.log(11/0.14)/np.log(10/0.14)
-                        #1049 20m
-                    elif measur_station==CAMS1049_pos:
-                        #wspd=wspd*np.log(20/0.14)/np.log(10/0.14)
-                        wspd=getvar(data, "wspd",time_idx)
-                        wspd= interplevel(wspd, height, 20)
-                        wspd=wspd[measur_station]
-                   # CAMS 1, 9m elevation
-                    elif measur_station==([64],[73]):
-                        wspd=wspd*np.log(9/0.14)/np.log(10/0.14)
-
-                    # MOODY TOWER, CAMS 695, elevation ~73m
-                    elif measur_station==([59],[63]):
-                        wspd=getvar(data, "wspd",time_idx)
-                        wspd= interplevel(wspd, height, 73)
-                        wspd=wspd[measur_station]
-                    # CAMS 416, at 10m elevation, no changes needed
-                    elif measur_station==([56],[67]):
-                        wspd=wspd
-                    # CAMS 53, at 20m elevation
-                    elif measur_station==([57],[51]):
-                        wspd=getvar(data, "wspd",time_idx)
-                        wspd= interplevel(wspd, height, 20)
-                        wspd=wspd[measur_station]
-                #       print('m here at cams 53')
-               #        wspd=wspd*np.log(20/0.14)/np.log(10/0.14)
-                    # CAMS 169, elevation 6m
-                    elif measur_station==([58],[70]):
-                        wspd=wspd*np.log(6/0.14)/np.log(10/0.14)    
-                    # CAMS 1052, at 14m elevation
-                    elif measur_station==([68],[60]):
-                        wspd=getvar(data, "wspd",time_idx)
-                        wspd= interplevel(wspd, height, 14)
-                        wspd=wspd[measur_station]
-                    
+                                     
 
 
-                    wspd_per_file.append(2.23693629*float(wspd))
+
                     surface_temperature_per_file.append(float(outdoor_temperature[measur_station]*9/5-459.67))
 
 
 
                     
                     #stations_dict[keys_for_dict[stations_counter]].append(2.23693629*float(wspd))
-                    stations_dict[keys_for_dict[stations_counter]].append(2.23693629*float(wspd))
+                    stations_dict[keys_for_dict[stations_counter]].append(surface_temperature_per_file)
                     stations_counter+=1
 
-            surface_temperature_list.append(np.mean(surface_temperature_per_file))    
-            # PM_list.append(np.mean(pm_per_file))  
-            # NO_list.append(np.mean(no_per_file))  
-            # NO2_list.append(np.mean(no2_per_file))  
-            WSPD_list.append(np.mean(wspd_per_file))  
 
 #        print(month)
 #        print(stations_dict['CAMS53'])
@@ -268,16 +187,16 @@ for dir_name in dir_names:
         os.chdir(Output_Dir+PBL+"_"+dir_name)
         MyFile=open('%s.csv' %var,'w')
         ##write the var name, top left corner
-        MyFile.write ("Urban_schemes_"+str(domain)+ "\n")
+        MyFile.write ("Urban_schemes_temperature_"+str(domain)+ "\n")
         # MyFile.write ("Temperature,PM2_5,NO,NO2,WSPD\n")
 
-        MyFile.write ("Temperature,CAMS404_WSPD,CAMS1052_WSPD,CAMS695_WSPD,CAMS53_WSPD,CAMS409_WSPD,CAMS8_WSPD,CAMS416_WSPD,CAMS1_WSPD,CAMS603_WSPD,CAMS403_WSPD,CAMS167_WSPD,CAMS1029_WSPD,CAMS169_WSPD,CAMS670_WSPD,CAMS1020_WSPD,CAMS1049_WSPD,ALL_CAMS_AVG\n")  
+        MyFile.write ("CAMS404_temperature,CAMS1052_temperature,CAMS695_temperature,CAMS53_temperature,CAMS409_temperature,CAMS8_temperature,CAMS416_temperature,CAMS1_temperature,CAMS603_temperature,CAMS403_temperature,CAMS167_temperature,CAMS1029_temperature,CAMS169_temperature,CAMS670_temperature,CAMS1020_temperature,CAMS1049_temperature\n")  
 
         ##write longitudes in first row
         for hour in range(len(ncfiles)-1):
 
         ##final longitude, swithc to lower row
-                MyFile.write(str(surface_temperature_list[hour])+",")
+
                 MyFile.write(str(stations_dict['CAMS404'][hour])+",")
                 MyFile.write(str(stations_dict['CAMS1052'][hour])+",")
                 MyFile.write(str(stations_dict['CAMS695'][hour])+",")
@@ -293,8 +212,8 @@ for dir_name in dir_names:
                 MyFile.write(str(stations_dict['CAMS169'][hour])+",")
                 MyFile.write(str(stations_dict['CAMS670'][hour])+",")
                 MyFile.write(str(stations_dict['CAMS1020'][hour])+",")
-                MyFile.write(str(stations_dict['CAMS1049'][hour])+",")
-                MyFile.write(str(WSPD_list[hour])+"\n")
+                MyFile.write(str(stations_dict['CAMS1049'][hour])+"\n")
+               
 
 
                             
