@@ -123,7 +123,7 @@ for sim_file in sim_files:
         tmp_list=Extract_by_name(sim_file,tmp_list,CAMS+'_'+tmp_var)
 
 
-        tmp_list=tmp_list[5:-2]
+        # tmp_list=tmp_list[5:-2]
 
         if tmp_var in dict_for_error_sims:
             dict_for_error_sims[tmp_var].append(tmp_list)

@@ -84,9 +84,9 @@ urban='BEM'
 
 Input_Dir='/project/momen/Lmatak/WRF_CHEM/URBAN_SCHEME_RUNS/simulation_runs/'
 
-dir_names=['cd_0.5','cd_2.0','cd_3.0','cd_4.0','Mom_0.2','Mom_5.0','Mom_2.0','Mom_0.5']
+#dir_names=['cd_0.5','cd_2.0','cd_3.0','cd_4.0','Mom_0.2','Mom_5.0','Mom_2.0','Mom_0.5']
 months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-#dir_names=['Default_BEM','Decreased_Buildings','Default_No_Urb','Increased_Buildings'] #,'Mom_0.2','Mom_5.0','Mom_2.0','Mom_0.5']
+dir_names=['Default_BEM','Decreased_Buildings','Default_No_Urb','Increased_Buildings','cd_0.5','cd_2.0','cd_3.0','cd_4.0','Mom_0.2','Mom_5.0','Mom_2.0','Mom_0.5'] #,'Mom_0.2','Mom_5.0','Mom_2.0','Mom_0.5']
 #at what altitude?
 alt=50
 
@@ -165,6 +165,7 @@ for dir_name in dir_names:
             # nitric_dioxide=interplevel(nitric_dioxide,height,alt)
             outdoor_temperature=getvar(data, "T2",time_idx)
             stations_counter=0
+            two_same_stations_counter=0
             for measur_station in measuring_stations:
                 
                     # wspd is U10 V10 squared at monitoring site
@@ -182,19 +183,17 @@ for dir_name in dir_names:
                         wspd=wspd[measur_station]
                         #8 24m
                     elif measur_station==CAMS8_pos:
-                        #wspd=wspd*np.log(24/0.14)/np.log(10/0.14)
+
                         wspd=getvar(data, "wspd",time_idx)
                         wspd= interplevel(wspd, height, 24)
                         wspd=wspd[measur_station]
                         #603 13m
                     elif measur_station==CAMS603_pos:
-                        #wspd=wspd*np.log(13/0.14)/np.log(10/0.14)
                         wspd=getvar(data, "wspd",time_idx)
                         wspd= interplevel(wspd, height, 13)
                         wspd=wspd[measur_station]
                         #403 13m
                     elif measur_station==CAMS403_pos:
-                        #wspd=wspd*np.log(13/0.14)/np.log(10/0.14)
                         wspd=getvar(data, "wspd",time_idx)
                         wspd= interplevel(wspd, height, 13)
                         wspd=wspd[measur_station]
@@ -204,48 +203,54 @@ for dir_name in dir_names:
                         #1029 7m
                     elif measur_station==CAMS1029_pos:
                         wspd=wspd*np.log(7/0.14)/np.log(10/0.14)
-                        #670 10m
-                    elif measur_station==CAMS670_pos:
-                        wspd=wspd
-                        #1020 11m
+                        #670 10m, although it's at 10m, I put it to 8 so it scales a little due to another stations
+                        #at the same elevation, cams 169
+                    elif measur_station==CAMS670_pos: 
+                        # wspd=wspd*np.log(8/0.14)/np.log(10/0.14)  
+                        print(two_same_stations_counter)
+                        wspd=math.sqrt(u10[measur_station]**2+v10[measur_station]**2) 
+                        two_same_stations_counter+=1
+                        if two_same_stations_counter==1:
+                        
+                            wspd=wspd*np.log(6/0.14)/np.log(10/0.14)
+                    #1020 11m
                     elif measur_station==CAMS1020_pos:
                         wspd=wspd*np.log(11/0.14)/np.log(10/0.14)
                         #1049 20m
                     elif measur_station==CAMS1049_pos:
-                        #wspd=wspd*np.log(20/0.14)/np.log(10/0.14)
                         wspd=getvar(data, "wspd",time_idx)
                         wspd= interplevel(wspd, height, 20)
                         wspd=wspd[measur_station]
                    # CAMS 1, 9m elevation
-                    elif measur_station==([64],[73]):
+                    elif measur_station==CAMS1_pos:
                         wspd=wspd*np.log(9/0.14)/np.log(10/0.14)
 
                     # MOODY TOWER, CAMS 695, elevation ~73m
-                    elif measur_station==([59],[63]):
+                    elif measur_station==CAMS695_pos:
                         wspd=getvar(data, "wspd",time_idx)
                         wspd= interplevel(wspd, height, 73)
                         wspd=wspd[measur_station]
                     # CAMS 416, at 10m elevation, no changes needed
-                    elif measur_station==([56],[67]):
+                    elif measur_station==CAMS416_pos:
                         wspd=wspd
                     # CAMS 53, at 20m elevation
-                    elif measur_station==([57],[51]):
+                    elif measur_station==CAMS53_pos:
                         wspd=getvar(data, "wspd",time_idx)
                         wspd= interplevel(wspd, height, 20)
                         wspd=wspd[measur_station]
                 #       print('m here at cams 53')
                #        wspd=wspd*np.log(20/0.14)/np.log(10/0.14)
                     # CAMS 169, elevation 6m
-                    elif measur_station==([58],[70]):
+                    elif measur_station==CAMS169_pos:  ##it will never get to here bcz cams607 has same coords
                         wspd=wspd*np.log(6/0.14)/np.log(10/0.14)    
                     # CAMS 1052, at 14m elevation
-                    elif measur_station==([68],[60]):
+                    elif measur_station==CAMS1052_pos:
                         wspd=getvar(data, "wspd",time_idx)
                         wspd= interplevel(wspd, height, 14)
                         wspd=wspd[measur_station]
                     
 
-
+                    # wspd=math.sqrt(u10[measur_station]**2+v10[measur_station]**2)
                     wspd_per_file.append(2.23693629*float(wspd))
                     surface_temperature_per_file.append(float(outdoor_temperature[measur_station]*9/5-459.67))
 
@@ -253,6 +258,7 @@ for dir_name in dir_names:
 
                     
                     #stations_dict[keys_for_dict[stations_counter]].append(2.23693629*float(wspd))
+                    print([keys_for_dict[stations_counter]],measur_station,float(wspd))
                     stations_dict[keys_for_dict[stations_counter]].append(2.23693629*float(wspd))
                     stations_counter+=1
 

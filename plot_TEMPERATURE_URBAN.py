@@ -6,9 +6,9 @@ import glob
 import os
 import pandas as pd
 
-urban_names=['MYJ_Default_SLUC','MYJ_Default_SLUC_NO_SCALE'] #,'MYJ_Default_BEM']
+urban_names=['MYJ_Default_SLUC','MYJ_Default_BEM','MYJ_Default_No_Urb'] #,'MYJ_Default_BEM']
 PBLS=["MYJ"]
-simulations_dir='/Users/lmatak/Downloads/URBAN_TIME_SERIES_MAE/with_scaling/'
+simulations_dir='/Users/lmatak/Downloads/URBAN_TEMPERATURE_TIMES_SERIES/'
 
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
 
@@ -98,7 +98,7 @@ def calculate_mae(simulation, real):
 
 def get_real_data(cams_station,month):
     os.chdir('/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/')
-    df = pd.read_excel('/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'+cams_station+'_whole_year_wind.xlsx')
+    df = pd.read_excel('/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'+cams_station+'_whole_year_temperature.xlsx')
     # date_to_plot = ' 2019-01-01 00:00:00'
     df['Date'] = pd.to_datetime(df['Date'])
     # Set the date column as the index of the DataFrame
@@ -153,8 +153,8 @@ def get_real_data(cams_station,month):
 
 
 # months=['Jan','Feb']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-months=['Jan','Feb','Mar','Apr','May','Jun']
-# months=['Jul','Aug','Sep','Oct','Nov','Dec']
+# months=['Jan','Feb','Mar','Apr','May','Jun']
+months=['Jul','Aug','Sep','Oct','Nov','Dec']
 
 fig, axes = plt.subplots(nrows=2, ncols=3,figsize=(16,10)) 
 fig.subplots_adjust(hspace=0.35)
@@ -164,18 +164,18 @@ real_data = []
 row=0
 col=0
 for_mae=[]
-cams='CAMS169_WSPD'
+cams='CAMS1_temperature'
 
 for month in months:
-        real_winds=get_real_data(cams[0:-5],month)
+
+        real_winds=get_real_data(cams[0:-12],month)
+
         # axes[row,col].plot(moving_average(real_winds,6),label='obs',linewidth=3,color='black')
         axes[row,col].plot(real_winds,label='obs',linewidth=3,color='black')
         some_counter=0
         for urban in urban_names:
-            print(urban)
-
             sim_data=simulations_dir+'/'+urban+'/'+urban[4:]+"_"+month+'.csv'
-            # print()
+
             temp_sim=[]
             wspd_sim=[]
             
@@ -184,6 +184,7 @@ for month in months:
   
             temp_sim=Extract_by_name(sim_data,temp_sim,'Temperature')
             wspd_sim=Extract_by_name(sim_data,wspd_sim,cams)
+            # print(wspd_sim)
 
             if (month== 'Jan' or month=='Feb' or month=='Mar' or month=='Dec'):
 
@@ -197,7 +198,7 @@ for month in months:
             #     continue
             # print(real_winds,wspd_sim)
             for_mae.append(calculate_mae(wspd_sim,real_winds))
-            print(row,col)
+            # print(row,col)
             correlation=get_corr_coeff((real_winds),(wspd_sim))
 
             axes[row,col].annotate((urban,str(round(correlation, 2))),
@@ -206,13 +207,13 @@ for month in months:
             
             horizontalalignment='right', verticalalignment='bottom')
 
-            print('corr',str(round(correlation, 2)))
+            # print('corr',str(round(correlation, 2)))
 
             # axes[row,col].plot(moving_average(wspd_sim,6),label=urban[4:],linewidth=2,)
             axes[row,col].plot(wspd_sim,label=urban[4:],linewidth=2,)
 
-            axes[row,col].set_title(month+str(round(correlation, 2)))
-            axes[row,col].set_ylim(0,20)
+            axes[row,col].set_title(month)
+            # axes[row,col].set_ylim(0,100)
             some_counter+=1
 
         col+=1
