@@ -6,7 +6,7 @@ import glob
 import os
 import pandas as pd
 
-urban_names=['MYJ_Default_SLUC','MYJ_Default_SLUC_NO_SCALE'] #,'MYJ_Default_BEM']
+urban_names=['MYJ_Ustar_20_SLUC','MYJ_Default_BEM'] #,'MYJ_Default_BEM']
 PBLS=["MYJ"]
 simulations_dir='/Users/lmatak/Downloads/URBAN_TIME_SERIES_MAE/with_scaling/'
 
@@ -16,6 +16,7 @@ real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
 
 def get_corr_coeff(real_data,sim_data):
     real_data_cleaned=np.copy(real_data)
+    moving_avg_sim=np.copy(sim_data)
 
     string_indices = [i for i, x in enumerate(real_data) if isinstance(x, str)]
     print(string_indices)
@@ -24,13 +25,14 @@ def get_corr_coeff(real_data,sim_data):
     # real_data=np.ma.masked_invalid(real_data.astype(np.nan))
     # real_data = np.where(mask, np.nan)
 
-    # moving_avg_real = moving_average(real_data_cleaned, 6)
+    moving_avg_real = moving_average(real_data_cleaned, 6)
 
-    moving_avg_real = real_data_cleaned
 
-    # print(len(moving_avg_real))
-    # print('sim ',simulation_month)
-    moving_avg_sim=sim_data
+  
+    moving_avg_sim=moving_average(moving_avg_sim, 6)
+
+
+    
 
 
     
@@ -156,7 +158,7 @@ def get_real_data(cams_station,month):
 months=['Jan','Feb','Mar','Apr','May','Jun']
 # months=['Jul','Aug','Sep','Oct','Nov','Dec']
 
-fig, axes = plt.subplots(nrows=2, ncols=3,figsize=(16,10)) 
+fig, axes = plt.subplots(nrows=2, ncols=3,figsize=(16,9)) 
 fig.subplots_adjust(hspace=0.35)
 
 real_data = []
@@ -164,12 +166,12 @@ real_data = []
 row=0
 col=0
 for_mae=[]
-cams='CAMS169_WSPD'
+cams='CAMS416_WSPD'
 
 for month in months:
         real_winds=get_real_data(cams[0:-5],month)
-        # axes[row,col].plot(moving_average(real_winds,6),label='obs',linewidth=3,color='black')
-        axes[row,col].plot(real_winds,label='obs',linewidth=3,color='black')
+        axes[row,col].plot(moving_average(real_winds,6),label='obs',linewidth=3,color='black')
+        # axes[row,col].plot(real_winds,label='obs',linewidth=3,color='black')
         some_counter=0
         for urban in urban_names:
             print(urban)
@@ -202,16 +204,16 @@ for month in months:
 
             axes[row,col].annotate((urban,str(round(correlation, 2))),
             xy=(1, 1), xycoords='data',
-            xytext=(150,-50+some_counter*(-25) ), textcoords='offset points',
+            xytext=(150,-50+some_counter*(-15) ), textcoords='offset points',
             
             horizontalalignment='right', verticalalignment='bottom')
 
             print('corr',str(round(correlation, 2)))
 
-            # axes[row,col].plot(moving_average(wspd_sim,6),label=urban[4:],linewidth=2,)
-            axes[row,col].plot(wspd_sim,label=urban[4:],linewidth=2,)
+            axes[row,col].plot(moving_average(wspd_sim,6),label=urban[4:],linewidth=2,)
+            # axes[row,col].plot(wspd_sim,label=urban[4:],linewidth=2,)
 
-            axes[row,col].set_title(month+str(round(correlation, 2)))
+            axes[row,col].set_title(month)
             axes[row,col].set_ylim(0,20)
             some_counter+=1
 

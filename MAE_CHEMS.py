@@ -144,14 +144,14 @@ fig.subplots_adjust(top=0.85,hspace=0.2)
 
 simulations_dir='/Users/lmatak/Downloads/WRF_CHEM_TIME_SERIES/'
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
-urb=['BEM','No_Urb']
+urb=['BEM','No_Urb','SLUC']
 
 # urb=['MYJ_Default_BEM','MYJ_Decreased_Buildings',]
 
 # HOW MANY MONTHS IN CALCULATION, SHOULD ALWAYS BE 12, UNLESS DEBUGGING !!!
 months = 3
 
-CHEM_ELE='pm25'
+CHEM_ELE='wind'
 
 # CAMS stations taken into consideration
 cams_stations=['CAMS404_WSPD','CAMS1052_WSPD','CAMS695_WSPD',\
@@ -171,6 +171,11 @@ elif CHEM_ELE=='nitrogen_dioxide':
 elif CHEM_ELE=='pm25':
     cams_stations=['CAMS8_pm25','CAMS416_pm25',\
         'CAMS1_pm25','CAMS403_pm25']
+elif CHEM_ELE=='wind':
+    cams_stations=['CAMS695_WSPD','CAMS53_WSPD','CAMS409_WSPD','CAMS8_WSPD',\
+        'CAMS416_WSPD','CAMS603_WSPD','CAMS1_WSPD','CAMS403_WSPD']
+
+
 
 
 
@@ -302,7 +307,7 @@ for urban_simulation in urb:
                 col=0
                 
             
-            ax[row,col].bar(bar_x,avg_values(error_dict,cams[:-(len(CHEM_ELE)+1)]),width=0.3,label=urb[run_number][4:],edgecolor='black')
+            ax[row,col].bar(bar_x,avg_values(error_dict,cams[:-(len(CHEM_ELE)+1)]),width=0.3,label=urb[run_number],edgecolor='black')
             ax[row,col].set_title(cams[:-(len(CHEM_ELE)+1)])
 
             col+=1
@@ -320,7 +325,7 @@ for urban_simulation in urb:
             if row==1 and col==2:
                 row=2
                 col=0
-            ax[row,col].bar(bar_x_offset,avg_values(error_dict,cams[:-(len(CHEM_ELE)+1)]),width=0.3,label=urb[run_number][4:],edgecolor='black')
+            ax[row,col].bar(bar_x_offset,avg_values(error_dict,cams[:-(len(CHEM_ELE)+1)]),width=0.3,label=urb[run_number],edgecolor='black')
             ax[row,col].set_title(cams[:-(len(CHEM_ELE)+1)])
 
             col+=1
@@ -403,7 +408,7 @@ plt.rc('legend',fontsize=13)
 
 # ax[0,2].axis("off")
 # ax[0,2].legend(h, l,ncol=2,frameon=False) 
-
+fig.suptitle(CHEM_ELE,size=15)
 ax[0,1].legend(h, l,ncol=7,frameon=False,loc='upper center',bbox_to_anchor=(0.4, 1.55))
 plt.show()
 
