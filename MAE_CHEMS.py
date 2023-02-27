@@ -151,7 +151,7 @@ urb=['BEM','No_Urb','SLUC']
 # HOW MANY MONTHS IN CALCULATION, SHOULD ALWAYS BE 12, UNLESS DEBUGGING !!!
 months = 3
 
-CHEM_ELE='wind'
+CHEM_ELE='carbon_monoxide'
 
 # CAMS stations taken into consideration
 cams_stations=['CAMS404_WSPD','CAMS1052_WSPD','CAMS695_WSPD',\
@@ -171,9 +171,22 @@ elif CHEM_ELE=='nitrogen_dioxide':
 elif CHEM_ELE=='pm25':
     cams_stations=['CAMS8_pm25','CAMS416_pm25',\
         'CAMS1_pm25','CAMS403_pm25']
+elif CHEM_ELE=='carbon_monoxide':
+    cams_stations=['CAMS1052_carbon_monoxide','CAMS695_carbon_monoxide',\
+        'CAMS403_carbon_monoxide']
+
 elif CHEM_ELE=='wind':
-    cams_stations=['CAMS695_WSPD','CAMS53_WSPD','CAMS409_WSPD','CAMS8_WSPD',\
-        'CAMS416_WSPD','CAMS603_WSPD','CAMS1_WSPD','CAMS403_WSPD']
+    cams_stations=['CAMS404_WSPD','CAMS1052_WSPD','CAMS695_WSPD',\
+    'CAMS53_WSPD','CAMS409_WSPD','CAMS8_WSPD','CAMS416_WSPD',\
+        'CAMS1_WSPD','CAMS603_WSPD','CAMS403_WSPD','CAMS167_WSPD'\
+            ,'CAMS1029_WSPD','CAMS169_WSPD','CAMS670_WSPD','CAMS1020_WSPD','CAMS1049_WSPD']
+elif CHEM_ELE=='temperature':
+    cams_stations=['CAMS1_temperature', 'CAMS404_temperature','CAMS1052_temperature' \
+    ,'CAMS409_temperature',\
+    'CAMS416_temperature','CAMS603_temperature',\
+        'CAMS403_temperature','CAMS167_temperature','CAMS1029_temperature',\
+    'CAMS169_temperature','CAMS1020_temperature',]
+
 
 
 
@@ -253,9 +266,16 @@ for urban_simulation in urb:
                 simulation_month=simulation_month[5:-1]
 
             # get the real data
-            # print(cams_name_for_real_data,month_name_for_real_data)
-            
             real_data=get_real_data(cams_name_for_real_data,month_name_for_real_data,CHEM_ELE)
+            # print(cams_name_for_real_data,month_name_for_real_data)
+            if cams_station[-(len(CHEM_ELE)+1):]!='wind' or 'temperature':
+                real_data=real_data[24:]
+                simulation_month=simulation_month[24:]
+            if cams_station[-(len(CHEM_ELE)+1):]!='carbon_monoxide': 
+                simulation_month=np.array(simulation_month)/1000
+
+            
+            
             print(cams_name_for_real_data,month_name_for_real_data,CHEM_ELE,real_data)
             # print(len(real_data))
             # print(len(simulation_month))
@@ -305,6 +325,8 @@ for urban_simulation in urb:
             if row==1 and col==2:
                 row=2
                 col=0
+            if row==3:
+                continue
                 
             
             ax[row,col].bar(bar_x,avg_values(error_dict,cams[:-(len(CHEM_ELE)+1)]),width=0.3,label=urb[run_number],edgecolor='black')
@@ -325,6 +347,8 @@ for urban_simulation in urb:
             if row==1 and col==2:
                 row=2
                 col=0
+            if row==3:
+                continue                
             ax[row,col].bar(bar_x_offset,avg_values(error_dict,cams[:-(len(CHEM_ELE)+1)]),width=0.3,label=urb[run_number],edgecolor='black')
             ax[row,col].set_title(cams[:-(len(CHEM_ELE)+1)])
 

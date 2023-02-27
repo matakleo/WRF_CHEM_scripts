@@ -68,14 +68,23 @@ elif domain == 2:
 
 ##for three domain run ##
 
-measuring_stations=[CAMS1052_pos,CAMS695_pos,CAMS53_pos,CAMS409_pos,CAMS416_pos,CAMS8_pos,CAMS1_pos,CAMS603_pos,CAMS403_pos,] #,CAMS55_pos,CAMS35_pos,CAMS695_pos,CAMS416_pos,CAMS53_pos,CAMS169_pos,CAMS1052_pos]
-
 stations_dict={}
-keys_for_dict = ['CAMS1052','CAMS695','CAMS53','CAMS409','CAMS416','CAMS8','CAMS1','CAMS603','CAMS403']
-keys_for_chems=['WSPD','pm25','ozone','nitric_oxide','nitrogen_dioxide','carbon_monoxide']
+### these are only the ones with chem###
+# keys_for_dict = ['CAMS1052','CAMS695','CAMS53','CAMS409','CAMS416','CAMS8','CAMS1','CAMS603','CAMS403']
+# measuring_stations=[CAMS1052_pos,CAMS695_pos,CAMS53_pos,CAMS409_pos,CAMS416_pos,CAMS8_pos,CAMS1_pos,CAMS603_pos,CAMS403_pos,]
 
-months=['Oct','Feb','May'] #,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-urb_dirs=['BEM','No_Urb']
+###these are all####
+measuring_stations=[CAMS404_pos,CAMS1052_pos,CAMS695_pos,CAMS53_pos,CAMS409_pos,CAMS8_pos,CAMS416_pos,CAMS1_pos,\
+    CAMS603_pos,CAMS403_pos,CAMS167_pos,CAMS1029_pos,CAMS169_pos,CAMS670_pos,CAMS1020_pos,CAMS1049_pos] 
+
+keys_for_dict = ['CAMS404','CAMS1052','CAMS695','CAMS53','CAMS409','CAMS8','CAMS416','CAMS1','CAMS603','CAMS403','CAMS167','CAMS1029',\
+    'CAMS169','CAMS670','CAMS1020','CAMS1049']
+
+
+keys_for_chems=['WSPD','temperature','pm25','ozone','nitric_oxide','nitrogen_dioxide','carbon_monoxide']
+
+months=['Oct','Feb','Mar'] #,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+urb_dirs=['SLUC']
 
 
 time_idx=0
@@ -108,7 +117,10 @@ for month in months:
     for urb in urb_dirs:
         # clean it every time, ncfiles
         ncfiles=[]
-        Input_Dir='/project/momen/Lmatak/WRF_CHEM/C_RUNS/'+month+'_'+urb+'/'
+        Input_Dir='/project/momen/Lmatak/WRF_CHEM/C_RUNS_SLUC/'+month+'_'+urb+'/'
+        
+        #Input_Dir='/project/momen/Lmatak/WRF_CHEM/C_RUNS_SLUC/'+month+'_'+urb+'/'
+        
         os.chdir(Input_Dir)
 
         for file in glob.glob(Input_Dir+'wrfout_d0'+str(domain)+'*'):
@@ -138,7 +150,7 @@ for month in months:
 
             height = getvar(data, "height_agl",time_idx)
 
-            carbon_monoxide=(data, "co",time_idx)
+            carbon_monoxide=getvar(data, "co",time_idx)
             carbon_monoxide=carbon_monoxide[0]
 
             #chem variabsl#
@@ -159,9 +171,93 @@ for month in months:
             v10=getvar(data, "V10",time_idx)
             outdoor_temperature=getvar(data, "T2",time_idx)
             stations_counter=0
+            two_same_stations_counter=0
             for measur_station in measuring_stations:
 
                 wspd=math.sqrt(u10[measur_station]**2+v10[measur_station]**2)
+
+                ##station based wspd##
+                
+                    
+        #           print('at surface wspd is ',float(wspd))
+                #404 19m
+                if measur_station==CAMS404_pos:
+                    wspd=getvar(data, "wspd",time_idx)
+                    wspd=wspd[0]
+                    wspd=wspd[measur_station]*np.log(19/0.14)/np.log(10/0.14)
+                #409 18m
+                elif measur_station==CAMS409_pos:
+                    
+                    wspd=wspd*np.log(18/0.14)/np.log(10/0.14)
+                    #8 24m
+                elif measur_station==CAMS8_pos:
+                    wspd=getvar(data, "wspd",time_idx)
+                    wspd=wspd[0]
+                    wspd=wspd[measur_station]*np.log(24/0.14)/np.log(10/0.14)
+                    #603 13m
+                elif measur_station==CAMS603_pos:
+                    wspd=wspd*np.log(13/0.14)/np.log(10/0.14)
+                    #403 13m
+                elif measur_station==CAMS403_pos:
+                    wspd=wspd*np.log(13/0.14)/np.log(10/0.14)
+                    #167 7m
+                elif measur_station==CAMS167_pos:
+                    wspd=wspd*np.log(7/0.14)/np.log(10/0.14)
+                    #1029 7m
+                elif measur_station==CAMS1029_pos:
+                    wspd=wspd*np.log(7/0.14)/np.log(10/0.14)
+                    #670 10m, although it's at 10m, I put it to 8 so it scales a little due to another stations
+                    #at the same elevation, cams 169
+                elif measur_station==CAMS670_pos: 
+                    # wspd=wspd*np.log(8/0.14)/np.log(10/0.14)  
+                    print(two_same_stations_counter)
+                    wspd=math.sqrt(u10[measur_station]**2+v10[measur_station]**2) 
+                    two_same_stations_counter+=1
+                    if two_same_stations_counter==1:
+                    
+                        wspd=wspd*np.log(6/0.14)/np.log(10/0.14) 
+
+
+
+                    
+                    #1020 11m
+                elif measur_station==CAMS1020_pos:
+                    wspd=wspd*np.log(11/0.14)/np.log(10/0.14)
+                    #1049 20m
+                elif measur_station==CAMS1049_pos:
+                    wspd=getvar(data, "wspd",time_idx)
+                    wspd=wspd[0]
+                    wspd=wspd[measur_station]
+                    wspd=wspd*np.log(20/0.14)/np.log(10/0.14)
+
+                # CAMS 1, 9m elevation
+                elif measur_station==CAMS1_pos:
+                    wspd=wspd*np.log(9/0.14)/np.log(10/0.14)
+
+                # MOODY TOWER, CAMS 695, elevation ~73m
+                elif measur_station==CAMS695_pos:
+                    wspd=getvar(data, "wspd",time_idx)
+                    wspd= interplevel(wspd, height, 73)
+                    wspd=wspd[measur_station]
+                # CAMS 416, at 10m elevation, no changes needed
+                elif measur_station==CAMS416_pos:
+                    wspd=wspd
+                # CAMS 53, at 20m elevation
+                elif measur_station==CAMS53_pos:
+                    wspd=getvar(data, "wspd",time_idx)
+                    wspd=wspd[0]
+                    wspd=wspd[measur_station]
+                    wspd=wspd*np.log(20/0.14)/np.log(10/0.14)
+            #       print('m here at cams 53')
+                    
+                # CAMS 169, elevation 6m
+                elif measur_station==CAMS169_pos:
+                    wspd=wspd*np.log(6/0.14)/np.log(10/0.14)    
+                # CAMS 1052, at 14m elevation
+                elif measur_station==CAMS1052_pos:
+
+                    wspd=wspd*np.log(14/0.14)/np.log(10/0.14) 
+
 
                 pm_per_file=(float(pm_2_5[measur_station]))
             #     ##1000 multiplier to go from ppm to ppb
@@ -171,12 +267,13 @@ for month in months:
                 # print('ozone',1000*float(ozone[measur_station]))
                 wspd_per_file=(2.23693629*float(wspd))
                 ## CO IS WRONG!!!
-                carbon_monoxide_per_file=(1000*float(ozone[measur_station]))
+                carbon_monoxide_per_file=(1000*float(carbon_monoxide[measur_station]))
 
                 surface_temperature_per_file=(float(outdoor_temperature[measur_station]*9/5-459.67))
 # keys_for_chems=['WSPD','pm25','ozone','nitric_oxide','nitrogen_dioxide','carbon_monoxide']
                 # print('this is dict val',stations_dict[keys_for_dict[stations_counter]]['WSPD'])
                 stations_dict[keys_for_dict[stations_counter]]['WSPD'].append(wspd_per_file)
+                stations_dict[keys_for_dict[stations_counter]]['temperature'].append(surface_temperature_per_file)
                 stations_dict[keys_for_dict[stations_counter]]['pm25'].append(pm_per_file)
                 stations_dict[keys_for_dict[stations_counter]]['ozone'].append(ozone_per_file)
                 stations_dict[keys_for_dict[stations_counter]]['nitric_oxide'].append(no_per_file)
@@ -215,11 +312,11 @@ for month in months:
                 MyFile.write((d+'_'+c)+",")
                 # print(d+'_'+c)
         MyFile.write("\n")
-        print('ncfiles len',len(ncfiles))
+        # print('ncfiles len',len(ncfiles))
         for hour in range(len(ncfiles)-1):
             for d in keys_for_dict:
                 for c in keys_for_chems:
-                    print('hour',hour,'station',d,'compound',c)
+                    # print('hour',hour,'station',d,'compound',c)
                     MyFile.write(str(stations_dict[d][c][hour])+",")
             MyFile.write("\n")        
                              

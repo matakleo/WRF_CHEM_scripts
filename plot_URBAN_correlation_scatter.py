@@ -6,9 +6,9 @@ import glob
 import os
 import pandas as pd
 
-urban_names=['BEM','No_Urb','SLUC'] #,'MYJ_Default_BEM']
+urban_names=['MYJ_Default_BEM','MYJ_Ustar_20_SLUC'] #,'MYJ_Default_BEM']
 PBLS=["MYJ"]
-simulations_dir='/Users/lmatak/Downloads/WRF_CHEM_TIME_SERIES/'
+simulations_dir='/Users/lmatak/Downloads/URBAN_TIME_SERIES_MAE/with_scaling/'
 
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
 
@@ -16,6 +16,7 @@ real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
 
 def get_corr_coeff(real_data,sim_data):
     real_data_cleaned=np.copy(real_data)
+    moving_avg_sim=np.copy(sim_data)
 
     string_indices = [i for i, x in enumerate(real_data) if isinstance(x, str)]
     print(string_indices)
@@ -26,11 +27,10 @@ def get_corr_coeff(real_data,sim_data):
 
     # moving_avg_real = moving_average(real_data_cleaned, 6)
 
-    moving_avg_real = real_data_cleaned
+    # moving_avg_sim=moving_average(moving_avg_sim, 6)
 
-    # print(len(moving_avg_real))
-    # print('sim ',simulation_month)
-    moving_avg_sim=sim_data
+
+    
 
 
     
@@ -44,7 +44,7 @@ def get_corr_coeff(real_data,sim_data):
     #calculate the CORRCOEFF
     # ma.corrcoef(ma.masked_invalid(A), ma.masked_invalid(B)))
 
-    p,corr= np.ma.corrcoef((moving_avg_sim, moving_avg_real.tolist()))
+    p,corr= np.ma.corrcoef((moving_avg_sim, real_data_cleaned.tolist()))
     corr=corr[0]
 
     return corr
@@ -96,9 +96,10 @@ def calculate_mae(simulation, real):
 
 
 
-def get_real_data_chem(cams_station,month,chem_name):
+def get_real_data(cams_station,month):
     os.chdir('/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/')
-    df = pd.read_excel('/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'+cams_station+'whole_year_'+chem_name+'.xlsx')
+    df = pd.read_excel('/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'+cams_station+'_whole_year_wind.xlsx')
+    # date_to_plot = ' 2019-01-01 00:00:00'
     df['Date'] = pd.to_datetime(df['Date'])
     # Set the date column as the index of the DataFrame
     df = df.set_index('Date')
@@ -152,10 +153,10 @@ def get_real_data_chem(cams_station,month,chem_name):
 
 
 # months=['Jan','Feb']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-# months=['Jan','Feb','Mar','Apr','May','Jun']
-months=['Oct','Mar','Feb'] #,'Oct','Nov','Dec']
+months=['Jan','Feb','Mar','Apr','May','Jun']
+# months=['Jul','Aug','Sep','Oct','Nov','Dec']
 
-fig, axes = plt.subplots(nrows=2, ncols=3,figsize=(16,10)) 
+fig, axes = plt.subplots(nrows=2, ncols=3,figsize=(16,9)) 
 fig.subplots_adjust(hspace=0.35)
 
 real_data = []
@@ -163,26 +164,18 @@ real_data = []
 row=0
 col=0
 for_mae=[]
-# chem_comp='wind'
-chem_comp='carbon_monoxide'
-
-cams='CAMS1052_'+chem_comp
+cams='CAMS416_WSPD'
 
 for month in months:
-
-        real_winds=get_real_data_chem(cams[0:-len(chem_comp)],month,chem_comp)
+        real_winds=get_real_data(cams[0:-5],month)
         # axes[row,col].plot(moving_average(real_winds,6),label='obs',linewidth=3,color='black')
-
-        a=check_numbers(real_winds)
-        real_winds[a]=None
-        if chem_comp!='wind'or'temperature':
-            real_winds=real_winds[24:]
-        axes[row,col].plot(real_winds,label='obs',linewidth=3,color='black')
+        # axes[row,col].plot(real_winds,label='obs',linewidth=3,color='black')
         some_counter=0
         for urban in urban_names:
-            sim_data=simulations_dir+'/'+urban+'/'+urban+"_"+month+'.csv'
-            print(sim_data)
+            print(urban)
 
+            sim_data=simulations_dir+'/'+urban+'/'+urban[4:]+"_"+month+'.csv'
+            # print()
             temp_sim=[]
             wspd_sim=[]
             
@@ -190,13 +183,7 @@ for month in months:
 
   
             temp_sim=Extract_by_name(sim_data,temp_sim,'Temperature')
-            if chem_comp=='wind':
-                cams=cams[0:-len(chem_comp)]+'WSPD'
             wspd_sim=Extract_by_name(sim_data,wspd_sim,cams)
-            if chem_comp=='carbon_monoxide':
-                wspd_sim=np.array(wspd_sim)/1000
-            
-            print(sim_data,wspd_sim,cams)
 
             if (month== 'Jan' or month=='Feb' or month=='Mar' or month=='Dec'):
 
@@ -209,24 +196,30 @@ for month in months:
             # if month == 'Feb' and urban=='BEP':
             #     continue
             # print(real_winds,wspd_sim)
+            for_mae.append(calculate_mae(wspd_sim,real_winds))
 
+            # correlation=get_corr_coeff((real_winds),(wspd_sim))
 
-            # axes[row,col].annotate((urban,str(round(correlation, 2))),
-            # xy=(1, 1), xycoords='data',
-            # xytext=(150,-50+some_counter*(-25) ), textcoords='offset points',
+            correlation=get_corr_coeff(moving_average(real_winds,6),moving_average(wspd_sim,6))
+
+            axes[row,col].annotate((urban,str(round(correlation, 2))),
+            xy=(1, 1), xycoords='data',
+            xytext=(150,-50+some_counter*(-15) ), textcoords='offset points',
             
-            # horizontalalignment='right', verticalalignment='bottom')
+            horizontalalignment='right', verticalalignment='bottom')
 
             # print('corr',str(round(correlation, 2)))
 
             # axes[row,col].plot(moving_average(wspd_sim,6),label=urban[4:],linewidth=2,)
-            if chem_comp!='wind'or'temperature':
-                wspd_sim=wspd_sim[24:]
-            axes[row,col].plot(wspd_sim,label=urban,linewidth=2,)
+            # axes[row,col].plot(wspd_sim,label=urban[4:],linewidth=2,)
+            print(month,wspd_sim)
 
+            # axes[row,col].scatter(real_winds,wspd_sim)
+            axes[row,col].scatter(moving_average(real_winds,6),moving_average(wspd_sim,6))
 
             axes[row,col].set_title(month)
-            # axes[row,col].set_ylim(0,100)
+            axes[row,col].set_xlim(0,20)
+            axes[row,col].set_ylim(0,20)
             some_counter+=1
 
         col+=1
@@ -245,5 +238,5 @@ print(np.mean(for_mae))
 fig.suptitle(cams,size=20)
 
 # plt.bar(['wrf','log'],[2.827,2.9043])
-axes[0,1].legend()
+axes[0,1].legend(urban_names)
 plt.show()
