@@ -8,7 +8,7 @@ import pandas as pd
 
 urban_names=['MYJ_Default_BEM'] #,'MYJ_Default_BEM','MYJ_cd_2.0']
 PBLS=["MYJ"]
-simulations_dir='/Users/lmatak/Downloads/URBAN_TIME_SERIES_MAE/'
+simulations_dir='/Users/lmatak/Downloads/URBAN_TIME_SERIES_MAE/with_scaling/'
 
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
 os.environ["PATH"]+=":/Library/TeX/texbin/"
@@ -72,15 +72,15 @@ def get_real_data(cams_station,month):
 
 
 
-
+font_size=20
 
 
 # months=['Jan','Feb']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 # months=['Jan','Feb','Mar','Apr','May','Jun']
 months=['Jul'] #,'Aug','Sep','Oct','Nov','Dec']
 
-fig, ax = plt.subplots(nrows=1, ncols=1,figsize=(14,2),dpi=350) 
-fig.subplots_adjust(bottom=0.2)
+fig, ax = plt.subplots(nrows=1, ncols=1,figsize=(16,2),dpi=350) 
+fig.subplots_adjust()
 
 real_data = []
 
@@ -131,18 +131,18 @@ for month in months:
 
             print('REAL DATA:',real_data)
 ax.grid(visible=True,color='grey', linestyle='--', linewidth=2,alpha=0.3,dash_capstyle='round',zorder=1)  
-ax.set_xlabel(r'Time (h)',size=25)
-ax.set_ylabel(r'Wind intensity\\  \hphantom{xyz} $\mathrm{(m\,s^{-1}) \,}$',size=25)
+ax.set_xlabel(r'Time (h)',size=font_size)
+ax.set_ylabel(r'Wind intensity\\  \hphantom{xyz} $\mathrm{(m\,s^{-1}) \,}$',size=font_size)
 
 ax.set_yticks(np.arange(0,28,8))
-ax.set_yticklabels(np.arange(0,28,8),size=25)
+ax.set_yticklabels(np.arange(0,28,8),size=font_size)
 ax.set_xticks(np.arange(0,73,12))
-ax.set_xticklabels(np.arange(0,73,12),size=25)
+ax.set_xticklabels(np.arange(0,73,12),size=font_size)
 plt.tick_params(bottom = False, left=False)
 
 
 # plt.legend(['BEM','cd_2.0'])
 # fig.suptitle(cams,size=25)
-ax.legend(loc='upper left',fontsize=20,bbox_to_anchor=(0.3,1.45),ncol=2,frameon=False)
+ax.legend(loc='upper left',fontsize=font_size,bbox_to_anchor=(0.3,1.35),ncol=2,frameon=False)
 # plt.show()
 plt.savefig('/Users/lmatak/Desktop/building_website/Images/time_series.jpg',bbox_inches='tight')

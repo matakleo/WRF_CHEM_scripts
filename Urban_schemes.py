@@ -67,6 +67,8 @@ stations_dict={}
 keys_for_dict = ['CAMS404','CAMS1052','CAMS695','CAMS53','CAMS409','CAMS8','CAMS416','CAMS1','CAMS603','CAMS403','CAMS167','CAMS1029',\
     'CAMS169','CAMS670','CAMS1020','CAMS1049']
 
+    
+
 
 
 time_idx=0

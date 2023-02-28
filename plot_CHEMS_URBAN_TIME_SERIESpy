@@ -164,9 +164,9 @@ row=0
 col=0
 for_mae=[]
 # chem_comp='wind'
-chem_comp='carbon_monoxide'
+chem_comp='nitrogen_dioxide'
 
-cams='CAMS1052_'+chem_comp
+cams='CAMS1_'+chem_comp
 
 for month in months:
 

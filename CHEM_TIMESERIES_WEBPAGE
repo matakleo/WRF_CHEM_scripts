@@ -1,0 +1,370 @@
+
+import numpy as np
+import matplotlib.pyplot as plt
+from all_functions import Extract_by_name, Extract_the_shit2
+import glob
+import os
+import pandas as pd
+
+urban_names=['BEM','No_Urb','SLUC'] #,'MYJ_Default_BEM']
+PBLS=["MYJ"]
+simulations_dir='/Users/lmatak/Downloads/WRF_CHEM_TIME_SERIES/'
+
+real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
+
+
+os.environ["PATH"]+=":/Library/TeX/texbin/"
+print(os.environ["PATH"])
+plt.rcParams.update({
+    "text.usetex":True,
+    "font.family":'Times New Roman'
+})
+def get_corr_coeff(real_data,sim_data):
+    real_data_cleaned=np.copy(real_data)
+
+    string_indices = [i for i, x in enumerate(real_data) if isinstance(x, str)]
+    print(string_indices)
+    real_data_cleaned[string_indices] = None
+    # np.corrcoef(x[mask], y[mask], rowvar=False)[0, 1]
+    # real_data=np.ma.masked_invalid(real_data.astype(np.nan))
+    # real_data = np.where(mask, np.nan)
+
+    # moving_avg_real = moving_average(real_data_cleaned, 6)
+
+    moving_avg_real = real_data_cleaned
+
+    # print(len(moving_avg_real))
+    # print('sim ',simulation_month)
+    moving_avg_sim=sim_data
+
+
+    
+    #append the mae seperately to different keys, for each month!
+    #this is what will be getting plotted!!
+    # error_dict[cams_name_for_real_data].append(mae)
+
+    #for debugging, this print line is very useful
+    # print(urban_simulation,month_number,cams_station,mae)
+
+    #calculate the CORRCOEFF
+    # ma.corrcoef(ma.masked_invalid(A), ma.masked_invalid(B)))
+
+    p,corr= np.ma.corrcoef((moving_avg_sim, moving_avg_real.tolist()))
+    corr=corr[0]
+
+    return corr
+
+
+def moving_average(arr, window_size):
+    """
+    Calculates the moving average of an array with a given window size.
+    """
+    weights = np.repeat(1.0, window_size) / window_size
+    ma = np.convolve(arr, weights, 'valid')
+    return ma
+
+# Example usage:
+
+def check_numbers(lst):
+    indices = []
+    for index, item in enumerate(lst):
+        if not isinstance(item, (int, float)):
+            indices.append(index)
+    return indices
+
+def calculate_mae(simulation, real):
+    """
+    Calculates the mean absolute error between simulation and real data
+
+    Parameters:
+        simulation (list): A list of simulated data
+        real (list): A list of real data
+
+    Returns:
+        mae (float): The mean absolute error
+    """
+    error=0
+    count=0
+
+    for index, a in enumerate(real):
+        # print(index,a)
+        if index in check_numbers(real):
+            # print('Im skipping?')
+            continue
+        p = simulation[index]
+        error += abs(a - p)
+        count += 1
+
+        if count==0:
+            return
+    return error / count
+
+
+
+def get_real_data_chem(cams_station,month,chem_name):
+    os.chdir('/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/')
+    df = pd.read_excel('/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'+cams_station+'whole_year_'+chem_name+'.xlsx')
+    df['Date'] = pd.to_datetime(df['Date'])
+    # Set the date column as the index of the DataFrame
+    df = df.set_index('Date')
+    # Specify the date for which you want to retrieve data
+   
+    if month =='Jan':
+        month_num='01'
+    elif month=='Feb':
+        month_num='02'
+    elif month=='Mar':
+        month_num='03'
+    elif month=='Apr':
+        month_num='04'
+    elif month=='May':
+        month_num='05'
+    elif month=='Jun':
+        month_num='06'
+    elif month=='Jul':
+        month_num='07'
+    elif month=='Aug':
+        month_num='08'
+    elif month=='Sep':
+        month_num='09'
+    elif month=='Oct':
+        month_num='10'
+    elif month=='Nov':
+        month_num='11'
+    elif month=='Dec':
+        month_num='12'
+
+    target_date = '2019-'+month_num+'-01'
+    target_date2= '2019-'+month_num+'-02'
+    target_date3='2019-'+month_num+'-03'
+
+    # Retrieve data for the target date
+    # target_data = np.array(df.loc[target_date],df.loc[target_date2]df.loc[target_date3])
+
+    col1 = np.array(df.loc[target_date])
+    col2 = np.array(df.loc[target_date2])
+    col3 = np.array(df.loc[target_date3])
+
+    target_data=(np.concatenate((col1,col2,col3),axis=0))
+    # # Concatenate the columns into one DataFrame
+
+
+    return target_data
+
+
+
+
+
+
+# months=['Jan','Feb']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+# months=['Jan','Feb','Mar','Apr','May','Jun']
+months=['Oct','Mar','Feb'] #,'Oct','Nov','Dec']
+
+fig, axes = plt.subplots(nrows=3, ncols=1,figsize=(16,8),sharex='col') 
+fig.subplots_adjust(wspace=0.05)
+
+real_data = []
+
+row=0
+col=0
+for_mae=[]
+# chem_comp='wind'
+chem_comp='nitrogen_dioxide'
+
+cams='CAMS1_'+chem_comp
+
+real_winds1=get_real_data_chem(cams[0:-len(chem_comp)],'Oct',chem_comp)
+a=check_numbers(real_winds1)
+real_winds1[a]=None
+real_winds2=get_real_data_chem(cams[0:-len(chem_comp)],'Mar',chem_comp)
+a=check_numbers(real_winds2)
+real_winds2[a]=None
+real_winds3=get_real_data_chem(cams[0:-len(chem_comp)],'Feb',chem_comp)
+a=check_numbers(real_winds3)
+real_winds3[a]=None
+
+
+
+empty_list1=[]
+empty_list2=[]
+empty_list3=[]
+
+BEM_Oct_sim_data=simulations_dir+'BEM'+'/'+'BEM'+"_"+'Oct'+'.csv'
+empty_list1=Extract_by_name(BEM_Oct_sim_data,empty_list1,cams)
+empty_list1=empty_list1[6:]
+
+BEM_Mar_sim_data=simulations_dir+'BEM'+'/'+'BEM'+"_"+'Mar'+'.csv'
+empty_list2=Extract_by_name(BEM_Mar_sim_data,empty_list2,cams)
+empty_list2=empty_list2[5:-1]
+
+
+BEM_Feb_sim_data=simulations_dir+'BEM'+'/'+'BEM'+"_"+'Feb'+'.csv'
+empty_list3=Extract_by_name(BEM_Feb_sim_data,empty_list3,cams)
+empty_list3=empty_list3[5:-1]
+
+
+
+
+
+empty_list4=[]
+empty_list5=[]
+empty_list6=[]
+
+No_Urb_Oct_sim_data=simulations_dir+'No_Urb'+'/'+'No_Urb'+"_"+'Oct'+'.csv'
+empty_list4=Extract_by_name(No_Urb_Oct_sim_data,empty_list4,cams)
+empty_list4=empty_list4[6:]
+
+No_Urb_Mar_sim_data=simulations_dir+'No_Urb'+'/'+'No_Urb'+"_"+'Mar'+'.csv'
+empty_list5=Extract_by_name(No_Urb_Mar_sim_data,empty_list5,cams)
+empty_list5=empty_list5[5:-1]
+
+No_Urb_Feb_sim_data=simulations_dir+'No_Urb'+'/'+'No_Urb'+"_"+'Feb'+'.csv'
+empty_list6=Extract_by_name(No_Urb_Feb_sim_data,empty_list6,cams)
+empty_list6=empty_list6[5:-1]
+
+empty_list7=[]
+empty_list8=[]
+empty_list9=[]
+
+SLUC_Oct_sim_data=simulations_dir+'SLUC'+'/'+'SLUC'+"_"+'Oct'+'.csv'
+empty_list7=Extract_by_name(SLUC_Oct_sim_data,empty_list7,cams)
+empty_list7=empty_list7[6:]
+
+SLUC_Mar_sim_data=simulations_dir+'SLUC'+'/'+'SLUC'+"_"+'Mar'+'.csv'
+empty_list8=Extract_by_name(SLUC_Mar_sim_data,empty_list8,cams)
+empty_list8=empty_list8[5:-1]
+
+SLUC_Feb_sim_data=simulations_dir+'SLUC'+'/'+'SLUC'+"_"+'Feb'+'.csv'
+empty_list9=Extract_by_name(SLUC_Feb_sim_data,empty_list9,cams)
+empty_list9=empty_list9[5:-1]
+
+
+
+
+
+
+# print(wspd_sim)
+
+temp_sim=[]
+
+
+
+
+
+
+        
+
+
+
+
+
+
+for hour in np.arange(0,48,1):
+
+    
+   
+
+    axes[0].set_xlim(0,50)
+    axes[0].set_ylim(0,50)
+    axes[1].set_xlim(0,50)
+    axes[1].set_ylim(0,50)
+    axes[2].set_xlim(0,50)
+    axes[2].set_ylim(0,50)
+
+    # axes[0].set_xlabel(r'Time $\(hr\)$',size=25)
+    # axes[0].set_xlabel(r'Time \(hr\)',size=25)
+    axes[2].set_xlabel(r'Time $\mathrm{(hr) \,}$',size=22)
+
+    axes[1].set_ylabel(r'Nox $\mathrm{(ppb) \,}$',size=22)
+    axes[0].set_ylabel(r'Nox $\mathrm{(ppb) \,}$',size=22)
+    axes[2].set_ylabel(r'Nox $\mathrm{(ppb) \,}$',size=22)
+    
+    axes[0].set_yticks(np.arange(0,50,10))
+    axes[0].set_yticklabels(np.arange(0,50,10),size=18)
+
+    axes[2].set_yticks(np.arange(0,50,10))
+    axes[2].set_yticklabels(np.arange(0,50,10),size=18)
+    axes[1].set_yticks(np.arange(0,50,10))
+    axes[1].set_yticklabels(np.arange(0,50,10),size=18)
+
+    axes[2].set_xticks(np.arange(0,50,6))
+    axes[2].set_xticklabels(np.arange(0,50,6),size=18)
+
+    axes[0].set_title('Oct 1 - Oct 3',size=22)
+    axes[1].set_title('Feb 1 - Feb 3',size=22)
+    axes[2].set_title('Mar 1 - Mar 3',size=22)
+
+
+
+
+    # axes[row,col].plot(moving_average(real_winds,6),label='obs',linewidth=3,color='black')
+    if hour==0:
+        axes[0].plot(real_winds1[0:hour],color='black',linewidth=3,label='Observed Data')
+        axes[1].plot(real_winds2[0:hour],color='black',linewidth=3)
+        axes[2].plot(real_winds3[0:hour],color='black',linewidth=3)
+    else:
+        axes[0].plot(real_winds1[0:hour],color='black',linewidth=3)
+        axes[1].plot(real_winds2[0:hour],color='black',linewidth=3)
+        axes[2].plot(real_winds3[0:hour],color='black',linewidth=3)
+    
+    
+    
+
+    if hour>15:
+        if hour == 16:
+            axes[0].plot(empty_list1[0:hour-14],color='blue',linewidth=2, linestyle='solid',label='Simulation 1')
+            axes[1].plot(empty_list2[0:hour-14],color='blue',linewidth=2, linestyle='solid')
+            axes[2].plot(empty_list3[0:hour-14],color='blue',linewidth=2, linestyle='solid')
+
+            axes[0].plot(empty_list4[0:hour-14],color='brown',linewidth=2,linestyle='solid',label='Simulation 2')
+            axes[1].plot(empty_list5[0:hour-14],color='brown',linewidth=2,linestyle='solid')
+            axes[2].plot(empty_list6[0:hour-14],color='brown',linewidth=2,linestyle='solid')
+
+            axes[0].plot(empty_list7[0:hour-14],color='orange',linewidth=2,linestyle='solid',label='Simulation 3')
+            axes[1].plot(empty_list8[0:hour-14],color='orange',linewidth=2,linestyle='solid')
+            axes[2].plot(empty_list9[0:hour-14],color='orange',linewidth=2,linestyle='solid')
+        else:
+            axes[0].plot(empty_list1[0:hour-14],color='blue',linewidth=2, linestyle='solid')
+            axes[1].plot(empty_list2[0:hour-14],color='blue',linewidth=2, linestyle='solid')
+            axes[2].plot(empty_list3[0:hour-14],color='blue',linewidth=2, linestyle='solid')
+
+            axes[0].plot(empty_list4[0:hour-14],color='brown',linewidth=2,linestyle='solid')
+            axes[1].plot(empty_list5[0:hour-14],color='brown',linewidth=2,linestyle='solid')
+            axes[2].plot(empty_list6[0:hour-14],color='brown',linewidth=2,linestyle='solid')
+
+            axes[0].plot(empty_list7[0:hour-14],color='orange',linewidth=2,linestyle='solid')
+            axes[1].plot(empty_list8[0:hour-14],color='orange',linewidth=2,linestyle='solid')
+            axes[2].plot(empty_list9[0:hour-14],color='orange',linewidth=2,linestyle='solid')
+          
+
+        
+
+        
+    if hour==47:
+        for i in range(hour-14,hour+1,1):
+            axes[0].plot(empty_list1[0:i],color='blue',linewidth=2, linestyle='solid')
+            axes[1].plot(empty_list2[0:i],color='blue',linewidth=2, linestyle='solid')
+            axes[2].plot(empty_list3[0:i],color='blue',linewidth=2, linestyle='solid')
+            axes[0].plot(empty_list4[0:i],color='brown',linewidth=2,linestyle='solid')
+            axes[1].plot(empty_list5[0:i],color='brown',linewidth=2,linestyle='solid')
+            axes[2].plot(empty_list6[0:i],color='brown',linewidth=2,linestyle='solid')
+
+            axes[0].plot(empty_list7[0:i],color='orange',linewidth=2,linestyle='solid')
+            axes[1].plot(empty_list8[0:i],color='orange',linewidth=2,linestyle='solid')
+            axes[2].plot(empty_list9[0:i],color='orange',linewidth=2,linestyle='solid')
+            plt.savefig('/Users/lmatak/Desktop/leo_python_scripts/Website_pics/for_chem_anumation/pic'+str(hour+i)+'.png')
+
+
+
+    fig.suptitle(r'Measuring station \#1',size=25)
+
+    # plt.bar(['wrf','log'],[2.827,2.9043])
+    plt.rc('legend', fontsize = 18)
+    axes[0].legend(bbox_to_anchor=(1, 1),
+          bbox_transform=fig.transFigure,ncol=2)
+    # plt.show()
+    plt.savefig('/Users/lmatak/Desktop/leo_python_scripts/Website_pics/for_chem_anumation/pic'+str(hour)+'.png')
+
+    
+
+
