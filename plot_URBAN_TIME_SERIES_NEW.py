@@ -5,10 +5,10 @@ from all_functions import Extract_by_name, Extract_the_shit2
 import glob
 import os
 import pandas as pd
-
-urban_names=['MYJ_Ustar_20_SLUC','MYJ_Default_BEM'] #,'MYJ_Default_BEM']
+from sklearn.metrics import mean_absolute_error
+urban_names=['MYJ_Default_No_Urb','MYJ_Default_SLUC'] #,'MYJ_Default_BEM']
 PBLS=["MYJ"]
-simulations_dir='/Users/lmatak/Downloads/URBAN_TIME_SERIES_MAE/with_scaling/'
+simulations_dir='/Users/lmatak/Downloads/all/URBAN_TIME_SERIES_MAE/with_scaling/'
 
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
 
@@ -166,12 +166,23 @@ real_data = []
 row=0
 col=0
 for_mae=[]
-cams='CAMS416_WSPD'
+cams='CAMS403_WSPD'
 
 for month in months:
-        real_winds=get_real_data(cams[0:-5],month)
-        axes[row,col].plot(moving_average(real_winds,6),label='obs',linewidth=3,color='black')
-        # axes[row,col].plot(real_winds,label='obs',linewidth=3,color='black')
+        real_winds=np.array(get_real_data(cams[0:-5],month))
+        a=check_numbers(real_winds)
+        print(month,a)
+        if len(a)==len(real_winds):
+            continue
+        if len(a)>0:
+            mask = np.ones(len(real_winds), dtype=bool)
+            mask[a] = False
+
+            # print(month,a)
+
+            real_winds = real_winds[mask,...]
+        # axes[row,col].plot(moving_average(real_winds,6),label='obs',linewidth=3,color='black')
+        axes[row,col].plot(real_winds,label='obs',linewidth=3,color='black')
         some_counter=0
         for urban in urban_names:
             print(urban)
@@ -185,7 +196,8 @@ for month in months:
 
   
             temp_sim=Extract_by_name(sim_data,temp_sim,'Temperature')
-            wspd_sim=Extract_by_name(sim_data,wspd_sim,cams)
+            wspd_sim=np.array(Extract_by_name(sim_data,wspd_sim,cams))
+            
 
             if (month== 'Jan' or month=='Feb' or month=='Mar' or month=='Dec'):
 
@@ -193,25 +205,28 @@ for month in months:
             else:
 
                 wspd_sim=wspd_sim[5:-1]
+
+            if len(a)>0:
+                wspd_sim=wspd_sim[mask,...]    
             
 
             # if month == 'Feb' and urban=='BEP':
             #     continue
             # print(real_winds,wspd_sim)
             for_mae.append(calculate_mae(wspd_sim,real_winds))
-            print(row,col)
+
             correlation=get_corr_coeff((real_winds),(wspd_sim))
 
-            axes[row,col].annotate((urban,str(round(correlation, 2))),
+            axes[row,col].annotate((urban+' MAE ',str(round(mean_absolute_error(wspd_sim,real_winds), 2))),
             xy=(1, 1), xycoords='data',
             xytext=(150,-50+some_counter*(-15) ), textcoords='offset points',
             
             horizontalalignment='right', verticalalignment='bottom')
 
-            print('corr',str(round(correlation, 2)))
 
-            axes[row,col].plot(moving_average(wspd_sim,6),label=urban[4:],linewidth=2,)
-            # axes[row,col].plot(wspd_sim,label=urban[4:],linewidth=2,)
+
+            # axes[row,col].plot(moving_average(wspd_sim,6),label=urban[4:],linewidth=2,)
+            axes[row,col].plot(wspd_sim,label=urban[4:],linewidth=2,)
 
             axes[row,col].set_title(month)
             axes[row,col].set_ylim(0,20)

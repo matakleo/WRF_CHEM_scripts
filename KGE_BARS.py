@@ -31,11 +31,12 @@ def avg_values(d, key):
     a=check_numbers(values)
 
     if len(a)>0:
-        print('indices where no num:',a)
-        print('lenght of vals b4 correction:',len(values))
-    values = [e for e in values if e is not None]
-    if len(a)>0:
-        print('lenght of vals after correction:',len(values))
+        # print('indices where no num:',a)
+        print('so here should some nums be missing',values)
+        # print('lenght of vals b4 correction:',len(values))
+    # values = [e for e in values if e is not None]
+    # if len(a)>0:
+        # print('lenght of vals after correction:',len(values))
     
     # if len(a)>0:
     #     for i in a:
@@ -122,7 +123,7 @@ def calculate_mae(simulation, real):
     for index, a in enumerate(real):
         # print(index,a)
         if index in check_numbers(real):
-            # print('Im skipping?')
+            print('Im skipping?')
             continue
         p = simulation[index]
         error += abs(a - p)
@@ -154,7 +155,7 @@ urb=['MYJ_Default_No_Urb','MYJ_Default_BEM','MYJ_Default_SLUC','MYJ_Ustar_10_SLU
 # urb=['MYJ_Default_BEM','MYJ_Decreased_Buildings',]
 
 # HOW MANY MONTHS IN CALCULATION, SHOULD ALWAYS BE 12, UNLESS DEBUGGING !!!
-months = 1
+months = 12
 
 # CAMS stations taken into consideration
 cams_stations=['CAMS404_WSPD','CAMS1052_WSPD','CAMS695_WSPD',\
@@ -206,7 +207,7 @@ for urban_simulation in urb:
 
             ################################################################
             ###### to test out some specific month, set the variable 'months' to 1, and then edit here:####
-            month_number=1
+            # month_number=1
 
 
             # empty the list for winds for each iteration
@@ -234,12 +235,11 @@ for urban_simulation in urb:
 
             #get the real data
             # print(cams_name_for_real_data,month_name_for_real_data)
-            real_data=get_real_data(cams_name_for_real_data,month_name_for_real_data)
+            real_data=np.array(get_real_data(cams_name_for_real_data,month_name_for_real_data))
             # print(real_data)
 
             # print(len(simulation_month),len(real_data))
-#             #calculate the MAE between sim and real data
-            mae=calculate_mae(simulation_month, real_data)
+
             # print(real_data.tolist())
             a=check_numbers(real_data)
             if len(a)==len(real_data):
@@ -247,15 +247,16 @@ for urban_simulation in urb:
             if len(a)>0:
                 mask = np.ones(len(real_data), dtype=bool)
                 mask[a] = False
-                print('before masking',real_data)
                 real_data = real_data[mask,...]
-                print('after masking',real_data)
-                print(simulation_month)
+                print(urban_simulation,month_name_for_real_data,cams_name_for_real_data,a,)
                 simulation_month=simulation_month[mask,...]
+            #             #calculate the MAE between sim and real data
+            mae=calculate_mae(simulation_month, real_data)    
+            # print('len of real',len(real_data),'len of sim',len(simulation_month))
             
 
 
-            kge, r, alpha, beta = he.evaluator(he.kge, simulation_month, real_data.tolist())
+            kge, r, alpha, beta = he.evaluator(he.kge, simulation_month.tolist(), real_data.tolist())
 
 
             # print(mae)
@@ -263,7 +264,7 @@ for urban_simulation in urb:
 
             #append the mae seperately to different keys, for each month!
             #this is what will be getting plotted!!
-            error_dict[cams_name_for_real_data].append(kge)
+            error_dict[cams_name_for_real_data].append(mae)
 
             #for debugging, this print line is very useful
             # print(urban_simulation,month_number,cams_station,mae)
@@ -272,10 +273,10 @@ for urban_simulation in urb:
             ##THIS IS USED FOR AVERAGING OUT ALL THE CAMS STATIONS!!##
             #if the key exists, e.g. MYJ_Increased_Buildings, just append the mae, if not create the key and append the mae
             if urban_simulation in dict_for_averaging_all_cams:
-                dict_for_averaging_all_cams[urban_simulation].append(kge)
+                dict_for_averaging_all_cams[urban_simulation].append(mae)
             else:
                 dict_for_averaging_all_cams[urban_simulation]=[]
-                dict_for_averaging_all_cams[urban_simulation].append(kge)
+                dict_for_averaging_all_cams[urban_simulation].append(mae)
 
             
 
