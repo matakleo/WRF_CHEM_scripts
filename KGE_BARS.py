@@ -264,7 +264,7 @@ for urban_simulation in urb:
 
             #append the mae seperately to different keys, for each month!
             #this is what will be getting plotted!!
-            error_dict[cams_name_for_real_data].append(mae)
+            error_dict[cams_name_for_real_data].append(kge)
 
             #for debugging, this print line is very useful
             # print(urban_simulation,month_number,cams_station,mae)
@@ -273,10 +273,10 @@ for urban_simulation in urb:
             ##THIS IS USED FOR AVERAGING OUT ALL THE CAMS STATIONS!!##
             #if the key exists, e.g. MYJ_Increased_Buildings, just append the mae, if not create the key and append the mae
             if urban_simulation in dict_for_averaging_all_cams:
-                dict_for_averaging_all_cams[urban_simulation].append(mae)
+                dict_for_averaging_all_cams[urban_simulation].append(kge)
             else:
                 dict_for_averaging_all_cams[urban_simulation]=[]
-                dict_for_averaging_all_cams[urban_simulation].append(mae)
+                dict_for_averaging_all_cams[urban_simulation].append(kge)
 
             
 
@@ -403,7 +403,7 @@ plt.setp(plt.gcf().get_axes(), xticks=[])
 h, l = ax[0,0].get_legend_handles_labels()
 plt.rc('legend',fontsize=13)
 # legend_names1=legend_names
-
+fig.suptitle('KGE')
 # ax[0,2].axis("off")
 # ax[0,2].legend(h, l,ncol=2,frameon=False) 
 

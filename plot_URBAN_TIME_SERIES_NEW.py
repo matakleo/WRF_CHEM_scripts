@@ -6,7 +6,7 @@ import glob
 import os
 import pandas as pd
 from sklearn.metrics import mean_absolute_error
-urban_names=['MYJ_Default_No_Urb','MYJ_Default_SLUC'] #,'MYJ_Default_BEM']
+urban_names=['MYJ_Default_No_Urb','MYJ_CHEM_No_Urb'] #,'MYJ_Default_BEM']
 PBLS=["MYJ"]
 simulations_dir='/Users/lmatak/Downloads/all/URBAN_TIME_SERIES_MAE/with_scaling/'
 
@@ -155,8 +155,8 @@ def get_real_data(cams_station,month):
 
 
 # months=['Jan','Feb']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-months=['Jan','Feb','Mar','Apr','May','Jun']
-# months=['Jul','Aug','Sep','Oct','Nov','Dec']
+# months=['Jan','Feb','Mar','Apr','May','Jun']
+months=['Jul','Aug','Sep','Oct','Nov','Dec']
 
 fig, axes = plt.subplots(nrows=2, ncols=3,figsize=(16,9)) 
 fig.subplots_adjust(hspace=0.35)
@@ -166,7 +166,7 @@ real_data = []
 row=0
 col=0
 for_mae=[]
-cams='CAMS403_WSPD'
+cams='CAMS1_WSPD'
 
 for month in months:
         real_winds=np.array(get_real_data(cams[0:-5],month))
@@ -206,22 +206,22 @@ for month in months:
 
                 wspd_sim=wspd_sim[5:-1]
 
-            if len(a)>0:
-                wspd_sim=wspd_sim[mask,...]    
+            # if len(a)>0:
+            #     wspd_sim=wspd_sim[mask,...]    
             
 
             # if month == 'Feb' and urban=='BEP':
             #     continue
             # print(real_winds,wspd_sim)
-            for_mae.append(calculate_mae(wspd_sim,real_winds))
+            # for_mae.append(calculate_mae(wspd_sim,real_winds))
 
-            correlation=get_corr_coeff((real_winds),(wspd_sim))
+            # correlation=get_corr_coeff((real_winds),(wspd_sim))
 
-            axes[row,col].annotate((urban+' MAE ',str(round(mean_absolute_error(wspd_sim,real_winds), 2))),
-            xy=(1, 1), xycoords='data',
-            xytext=(150,-50+some_counter*(-15) ), textcoords='offset points',
+            # axes[row,col].annotate((urban+' MAE ',str(round(mean_absolute_error(wspd_sim,real_winds), 2))),
+            # xy=(1, 1), xycoords='data',
+            # xytext=(150,-50+some_counter*(-15) ), textcoords='offset points',
             
-            horizontalalignment='right', verticalalignment='bottom')
+            # horizontalalignment='right', verticalalignment='bottom')
 
 
 

@@ -125,7 +125,7 @@ def calculate_mae(simulation, real):
         error += abs(a - p)
         count += 1
 
-    
+    print('len of simulation',len(simulation),'count',count)
 
 
     if count==0:
@@ -142,16 +142,16 @@ fig.subplots_adjust(top=0.85,hspace=0.2)
 
 # Calculate the mean absolute error for each month
 
-simulations_dir='/Users/lmatak/Downloads/WRF_CHEM_TIME_SERIES/'
+simulations_dir='/Users/lmatak/Downloads/all/WRF_CHEM_TIME_SERIES/'
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
-urb=['BEM','No_Urb','SLUC']
+urb=['BEM','No_Urb']
 
 # urb=['MYJ_Default_BEM','MYJ_Decreased_Buildings',]
 
 # HOW MANY MONTHS IN CALCULATION, SHOULD ALWAYS BE 12, UNLESS DEBUGGING !!!
-months = 3
+months = 12
 
-CHEM_ELE='carbon_monoxide'
+CHEM_ELE='nitrogen_dioxide'
 
 # CAMS stations taken into consideration
 cams_stations=['CAMS404_WSPD','CAMS1052_WSPD','CAMS695_WSPD',\
@@ -276,7 +276,7 @@ for urban_simulation in urb:
 
             
             
-            print(cams_name_for_real_data,month_name_for_real_data,CHEM_ELE,real_data)
+            # print(cams_name_for_real_data,month_name_for_real_data,CHEM_ELE,real_data)
             # print(len(real_data))
             # print(len(simulation_month))
 
@@ -318,10 +318,10 @@ for urban_simulation in urb:
     col=0
 
     if run_number==0:
-        print(cams_stations)
+        # print(cams_stations)
         for cams in cams_stations:
-            print(cams[:-(len(CHEM_ELE)+1)])
-            print('row',row,'col',col)
+            # print(cams[:-(len(CHEM_ELE)+1)])
+            # print('row',row,'col',col)
             if row==1 and col==2:
                 row=2
                 col=0
@@ -343,7 +343,7 @@ for urban_simulation in urb:
     else:
         bar_x_offset = [bar_x + run_number]  
         for cams in cams_stations:
-            print(cams[:-(len(CHEM_ELE)+1)])
+            # print(cams[:-(len(CHEM_ELE)+1)])
             if row==1 and col==2:
                 row=2
                 col=0

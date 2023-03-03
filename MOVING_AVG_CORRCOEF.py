@@ -12,12 +12,12 @@ def moving_average(arr, window_size):
     """
     Calculates the moving average of an array with a given window size.
     """
-    print(arr)
+    # print(arr)
     arr = [e for e in arr if e is not None]
     weights = np.repeat(1.0, window_size) / window_size
-    try:
-        ma = np.convolve(arr, weights, 'valid')
-    except: return
+    # try:
+    ma = np.convolve(arr, weights, 'valid')
+    # except: return
     return ma
 
 # Example usage:
@@ -65,7 +65,7 @@ def avg_values(d, key):
     values = d[key]
     # print('vals in avg',values)
     # print('len of vals',len(values))
-    values = [e for e in values if e is not None]
+    # values = [e for e in values if e is not None]
 
     if len(values)==0:
         return
@@ -148,7 +148,7 @@ fig, ax = plt.subplots(nrows=3, ncols=3,figsize=(19.3, 9.7))
 
 # Calculate the mean absolute error for each month
 
-simulations_dir='/Users/lmatak/Downloads/URBAN_TIME_SERIES_MAE/with_scaling/'
+simulations_dir='/Users/lmatak/Downloads/all/URBAN_TIME_SERIES_MAE/with_scaling/'
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
 
 
@@ -219,8 +219,8 @@ for urban_simulation in urb:
             
             #get the SIMULATED data for specific month and specific station
             #actual wspd points from simulation
-            print(sim_data[month_number],wspd_sim,cams_station)
-            simulation_month=(Extract_by_name(sim_data[month_number],wspd_sim,cams_station))
+            # print(sim_data[month_number],wspd_sim,cams_station)
+            simulation_month=np.array((Extract_by_name(sim_data[month_number],wspd_sim,cams_station)))
 
 
             
@@ -239,12 +239,22 @@ for urban_simulation in urb:
             # print(month_name_for_real_data)
             
             #get the real data
-            real_data=get_real_data(cams_name_for_real_data,month_name_for_real_data)
+            real_data=np.array(get_real_data(cams_name_for_real_data,month_name_for_real_data))
             # print('realdata',real_data)
+            a=check_numbers(real_data)
+            if len(a)==len(real_data):
+                continue
+            if len(a)>0:
+                mask = np.ones(len(real_data), dtype=bool)
+                mask[a] = False
+                real_data = real_data[mask,...]
+                print(urban_simulation,month_name_for_real_data,cams_name_for_real_data,a,)
+                simulation_month=simulation_month[mask,...]
             
-            string_indices = [i for i, x in enumerate(real_data) if isinstance(x, str)]
+            # string_indices = [i for i, x in enumerate(real_data) if isinstance(x, str)]
 
-            real_data[string_indices] = None
+            # real_data[string_indices] = None
+
             # np.corrcoef(x[mask], y[mask], rowvar=False)[0, 1]
             # real_data=np.ma.masked_invalid(real_data.astype(np.nan))
             # real_data = np.where(mask, np.nan)

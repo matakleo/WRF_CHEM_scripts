@@ -6,9 +6,9 @@ import glob
 import os
 import pandas as pd
 
-urban_names=['BEM','No_Urb','SLUC'] #,'MYJ_Default_BEM']
+urban_names=['BEM','No_Urb'] #,'MYJ_Default_BEM']
 PBLS=["MYJ"]
-simulations_dir='/Users/lmatak/Downloads/WRF_CHEM_TIME_SERIES/'
+simulations_dir='/Users/lmatak/Downloads/all/WRF_CHEM_TIME_SERIES/'
 
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
 
@@ -152,8 +152,9 @@ def get_real_data_chem(cams_station,month,chem_name):
 
 
 # months=['Jan','Feb']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-# months=['Jan','Feb','Mar','Apr','May','Jun']
-months=['Oct','Mar','Feb'] #,'Oct','Nov','Dec']
+months=['Jan','Feb','Jun','Aug','Sep','Oct']
+# months=['Jul','Aug','Sep','Oct','Nov','Dec']
+# months=['Oct','Mar','Feb'] #,'Oct','Nov','Dec']
 
 fig, axes = plt.subplots(nrows=2, ncols=3,figsize=(16,10)) 
 fig.subplots_adjust(hspace=0.35)
@@ -164,9 +165,9 @@ row=0
 col=0
 for_mae=[]
 # chem_comp='wind'
-chem_comp='nitrogen_dioxide'
+chem_comp='wind'
 
-cams='CAMS1_'+chem_comp
+cams='CAMS409_'+chem_comp
 
 for month in months:
 
@@ -175,13 +176,13 @@ for month in months:
 
         a=check_numbers(real_winds)
         real_winds[a]=None
-        if chem_comp!='wind'or'temperature':
-            real_winds=real_winds[24:]
+        # if chem_comp!='wind'or'temperature':
+        #     real_winds=real_winds[24:]
         axes[row,col].plot(real_winds,label='obs',linewidth=3,color='black')
         some_counter=0
         for urban in urban_names:
             sim_data=simulations_dir+'/'+urban+'/'+urban+"_"+month+'.csv'
-            print(sim_data)
+            # print(sim_data)
 
             temp_sim=[]
             wspd_sim=[]
@@ -196,7 +197,7 @@ for month in months:
             if chem_comp=='carbon_monoxide':
                 wspd_sim=np.array(wspd_sim)/1000
             
-            print(sim_data,wspd_sim,cams)
+            print(len(wspd_sim),sim_data,cams)
 
             if (month== 'Jan' or month=='Feb' or month=='Mar' or month=='Dec'):
 
@@ -220,8 +221,8 @@ for month in months:
             # print('corr',str(round(correlation, 2)))
 
             # axes[row,col].plot(moving_average(wspd_sim,6),label=urban[4:],linewidth=2,)
-            if chem_comp!='wind'or'temperature':
-                wspd_sim=wspd_sim[24:]
+            # if chem_comp!='wind'or'temperature':
+            #     wspd_sim=wspd_sim[24:]
             axes[row,col].plot(wspd_sim,label=urban,linewidth=2,)
 
 
@@ -241,7 +242,7 @@ for month in months:
             # print('REAL DATA:',real_data)
 
 # plt.legend(['BEM','cd_2.0'])
-print(np.mean(for_mae))
+# print(np.mean(for_mae))
 fig.suptitle(cams,size=20)
 
 # plt.bar(['wrf','log'],[2.827,2.9043])
