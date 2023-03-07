@@ -6,7 +6,7 @@ import glob
 import os
 import pandas as pd
 
-urban_names=['BEM','No_Urb'] #,'MYJ_Default_BEM']
+urban_names=['No_Urb','BEM','SLUC',] #,'MYJ_Default_BEM']
 PBLS=["MYJ"]
 simulations_dir='/Users/lmatak/Downloads/all/WRF_CHEM_TIME_SERIES/'
 
@@ -152,8 +152,8 @@ def get_real_data_chem(cams_station,month,chem_name):
 
 
 # months=['Jan','Feb']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-months=['Jan','Feb','Jun','Aug','Sep','Oct']
-# months=['Jul','Aug','Sep','Oct','Nov','Dec']
+# months=['Jan','Feb','Mar','Apr','May','Jun']
+months=['Jul','Aug','Sep','Oct','Nov','Dec']
 # months=['Oct','Mar','Feb'] #,'Oct','Nov','Dec']
 
 fig, axes = plt.subplots(nrows=2, ncols=3,figsize=(16,10)) 
@@ -165,9 +165,9 @@ row=0
 col=0
 for_mae=[]
 # chem_comp='wind'
-chem_comp='wind'
+chem_comp='pm25'
 
-cams='CAMS409_'+chem_comp
+cams='CAMS403_'+chem_comp
 
 for month in months:
 
@@ -178,6 +178,7 @@ for month in months:
         real_winds[a]=None
         # if chem_comp!='wind'or'temperature':
         #     real_winds=real_winds[24:]
+        real_winds=real_winds[24:]
         axes[row,col].plot(real_winds,label='obs',linewidth=3,color='black')
         some_counter=0
         for urban in urban_names:
@@ -205,6 +206,9 @@ for month in months:
             else:
 
                 wspd_sim=wspd_sim[5:-1]
+            wspd_sim=wspd_sim[24:]
+            
+
             
 
             # if month == 'Feb' and urban=='BEP':

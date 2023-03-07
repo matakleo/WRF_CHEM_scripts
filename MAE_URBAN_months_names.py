@@ -143,14 +143,15 @@ fig.subplots_adjust(top=0.85,hspace=0.2)
 
 simulations_dir='/Users/lmatak/Downloads/all/URBAN_TIME_SERIES_MAE/with_scaling/'
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
-urb=['MYJ_Default_No_Urb','MYJ_Default_BEM','MYJ_Default_SLUC','MYJ_Ustar_10_SLUC', \
-     'MYJ_Ustar_20_SLUC','MYJ_Ustar_5_SLUC','MYJ_Increased_Buildings','MYJ_Decreased_Buildings','MYJ_cd_0.5','MYJ_cd_2.0','MYJ_cd_3.0','MYJ_cd_4.0',\
-         'MYJ_Mom_0.2','MYJ_Mom_0.5','MYJ_Mom_2.0','MYJ_Mom_5.0' ]
+urb=['MYJ_Default_No_Urb', 'MYJ_Default_BEM','MYJ_Default_SLUC','MYJ_Ustar_10_SLUC', \
+      'MYJ_Ustar_20_SLUC','MYJ_Ustar_5_SLUC','MYJ_Increased_Buildings','MYJ_Decreased_Buildings','MYJ_cd_0.5','MYJ_cd_2.0','MYJ_cd_3.0','MYJ_cd_4.0',\
+          'MYJ_Mom_0.2','MYJ_Mom_0.5','MYJ_Mom_2.0','MYJ_Mom_5.0' ]
 
 # urb=['MYJ_Default_BEM','MYJ_Decreased_Buildings',]
 
 # HOW MANY MONTHS IN CALCULATION, SHOULD ALWAYS BE 12, UNLESS DEBUGGING !!!
 months = 12
+months =['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 
 # CAMS stations taken into consideration
 cams_stations=['CAMS404_WSPD','CAMS1052_WSPD','CAMS695_WSPD',\
@@ -192,10 +193,11 @@ for urban_simulation in urb:
     for file in glob.glob(turb_sim_dir+'/*.csv'):
             sim_data.append(file)
     sim_data.sort()
+    # print(sim_data)
 
     #once we have all the simulated data gathered in a list, we loop through the months
     #variable months is just a number, and should always be set to 12
-    for month_number in range(months):
+    for month in months:
         #the mae calculation starts from zero for each month
         mae=0
         for cams_station in cams_stations:
@@ -210,14 +212,17 @@ for urban_simulation in urb:
             
             #get the SIMULATED data for specific month and specific station
             #actual wspd points from simulation
+            for i in range(len(sim_data)):
+                if month in sim_data[i]:
+                    simulation_month=(Extract_by_name(sim_data[i],wspd_sim,cams_station))
 
-            simulation_month=(Extract_by_name(sim_data[month_number],wspd_sim,cams_station))
+            
 
 
             
             #for the real data, parse the name of the cams station, and the name of the month
             cams_name_for_real_data=cams_station[0:-5]
-            month_name_for_real_data=sim_data[month_number][-7:-4]
+            month_name_for_real_data=month
             # print(sim_data[month_number])
 
             ##this is necessart to adjust the difference between UTC and WRF time
