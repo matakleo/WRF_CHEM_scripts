@@ -2,7 +2,7 @@
 from audioop import avg
 from netCDF4 import Dataset
 from numpy.core.fromnumeric import shape, size, transpose
-from wrf import getvar,interplevel,latlon_coords
+from wrf import getvar,interplevel,latlon_coords,rh
 import numpy as np
 import math
 import csv
@@ -82,10 +82,11 @@ keys_for_dict = ['CAMS404','CAMS1052','CAMS695','CAMS53','CAMS409','CAMS8','CAMS
 measuring_stations=[CAMS404_pos,CAMS1052_pos,CAMS695_pos,CAMS53_pos,CAMS409_pos,CAMS8_pos,CAMS416_pos,CAMS1_pos,\
 CAMS603_pos,CAMS403_pos,CAMS167_pos,CAMS1029_pos,CAMS169_pos,CAMS670_pos,CAMS1020_pos,CAMS1049_pos] 
 
-keys_for_chems=['WSPD','temperature','pm25','ozone','nitric_oxide','nitrogen_dioxide','carbon_monoxide']
+keys_for_chems=['WSPD','temperature','pm25','ozone','nitric_oxide','nitrogen_dioxide','carbon_monoxide','sulfur_dioxide','relative_humidity']
 
-months=['Oct','Feb','Mar'] #,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-urb_dirs=['BEM','No_Urb']
+#months=['Oct','Feb','Mar'] #,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] #,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+urb_dirs=['No_Urb'] #,'No_Urb']
 
 
 time_idx=0
@@ -153,17 +154,33 @@ for month in months:
 
             carbon_monoxide=getvar(data, "co",time_idx)
             carbon_monoxide=carbon_monoxide[0]
-
+            #print('carbon mono shape',np.shape(carbon_monoxide))
+            print('----------------------')
+            print('carbon mono',carbon_monoxide)
+            print('----------------------')
             #chem variabsl#
             pm_2_5 = getvar(data, "PM2_5_DRY",time_idx)
             pm_2_5=pm_2_5[0]
 
+            pm10=getvar(data, "PM10",time_idx)
+            pm10=pm10[0]
+
             ozone=getvar(data, "o3",time_idx)
             ozone=ozone[0]
+
+            qv=getvar(data,"Q2",time_idx)
+
+
+            Pressure=getvar(data,"PSFC",time_idx)
+
 
             nitric_oxide=getvar(data, "no",time_idx)
             nitric_oxide=nitric_oxide[0]
 
+
+            sulfur_dioxide=getvar(data, "so2",time_idx) 
+            sulfur_dioxide=sulfur_dioxide[0]
+            
             nitric_dioxide=getvar(data, "no2",time_idx)
             nitric_dioxide=nitric_dioxide[0]
             #met variabls#
@@ -173,6 +190,10 @@ for month in months:
             outdoor_temperature=getvar(data, "T2",time_idx)
             stations_counter=0
             two_same_stations_counter=0
+            
+            #rel hum calculation
+            rel_hum=rh(qv,Pressure,outdoor_temperature)
+
             for measur_station in measuring_stations:
 
                 wspd=math.sqrt(u10[measur_station]**2+v10[measur_station]**2)
@@ -256,6 +277,7 @@ for month in months:
                     wspd=wspd[measur_station]
 
 
+                pm10_per_file=(float(pm10[measur_station]))
                 pm_per_file=(float(pm_2_5[measur_station]))
             #     ##1000 multiplier to go from ppm to ppb
                 no_per_file=(1000*float(nitric_oxide[measur_station]))
@@ -264,6 +286,8 @@ for month in months:
                 # print('ozone',1000*float(ozone[measur_station]))
                 wspd_per_file=(2.23693629*float(wspd))
                 ## CO IS WRONG!!!
+                sulfur_dioxide_per_file=1000*float(sulfur_dioxide[measur_station])
+                print('measur station',measur_station,'co on mesaru stat',float(carbon_monoxide[measur_station]))
                 carbon_monoxide_per_file=(1000*float(carbon_monoxide[measur_station]))
 
                 surface_temperature_per_file=(float(outdoor_temperature[measur_station]*9/5-459.67))
@@ -273,10 +297,12 @@ for month in months:
                 stations_dict[keys_for_dict[stations_counter]]['temperature'].append(surface_temperature_per_file)
 
                 stations_dict[keys_for_dict[stations_counter]]['pm25'].append(pm_per_file)
+                stations_dict[keys_for_dict[stations_counter]]['relative_humidity'].append(rel_hum[measur_station])
                 stations_dict[keys_for_dict[stations_counter]]['ozone'].append(ozone_per_file)
                 stations_dict[keys_for_dict[stations_counter]]['nitric_oxide'].append(no_per_file)
                 stations_dict[keys_for_dict[stations_counter]]['nitrogen_dioxide'].append(no2_per_file)
                 stations_dict[keys_for_dict[stations_counter]]['carbon_monoxide'].append(carbon_monoxide_per_file)
+                stations_dict[keys_for_dict[stations_counter]]['sulfur_dioxide'].append(sulfur_dioxide_per_file)
 
 
                 stations_counter+=1
