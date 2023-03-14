@@ -1,18 +1,23 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import ticker
 from all_functions import Extract_by_name, Extract_the_shit2
 import glob
 import os
 import pandas as pd
 
-urban_names=['No_Urb','BEM','SLUC',] #,'MYJ_Default_BEM']
+urban_names=['No_urb','SLUC','SLUC_ust10'] #,'MYJ_Default_BEM']
 PBLS=["MYJ"]
 simulations_dir='/Users/lmatak/Downloads/all/WRF_CHEM_TIME_SERIES/'
 
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
 
-
+def check_longer(sim,real):
+    if len(sim)>=len(real):
+        a=len(real)
+    else:a=len(sim)
+    return a
 
 def get_corr_coeff(real_data,sim_data):
     real_data_cleaned=np.copy(real_data)
@@ -80,18 +85,21 @@ def calculate_mae(simulation, real):
     """
     error=0
     count=0
+    real_tmp=np.copy(real)
+    sim_tmp=np.copy(simulation)
+    real_tmp=real_tmp[0:len(sim_tmp)]
 
-    for index, a in enumerate(real):
+    for index, a in enumerate(real_tmp):
         # print(index,a)
-        if index in check_numbers(real):
+        if index in check_numbers(real_tmp):
             # print('Im skipping?')
             continue
-        p = simulation[index]
+        p = sim_tmp[index]
         error += abs(a - p)
         count += 1
 
-        if count==0:
-            return
+    if count==0:
+        return -1
     return error / count
 
 
@@ -153,11 +161,11 @@ def get_real_data_chem(cams_station,month,chem_name):
 
 # months=['Jan','Feb']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 # months=['Jan','Feb','Mar','Apr','May','Jun']
-months=['Jul','Aug','Sep','Oct','Nov','Dec']
-# months=['Oct','Mar','Feb'] #,'Oct','Nov','Dec']
+# months=['Jul','Aug','Sep','Oct','Nov','Dec']
+months=['Aug','Dec','Jan','Oct','May','Nov']
 
-fig, axes = plt.subplots(nrows=2, ncols=3,figsize=(16,10)) 
-fig.subplots_adjust(hspace=0.35)
+fig, axes = plt.subplots(nrows=2, ncols=3,figsize=(16,9)) 
+fig.subplots_adjust(hspace=0.55,bottom=0.2)
 
 real_data = []
 
@@ -167,20 +175,29 @@ for_mae=[]
 # chem_comp='wind'
 chem_comp='pm25'
 
-cams='CAMS403_'+chem_comp
+cams='CAMS8_'+chem_comp
 
 for month in months:
 
-        real_winds=get_real_data_chem(cams[0:-len(chem_comp)],month,chem_comp)
+        real_winds=np.array(get_real_data_chem(cams[0:-len(chem_comp)],month,chem_comp))
+        
         # axes[row,col].plot(moving_average(real_winds,6),label='obs',linewidth=3,color='black')
 
-        a=check_numbers(real_winds)
-        real_winds[a]=None
+        
         # if chem_comp!='wind'or'temperature':
         #     real_winds=real_winds[24:]
-        real_winds=real_winds[24:]
+        # real_winds=real_winds[24:]
+        print(real_winds)
+        a=check_numbers(real_winds)
+        real_winds[a]=None
+        print(a)
+        
+        # a=check_numbers(real_winds)
+        # real_winds[a]=None
         axes[row,col].plot(real_winds,label='obs',linewidth=3,color='black')
         some_counter=0
+        axes[row,col].set_title(month)
+        # axes[row,col].set_ylim([0,100])
         for urban in urban_names:
             sim_data=simulations_dir+'/'+urban+'/'+urban+"_"+month+'.csv'
             # print(sim_data)
@@ -194,11 +211,11 @@ for month in months:
             temp_sim=Extract_by_name(sim_data,temp_sim,'Temperature')
             if chem_comp=='wind':
                 cams=cams[0:-len(chem_comp)]+'WSPD'
-            wspd_sim=Extract_by_name(sim_data,wspd_sim,cams)
+            wspd_sim=np.array(Extract_by_name(sim_data,wspd_sim,cams))
             if chem_comp=='carbon_monoxide':
                 wspd_sim=np.array(wspd_sim)/1000
             
-            print(len(wspd_sim),sim_data,cams)
+            # print(len(wspd_sim),sim_data,cams)
 
             if (month== 'Jan' or month=='Feb' or month=='Mar' or month=='Dec'):
 
@@ -206,32 +223,39 @@ for month in months:
             else:
 
                 wspd_sim=wspd_sim[5:-1]
-            wspd_sim=wspd_sim[24:]
+            # wspd_sim=wspd_sim[24:]
             
 
+            axes[row,col].plot(wspd_sim,label=urban,linewidth=2,)
+
+
+            axes[row,col].xaxis.set_major_locator(ticker.NullLocator())
+            len_of_shortest=check_longer(wspd_sim,real_winds)
+            print(len_of_shortest)
+            wspd_sim=wspd_sim[0:len_of_shortest]
+            real_winds=real_winds[0:len_of_shortest]
+            if len(a)>0:
+
+                a=check_numbers(real_winds)
+                mask = np.ones(len(real_winds), dtype=bool)
+                mask[a] = False
+                real_winds = real_winds[mask,...]
+                wspd_sim=wspd_sim[mask,...]
+            axes[row,col].annotate((urban,str(round(calculate_mae(wspd_sim,real_winds), 2))),
+            xy=(-0.2, -0.2), xycoords='axes points',
+            xytext=(150,-20+some_counter*(-25) ), textcoords='offset points',
             
-
-            # if month == 'Feb' and urban=='BEP':
-            #     continue
-            # print(real_winds,wspd_sim)
-
-
-            # axes[row,col].annotate((urban,str(round(correlation, 2))),
-            # xy=(1, 1), xycoords='data',
-            # xytext=(150,-50+some_counter*(-25) ), textcoords='offset points',
-            
-            # horizontalalignment='right', verticalalignment='bottom')
+            horizontalalignment='right', verticalalignment='bottom')
 
             # print('corr',str(round(correlation, 2)))
 
             # axes[row,col].plot(moving_average(wspd_sim,6),label=urban[4:],linewidth=2,)
             # if chem_comp!='wind'or'temperature':
             #     wspd_sim=wspd_sim[24:]
-            axes[row,col].plot(wspd_sim,label=urban,linewidth=2,)
+            
 
 
-            axes[row,col].set_title(month)
-            # axes[row,col].set_ylim(0,100)
+            
             some_counter+=1
 
         col+=1

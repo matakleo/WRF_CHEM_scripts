@@ -2,7 +2,7 @@
 from audioop import avg
 from netCDF4 import Dataset
 from numpy.core.fromnumeric import shape, size, transpose
-from wrf import getvar,interplevel,latlon_coords
+from wrf import getvar,interplevel,latlon_coords,rh
 import numpy as np
 import math
 import csv
@@ -81,9 +81,9 @@ keys_for_dict = ['CAMS404','CAMS1052','CAMS695','CAMS53','CAMS409','CAMS8','CAMS
     'CAMS169','CAMS670','CAMS1020','CAMS1049']
 
 
-keys_for_chems=['WSPD','temperature','pm25','ozone','nitric_oxide','nitrogen_dioxide','carbon_monoxide']
+keys_for_chems=['WSPD','temperature','pm25','ozone','nitric_oxide','nitrogen_dioxide','carbon_monoxide','relative_humidity']
 
-months=['Oct','Feb','Mar'] #,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 urb_dirs=['SLUC']
 
 
@@ -157,6 +157,14 @@ for month in months:
             pm_2_5 = getvar(data, "PM2_5_DRY",time_idx)
             pm_2_5=pm_2_5[0]
 
+            qv=getvar(data,"Q2",time_idx)
+
+
+            Pressure=getvar(data,"PSFC",time_idx)
+
+            pm10 = getvar(data, "PM10",time_idx)
+            pm10=pm10[0]
+            
             ozone=getvar(data, "o3",time_idx)
             ozone=ozone[0]
 
@@ -172,6 +180,9 @@ for month in months:
             outdoor_temperature=getvar(data, "T2",time_idx)
             stations_counter=0
             two_same_stations_counter=0
+            #rel hum calculation
+            rel_hum=rh(qv,Pressure,outdoor_temperature)
+
             for measur_station in measuring_stations:
 
                 wspd=math.sqrt(u10[measur_station]**2+v10[measur_station]**2)
@@ -260,6 +271,7 @@ for month in months:
 
 
                 pm_per_file=(float(pm_2_5[measur_station]))
+                pm10_per_file=(float(pm10[measur_station]))
             #     ##1000 multiplier to go from ppm to ppb
                 no_per_file=(1000*float(nitric_oxide[measur_station]))
                 no2_per_file=(1000*float(nitric_dioxide[measur_station]))
@@ -275,6 +287,7 @@ for month in months:
                 stations_dict[keys_for_dict[stations_counter]]['WSPD'].append(wspd_per_file)
                 stations_dict[keys_for_dict[stations_counter]]['temperature'].append(surface_temperature_per_file)
                 stations_dict[keys_for_dict[stations_counter]]['pm25'].append(pm_per_file)
+                stations_dict[keys_for_dict[stations_counter]]['relative_humidity'].append(float(rel_hum[measur_station]))
                 stations_dict[keys_for_dict[stations_counter]]['ozone'].append(ozone_per_file)
                 stations_dict[keys_for_dict[stations_counter]]['nitric_oxide'].append(no_per_file)
                 stations_dict[keys_for_dict[stations_counter]]['nitrogen_dioxide'].append(no2_per_file)

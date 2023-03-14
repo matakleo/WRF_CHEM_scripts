@@ -27,14 +27,14 @@ my_cmap1.set_bad((0,0,0))
 
 
 # dirs=['BEM_default','BEP_default',]#'clz_1000','clz_100']
-dirs=['Jun_with_Urb_d1','Jun_with_Urb_d3'] #,'BEM_ust_10_in_LSM',]#'clz_1000','clz_100']
+dirs=['no_temp_change','sst_p_2'] #,'BEM_ust_10_in_LSM',]#'clz_1000','clz_100']
 # dirs=['BEM_default','BEM_change_tke_100','BEM_change_mom_5',]
 dir_num=0
 i=0
 file_in_dir=0
 height_lvl=0
 # var_to_plot='TKE'
-var_to_plot='PM2_5_DRY'
+var_to_plot='T2'
 
 
 mid_downtown_lon=-95.3621823
@@ -50,7 +50,7 @@ col=0
 row=0
 for dir in dirs:
     ZNT=[]
-    Input_Dir = '/Users/lmatak/Downloads/URBAN_SCHEME_CONTOURING/'+dir
+    Input_Dir = '/Users/lmatak/Downloads/all/WRF_CHEM_CONTOURING/'+dir
     # Input_Dir = '/Users/lmatak/Downloads/URBAN_SCHEME_CONTOURING/different_times/'+dir
     os.chdir(Input_Dir)
     ncfiles=[]
@@ -85,10 +85,12 @@ for dir in dirs:
 
     total_wind=ozone[height_lvl]
     total_wind_one_lvl_higher=ozone[1]
-    vmin_set=total_wind.min()
+
+    temperature=getvar(Data,'T2',0)
+    vmin_set=300
     vmin_one_lvl_higher=vmin_set
     vmax_one_lvl_higher=total_wind.max()
-    vmax_set=vmax_one_lvl_higher
+    vmax_set=306
     label='WSPD [m/s]'
 
     height = (getvar(Data, "height_agl",timeidx = idx))
@@ -97,34 +99,30 @@ for dir in dirs:
 
     lats1, lons1 = latlon_coords(height[0])
     height=int(np.mean(height[height_lvl]))
+
+   
     
     # total_wind[MASKING!=13]=nan
     # total_wind_one_lvl_higher[MASKING!=13]=nan
 
 
-    print('min wspd=',float(np.min(total_wind)),'max wspd=',float(np.max(total_wind)), 'avg total_wind=',float(np.mean(total_wind)))
-
     
 
-   
-
-    
-
-    ax[0,col].contourf(to_np(lons1),to_np(lats1), (total_wind), 250,  vmin=vmin_set,vmax=vmax_set,     transform=crs.PlateCarree(), 
+    ax[0,col].contourf(to_np(lons1),to_np(lats1), (temperature), 250,  vmin=vmin_set,vmax=vmax_set,     transform=crs.PlateCarree(), 
         cmap=my_cmap1)    
 
     ax[0,col].scatter(mid_downtown_lon,mid_downtown_lat,s=15,c='black',transform=crs.PlateCarree())    
     ax[0,col].scatter(three_dom_lons,three_dom_lats,s=15,c='cyan',transform=crs.PlateCarree())
-    ax[0,col].set_title(dirs[dir_num][4:]+', at: '+str(height)+'m, : '+str(time_of_the_day)+':00 h')
+    ax[0,col].set_title(dirs[dir_num]+', at: '+str(height)+'m, : '+str(time_of_the_day)+':00 h')
     ax[0,col].background_patch.set_facecolor('black')  
 
-    ax[1,col].contourf(to_np(lons1),to_np(lats1), (total_wind_one_lvl_higher), 250,  vmin=vmin_one_lvl_higher,vmax=vmax_one_lvl_higher,     transform=crs.PlateCarree(), 
-        cmap=my_cmap1)    
+    # ax[1,col].contourf(to_np(lons1),to_np(lats1), (temperature), 250,  vmin=vmin_set,vmax=vmax_set,     transform=crs.PlateCarree(), 
+    #     cmap=my_cmap1)    
 
-    ax[1,col].scatter(mid_downtown_lon,mid_downtown_lat,s=15,c='black',transform=crs.PlateCarree())    
-    ax[1,col].scatter(three_dom_lons,three_dom_lats,s=15,c='cyan',transform=crs.PlateCarree())
-    ax[1,col].set_title('at height: '+str(height_one_lvl_more)+'m, at time: '+str(time_of_the_day)+':00 h')
-    ax[1,col].background_patch.set_facecolor('black')  
+    # ax[1,col].scatter(mid_downtown_lon,mid_downtown_lat,s=15,c='black',transform=crs.PlateCarree())    
+    # ax[1,col].scatter(three_dom_lons,three_dom_lats,s=15,c='cyan',transform=crs.PlateCarree())
+    # ax[1,col].set_title('at height: '+str(height_one_lvl_more)+'m, at time: '+str(time_of_the_day)+':00 h')
+    # ax[1,col].background_patch.set_facecolor('black')  
     dir_num+=1
     col+=1
     # if dir_num==3:

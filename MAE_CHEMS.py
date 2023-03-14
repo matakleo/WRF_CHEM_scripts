@@ -49,7 +49,7 @@ def avg_values(d, key):
 
 
     # if len(values)==0:
-    #     return 0
+    #     return 
 
     avg = sum(values) / (len(values))
     return avg
@@ -151,17 +151,17 @@ fig.subplots_adjust(top=0.85,hspace=0.2)
 
 simulations_dir='/Users/lmatak/Downloads/all/WRF_CHEM_TIME_SERIES/'
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
-urb=['No_Urb','BEM','SLUC']
+urb=['No_Urb','BEM','SLUC','SLUC_ust10']
 
 
 # urb=['MYJ_Default_BEM','MYJ_Decreased_Buildings',]
 
 # HOW MANY MONTHS IN CALCULATION, SHOULD ALWAYS BE 12, UNLESS DEBUGGING !!!
 months = 12
-# months =['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-months =['Jan','Feb','Mar','Jun','Aug','Sep','Oct',]
+months =['Aug','Dec','Jan','Jul','Jun','May','Nov','Oct','Sep'] #,'Jul','Aug','Sep','Oct','Nov','Dec']
+# months =['Jan','Feb','Mar','Jun','Aug','Sep','Oct',]
 
-CHEM_ELE='nitrogen_dioxide'
+CHEM_ELE='carbon_monoxide'
 
 # CAMS stations taken into consideration
 cams_stations=['CAMS404_WSPD','CAMS1052_WSPD','CAMS695_WSPD',\
@@ -184,6 +184,10 @@ elif CHEM_ELE=='pm25':
 elif CHEM_ELE=='carbon_monoxide':
     cams_stations=['CAMS1052_carbon_monoxide','CAMS695_carbon_monoxide',\
         'CAMS403_carbon_monoxide']
+elif CHEM_ELE=='relative_humidity':
+    cams_stations=['CAMS8_relative_humidity','CAMS416_relative_humidity','CAMS695_relative_humidity',\
+        'CAMS403_relative_humidity']
+
 
 elif CHEM_ELE=='wind':
     cams_stations=['CAMS404_WSPD','CAMS1052_WSPD','CAMS695_WSPD',\

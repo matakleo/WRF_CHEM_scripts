@@ -86,7 +86,7 @@ keys_for_chems=['WSPD','temperature','pm25','ozone','nitric_oxide','nitrogen_dio
 
 #months=['Oct','Feb','Mar'] #,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] #,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-urb_dirs=['No_Urb'] #,'No_Urb']
+urb_dirs=['No_Urb','BEM'] #,'No_Urb']
 
 
 time_idx=0
@@ -155,9 +155,6 @@ for month in months:
             carbon_monoxide=getvar(data, "co",time_idx)
             carbon_monoxide=carbon_monoxide[0]
             #print('carbon mono shape',np.shape(carbon_monoxide))
-            print('----------------------')
-            print('carbon mono',carbon_monoxide)
-            print('----------------------')
             #chem variabsl#
             pm_2_5 = getvar(data, "PM2_5_DRY",time_idx)
             pm_2_5=pm_2_5[0]
@@ -287,9 +284,8 @@ for month in months:
                 wspd_per_file=(2.23693629*float(wspd))
                 ## CO IS WRONG!!!
                 sulfur_dioxide_per_file=1000*float(sulfur_dioxide[measur_station])
-                print('measur station',measur_station,'co on mesaru stat',float(carbon_monoxide[measur_station]))
                 carbon_monoxide_per_file=(1000*float(carbon_monoxide[measur_station]))
-
+                #print('rel hum',float(rel_hum[measur_station]))
                 surface_temperature_per_file=(float(outdoor_temperature[measur_station]*9/5-459.67))
 # keys_for_chems=['WSPD','pm25','ozone','nitric_oxide','nitrogen_dioxide','carbon_monoxide']
                 # print('this is dict val',stations_dict[keys_for_dict[stations_counter]]['WSPD'])
@@ -297,7 +293,7 @@ for month in months:
                 stations_dict[keys_for_dict[stations_counter]]['temperature'].append(surface_temperature_per_file)
 
                 stations_dict[keys_for_dict[stations_counter]]['pm25'].append(pm_per_file)
-                stations_dict[keys_for_dict[stations_counter]]['relative_humidity'].append(rel_hum[measur_station])
+                stations_dict[keys_for_dict[stations_counter]]['relative_humidity'].append(float(rel_hum[measur_station]))
                 stations_dict[keys_for_dict[stations_counter]]['ozone'].append(ozone_per_file)
                 stations_dict[keys_for_dict[stations_counter]]['nitric_oxide'].append(no_per_file)
                 stations_dict[keys_for_dict[stations_counter]]['nitrogen_dioxide'].append(no2_per_file)
