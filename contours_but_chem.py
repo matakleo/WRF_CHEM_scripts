@@ -99,8 +99,9 @@ for dir in dirs:
 
     lats1, lons1 = latlon_coords(height[0])
     height=int(np.mean(height[height_lvl]))
+    PBLH=getvar(Data,'PBLH',0)
 
-   
+    print(float(PBLH[24]))
     
     # total_wind[MASKING!=13]=nan
     # total_wind_one_lvl_higher[MASKING!=13]=nan
@@ -108,39 +109,39 @@ for dir in dirs:
 
     
 
-    ax[0,col].contourf(to_np(lons1),to_np(lats1), (temperature), 250,  vmin=vmin_set,vmax=vmax_set,     transform=crs.PlateCarree(), 
-        cmap=my_cmap1)    
+#     ax[0,col].contourf(to_np(lons1),to_np(lats1), (temperature), 250,  vmin=vmin_set,vmax=vmax_set,     transform=crs.PlateCarree(), 
+#         cmap=my_cmap1)    
 
-    ax[0,col].scatter(mid_downtown_lon,mid_downtown_lat,s=15,c='black',transform=crs.PlateCarree())    
-    ax[0,col].scatter(three_dom_lons,three_dom_lats,s=15,c='cyan',transform=crs.PlateCarree())
-    ax[0,col].set_title(dirs[dir_num]+', at: '+str(height)+'m, : '+str(time_of_the_day)+':00 h')
-    ax[0,col].background_patch.set_facecolor('black')  
+#     ax[0,col].scatter(mid_downtown_lon,mid_downtown_lat,s=15,c='black',transform=crs.PlateCarree())    
+#     ax[0,col].scatter(three_dom_lons,three_dom_lats,s=15,c='cyan',transform=crs.PlateCarree())
+#     ax[0,col].set_title(dirs[dir_num]+', at: '+str(height)+'m, : '+str(time_of_the_day)+':00 h')
+#     ax[0,col].background_patch.set_facecolor('black')  
 
-    # ax[1,col].contourf(to_np(lons1),to_np(lats1), (temperature), 250,  vmin=vmin_set,vmax=vmax_set,     transform=crs.PlateCarree(), 
-    #     cmap=my_cmap1)    
+#     # ax[1,col].contourf(to_np(lons1),to_np(lats1), (temperature), 250,  vmin=vmin_set,vmax=vmax_set,     transform=crs.PlateCarree(), 
+#     #     cmap=my_cmap1)    
 
-    # ax[1,col].scatter(mid_downtown_lon,mid_downtown_lat,s=15,c='black',transform=crs.PlateCarree())    
-    # ax[1,col].scatter(three_dom_lons,three_dom_lats,s=15,c='cyan',transform=crs.PlateCarree())
-    # ax[1,col].set_title('at height: '+str(height_one_lvl_more)+'m, at time: '+str(time_of_the_day)+':00 h')
-    # ax[1,col].background_patch.set_facecolor('black')  
-    dir_num+=1
-    col+=1
-    # if dir_num==3:
-    #     dir_
+#     # ax[1,col].scatter(mid_downtown_lon,mid_downtown_lat,s=15,c='black',transform=crs.PlateCarree())    
+#     # ax[1,col].scatter(three_dom_lons,three_dom_lats,s=15,c='cyan',transform=crs.PlateCarree())
+#     # ax[1,col].set_title('at height: '+str(height_one_lvl_more)+'m, at time: '+str(time_of_the_day)+':00 h')
+#     # ax[1,col].background_patch.set_facecolor('black')  
+#     dir_num+=1
+#     col+=1
+#     # if dir_num==3:
+#     #     dir_
 
 
     
 
 
-norm1 = mpl.colors.Normalize(vmin=vmin_set,vmax=vmax_set)
+# norm1 = mpl.colors.Normalize(vmin=vmin_set,vmax=vmax_set)
 
-                #xstart ystart xend yend#
+#                 #xstart ystart xend yend#
                 
-cax = plt.axes([0.83, 0.050, 0.01, 0.81])
-plt.subplots_adjust(bottom=0.001, right=0.8, top=0.9)
+# cax = plt.axes([0.83, 0.050, 0.01, 0.81])
+# plt.subplots_adjust(bottom=0.001, right=0.8, top=0.9)
 
-cbar1=fig.colorbar(mpl.cm.ScalarMappable(norm=norm1, cmap=my_cmap1),
-cax=cax, orientation='vertical',  extend='max', fraction=0.03,
-label=var_to_plot)
+# cbar1=fig.colorbar(mpl.cm.ScalarMappable(norm=norm1, cmap=my_cmap1),
+# cax=cax, orientation='vertical',  extend='max', fraction=0.03,
+# label=var_to_plot)
 
-plt.show()
+# plt.show()

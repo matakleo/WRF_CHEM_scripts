@@ -2,7 +2,7 @@
 from audioop import avg
 from netCDF4 import Dataset
 from numpy.core.fromnumeric import shape, size, transpose
-from wrf import getvar,interplevel,latlon_coords,rh
+from wrf import getvar,interplevel,latlon_coords,rh,tk
 import numpy as np
 import math
 import csv
@@ -82,11 +82,11 @@ keys_for_dict = ['CAMS404','CAMS1052','CAMS695','CAMS53','CAMS409','CAMS8','CAMS
 measuring_stations=[CAMS404_pos,CAMS1052_pos,CAMS695_pos,CAMS53_pos,CAMS409_pos,CAMS8_pos,CAMS416_pos,CAMS1_pos,\
 CAMS603_pos,CAMS403_pos,CAMS167_pos,CAMS1029_pos,CAMS169_pos,CAMS670_pos,CAMS1020_pos,CAMS1049_pos] 
 
-keys_for_chems=['WSPD','temperature','pm25','ozone','nitric_oxide','nitrogen_dioxide','carbon_monoxide','sulfur_dioxide','relative_humidity']
+keys_for_chems=['WSPD','temperature','pm25','ozone','nitric_oxide','nitrogen_dioxide','carbon_monoxide','PBLH','relative_humidity']
 
 #months=['Oct','Feb','Mar'] #,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] #,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-urb_dirs=['No_Urb','BEM'] #,'No_Urb']
+months=['Jan','Feb','Mar','Apr','May','Jun'] #,'Jul','Aug','Sep','Oct','Nov','Dec'] #,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+urb_dirs=['No_Urb_aer_fdb_0'] #,'No_Urb']
 
 
 time_idx=0
@@ -167,7 +167,6 @@ for month in months:
 
             qv=getvar(data,"Q2",time_idx)
 
-
             Pressure=getvar(data,"PSFC",time_idx)
 
 
@@ -175,8 +174,8 @@ for month in months:
             nitric_oxide=nitric_oxide[0]
 
 
-            sulfur_dioxide=getvar(data, "so2",time_idx) 
-            sulfur_dioxide=sulfur_dioxide[0]
+            PBLH=getvar(data, "PBLH",time_idx) 
+
             
             nitric_dioxide=getvar(data, "no2",time_idx)
             nitric_dioxide=nitric_dioxide[0]
@@ -184,11 +183,13 @@ for month in months:
 
             u10=getvar(data, "U10",time_idx)
             v10=getvar(data, "V10",time_idx)
+
             outdoor_temperature=getvar(data, "T2",time_idx)
             stations_counter=0
             two_same_stations_counter=0
             
             #rel hum calculation
+
             rel_hum=rh(qv,Pressure,outdoor_temperature)
 
             for measur_station in measuring_stations:
@@ -211,6 +212,22 @@ for month in months:
                     wspd=getvar(data, "wspd",time_idx)
                     wspd= interplevel(wspd, height, 24)
                     wspd=wspd[measur_station]
+
+                    qv=getvar(data,"QVAPOR",time_idx)
+                    qv=interplevel(qv,height,24)
+
+                    Pressure=getvar(data,"P",time_idx)
+                    Pressure=interplevel(Pressure,height,24)
+
+                    potential_temp=getvar(data, "T",time_idx)
+                    potential_temp=interplevel(potential_temp,height,24)
+
+                    temperature=tk(Pressure,potential_temp,meta=True, units='K')
+
+                    rel_hum=rh(qv,Pressure,temperature)
+
+
+
                     #603 13m
                 elif measur_station==CAMS603_pos:
                     wspd=getvar(data, "wspd",time_idx)
@@ -221,6 +238,21 @@ for month in months:
                     wspd=getvar(data, "wspd",time_idx)
                     wspd= interplevel(wspd, height, 13)
                     wspd=wspd[measur_station]
+
+                    qv=getvar(data,"QVAPOR",time_idx)
+                    qv=interplevel(qv,height,13)
+
+                    Pressure=getvar(data,"P",time_idx)
+                    Pressure=interplevel(Pressure,height,13)
+
+                    potential_temp=getvar(data, "T",time_idx)
+                    potential_temp=interplevel(potential_temp,height,13)
+
+                    temperature=tk(Pressure,potential_temp,meta=True, units='K')
+
+                    rel_hum=rh(qv,Pressure,temperature)
+
+
                     #167 7m
                 elif measur_station==CAMS167_pos:
                     wspd=wspd*np.log(7/0.14)/np.log(10/0.14)
@@ -254,6 +286,21 @@ for month in months:
                     wspd=getvar(data, "wspd",time_idx)
                     wspd= interplevel(wspd, height, 73)
                     wspd=wspd[measur_station]
+
+                    qv=getvar(data,"QVAPOR",time_idx)
+                    qv=interplevel(qv,height,73)
+
+                    Pressure=getvar(data,"P",time_idx)
+                    Pressure=interplevel(Pressure,height,73)
+
+                    potential_temp=getvar(data, "T",time_idx)
+                    potential_temp=interplevel(potential_temp,height,73)
+
+                    temperature=tk(Pressure,potential_temp,meta=True, units='K')
+
+                    rel_hum=rh(qv,Pressure,temperature)
+
+
                 # CAMS 416, at 10m elevation, no changes needed
                 elif measur_station==CAMS416_pos:
                     wspd=wspd
@@ -283,7 +330,7 @@ for month in months:
                 # print('ozone',1000*float(ozone[measur_station]))
                 wspd_per_file=(2.23693629*float(wspd))
                 ## CO IS WRONG!!!
-                sulfur_dioxide_per_file=1000*float(sulfur_dioxide[measur_station])
+                PBLH=float(PBLH[measur_station])
                 carbon_monoxide_per_file=(1000*float(carbon_monoxide[measur_station]))
                 #print('rel hum',float(rel_hum[measur_station]))
                 surface_temperature_per_file=(float(outdoor_temperature[measur_station]*9/5-459.67))
@@ -298,7 +345,7 @@ for month in months:
                 stations_dict[keys_for_dict[stations_counter]]['nitric_oxide'].append(no_per_file)
                 stations_dict[keys_for_dict[stations_counter]]['nitrogen_dioxide'].append(no2_per_file)
                 stations_dict[keys_for_dict[stations_counter]]['carbon_monoxide'].append(carbon_monoxide_per_file)
-                stations_dict[keys_for_dict[stations_counter]]['sulfur_dioxide'].append(sulfur_dioxide_per_file)
+                stations_dict[keys_for_dict[stations_counter]]['PBLH'].append(PBLH)
 
 
                 stations_counter+=1
@@ -324,9 +371,7 @@ for month in months:
         MyFile=open('%s.csv' %var,'w')
         ##write the var name, top left corner
         MyFile.write (var+ "\n")
-        # MyFile.write ("Temperature,PM2_5,NO,NO2,WSPD\n")
-        # MyFile.write ("pm25,nitric_oxide,nitrogen_dioxide,ozone,dom_avg_pm25,dom_avg_no,dom_avg_no2,dom_avg_ozone,wind,Temperature,dom_avg_Temperature,dom_avg_WSPD\n")
-        
+  
         for d in keys_for_dict:
             for c in keys_for_chems:
                 MyFile.write((d+'_'+c)+",")
@@ -336,7 +381,7 @@ for month in months:
         for hour in range(len(ncfiles)-1):
             for d in keys_for_dict:
                 for c in keys_for_chems:
-                    print('hour',hour,'station',d,'compound',c)
+
                     MyFile.write(str(stations_dict[d][c][hour])+",")
             MyFile.write("\n")        
                              

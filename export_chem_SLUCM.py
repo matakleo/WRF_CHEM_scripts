@@ -2,7 +2,7 @@
 from audioop import avg
 from netCDF4 import Dataset
 from numpy.core.fromnumeric import shape, size, transpose
-from wrf import getvar,interplevel,latlon_coords,rh
+from wrf import getvar,interplevel,latlon_coords,rh,tk
 import numpy as np
 import math
 import csv
@@ -81,10 +81,10 @@ keys_for_dict = ['CAMS404','CAMS1052','CAMS695','CAMS53','CAMS409','CAMS8','CAMS
     'CAMS169','CAMS670','CAMS1020','CAMS1049']
 
 
-keys_for_chems=['WSPD','temperature','pm25','ozone','nitric_oxide','nitrogen_dioxide','carbon_monoxide','relative_humidity']
+keys_for_chems=['WSPD','temperature','pm25','ozone','nitric_oxide','nitrogen_dioxide','carbon_monoxide','relative_humidity','PBLH']
 
-months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-urb_dirs=['SLUC']
+months=['Jan','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+urb_dirs=['SLUC_ust10']
 
 
 time_idx=0
@@ -168,6 +168,8 @@ for month in months:
             ozone=getvar(data, "o3",time_idx)
             ozone=ozone[0]
 
+            PBLH=getvar(data,'PBLH',time_idx)
+
             nitric_oxide=getvar(data, "no",time_idx)
             nitric_oxide=nitric_oxide[0]
 
@@ -250,6 +252,20 @@ for month in months:
                     wspd=getvar(data, "wspd",time_idx)
                     wspd= interplevel(wspd, height, 73)
                     wspd=wspd[measur_station]
+                    qv=getvar(data,"QVAPOR",time_idx)
+                    qv=interplevel(qv,height,73)
+
+                    Pressure=getvar(data,"P",time_idx)
+                    Pressure=interplevel(Pressure,height,73)
+
+                    potential_temp=getvar(data, "T",time_idx)
+                    potential_temp=interplevel(potential_temp,height,73)
+
+                    temperature=tk(Pressure,potential_temp,meta=True, units='K')
+
+                    rel_hum=rh(qv,Pressure,temperature)
+
+
                 # CAMS 416, at 10m elevation, no changes needed
                 elif measur_station==CAMS416_pos:
                     wspd=wspd
@@ -269,6 +285,7 @@ for month in months:
 
                     wspd=wspd*np.log(14/0.14)/np.log(10/0.14) 
 
+                PBLH=PBLH[measur_station]
 
                 pm_per_file=(float(pm_2_5[measur_station]))
                 pm10_per_file=(float(pm10[measur_station]))
@@ -292,6 +309,8 @@ for month in months:
                 stations_dict[keys_for_dict[stations_counter]]['nitric_oxide'].append(no_per_file)
                 stations_dict[keys_for_dict[stations_counter]]['nitrogen_dioxide'].append(no2_per_file)
                 stations_dict[keys_for_dict[stations_counter]]['carbon_monoxide'].append(carbon_monoxide_per_file)
+                stations_dict[keys_for_dict[stations_counter]]['PBLH'].append(PBLH)
+
 
 
                 stations_counter+=1

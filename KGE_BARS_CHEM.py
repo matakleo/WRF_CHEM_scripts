@@ -33,16 +33,7 @@ def avg_values(d, key):
     if len(a)>0:
         # print('indices where no num:',a)
         print('so here should some nums be missing',values)
-        # print('lenght of vals b4 correction:',len(values))
-    # values = [e for e in values if e is not None]
-    # if len(a)>0:
-        # print('lenght of vals after correction:',len(values))
-    
-    # if len(a)>0:
-    #     for i in a:
-    #         print(values[i])
-            # values.pop(i)
-    # print('vals',values)
+
 
 
 
@@ -148,9 +139,7 @@ fig.subplots_adjust(top=0.85,hspace=0.2)
 
 simulations_dir='/Users/lmatak/Downloads/all/URBAN_TIME_SERIES_MAE/with_scaling/'
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
-urb=['MYJ_Default_No_Urb','MYJ_Default_BEM','MYJ_Default_SLUC','MYJ_Ustar_10_SLUC', \
-     'MYJ_Ustar_20_SLUC','MYJ_Ustar_5_SLUC','MYJ_Increased_Buildings','MYJ_Decreased_Buildings','MYJ_cd_0.5','MYJ_cd_2.0','MYJ_cd_3.0','MYJ_cd_4.0',\
-         'MYJ_Mom_0.2','MYJ_Mom_0.5','MYJ_Mom_2.0','MYJ_Mom_5.0' ]
+urb=['MYJ_Default_No_Urb','MYJ_Default_BEM','MYJ_Default_SLUC']
 
 # urb=['MYJ_Default_BEM','MYJ_Decreased_Buildings',]
 
