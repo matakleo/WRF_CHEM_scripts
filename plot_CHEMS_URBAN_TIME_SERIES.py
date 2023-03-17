@@ -173,31 +173,106 @@ row=0
 col=0
 for_mae=[]
 # chem_comp='wind'
-chem_comp='pm25'
+chem_comp='relative_humidity'
 
-cams='CAMS8_'+chem_comp
+cams='CAMS695_'+chem_comp
 
-for month in months:
+if chem_comp!='PBLH':
 
-        real_winds=np.array(get_real_data_chem(cams[0:-len(chem_comp)],month,chem_comp))
+    for month in months:
+
+            real_winds=np.array(get_real_data_chem(cams[0:-len(chem_comp)],month,chem_comp))
+            
+            # axes[row,col].plot(moving_average(real_winds,6),label='obs',linewidth=3,color='black')
+
+            
+            # if chem_comp!='wind'or'temperature':
+            #     real_winds=real_winds[24:]
+            # real_winds=real_winds[24:]
+            print(real_winds)
+            a=check_numbers(real_winds)
+            real_winds[a]=None
+            print(a)
+            
+            # a=check_numbers(real_winds)
+            # real_winds[a]=None
+            axes[row,col].plot(real_winds,label='obs',linewidth=3,color='black')
+            some_counter=0
+            axes[row,col].set_title(month)
+            # axes[row,col].set_ylim([0,100])
+            for urban in urban_names:
+                sim_data=simulations_dir+'/'+urban+'/'+urban+"_"+month+'.csv'
+                # print(sim_data)
+
+                temp_sim=[]
+                wspd_sim=[]
+                
+                # print(sim_data)
+
+    
+                temp_sim=Extract_by_name(sim_data,temp_sim,'Temperature')
+                if chem_comp=='wind':
+                    cams=cams[0:-len(chem_comp)]+'WSPD'
+                wspd_sim=np.array(Extract_by_name(sim_data,wspd_sim,cams))
+                if chem_comp=='carbon_monoxide':
+                    wspd_sim=np.array(wspd_sim)/1000
+                
+                # print(len(wspd_sim),sim_data,cams)
+
+                if (month== 'Jan' or month=='Feb' or month=='Mar' or month=='Dec'):
+
+                    wspd_sim=wspd_sim[6:]
+                else:
+
+                    wspd_sim=wspd_sim[5:-1]
+                # wspd_sim=wspd_sim[24:]
+                
+
+                axes[row,col].plot(wspd_sim,label=urban,linewidth=2,)
+
+
+                axes[row,col].xaxis.set_major_locator(ticker.NullLocator())
+                len_of_shortest=check_longer(wspd_sim,real_winds)
+                print(len_of_shortest)
+                wspd_sim=wspd_sim[0:len_of_shortest]
+                real_winds=real_winds[0:len_of_shortest]
+                if len(a)>0:
+
+                    a=check_numbers(real_winds)
+                    mask = np.ones(len(real_winds), dtype=bool)
+                    mask[a] = False
+                    real_winds = real_winds[mask,...]
+                    wspd_sim=wspd_sim[mask,...]
+                axes[row,col].annotate((urban,str(round(calculate_mae(wspd_sim,real_winds), 2))),
+                xy=(-0.2, -0.2), xycoords='axes points',
+                xytext=(150,-20+some_counter*(-25) ), textcoords='offset points',
+                
+                horizontalalignment='right', verticalalignment='bottom')
+
+                # print('corr',str(round(correlation, 2)))
+
+                # axes[row,col].plot(moving_average(wspd_sim,6),label=urban[4:],linewidth=2,)
+                # if chem_comp!='wind'or'temperature':
+                #     wspd_sim=wspd_sim[24:]
+                
+
+
+                
+                some_counter+=1
+
+            col+=1
+            if col==3:
+                row=1
+                col=0
+
+
+            ### THIS IS FOR CALCULATION, THE UPPER PART IS ONLY PLOTTING###
         
-        # axes[row,col].plot(moving_average(real_winds,6),label='obs',linewidth=3,color='black')
 
-        
-        # if chem_comp!='wind'or'temperature':
-        #     real_winds=real_winds[24:]
-        # real_winds=real_winds[24:]
-        print(real_winds)
-        a=check_numbers(real_winds)
-        real_winds[a]=None
-        print(a)
-        
-        # a=check_numbers(real_winds)
-        # real_winds[a]=None
-        axes[row,col].plot(real_winds,label='obs',linewidth=3,color='black')
-        some_counter=0
-        axes[row,col].set_title(month)
-        # axes[row,col].set_ylim([0,100])
+                # print('REAL DATA:',real_data)
+
+else:
+    for month in months:
         for urban in urban_names:
             sim_data=simulations_dir+'/'+urban+'/'+urban+"_"+month+'.csv'
             # print(sim_data)
@@ -207,7 +282,7 @@ for month in months:
             
             # print(sim_data)
 
-  
+
             temp_sim=Extract_by_name(sim_data,temp_sim,'Temperature')
             if chem_comp=='wind':
                 cams=cams[0:-len(chem_comp)]+'WSPD'
@@ -227,47 +302,19 @@ for month in months:
             
 
             axes[row,col].plot(wspd_sim,label=urban,linewidth=2,)
+            axes[row,col].set_title(month)
 
 
             axes[row,col].xaxis.set_major_locator(ticker.NullLocator())
-            len_of_shortest=check_longer(wspd_sim,real_winds)
-            print(len_of_shortest)
-            wspd_sim=wspd_sim[0:len_of_shortest]
-            real_winds=real_winds[0:len_of_shortest]
-            if len(a)>0:
-
-                a=check_numbers(real_winds)
-                mask = np.ones(len(real_winds), dtype=bool)
-                mask[a] = False
-                real_winds = real_winds[mask,...]
-                wspd_sim=wspd_sim[mask,...]
-            axes[row,col].annotate((urban,str(round(calculate_mae(wspd_sim,real_winds), 2))),
-            xy=(-0.2, -0.2), xycoords='axes points',
-            xytext=(150,-20+some_counter*(-25) ), textcoords='offset points',
-            
-            horizontalalignment='right', verticalalignment='bottom')
-
-            # print('corr',str(round(correlation, 2)))
-
-            # axes[row,col].plot(moving_average(wspd_sim,6),label=urban[4:],linewidth=2,)
-            # if chem_comp!='wind'or'temperature':
-            #     wspd_sim=wspd_sim[24:]
-            
 
 
-            
-            some_counter+=1
+
 
         col+=1
         if col==3:
             row=1
             col=0
 
-
-        ### THIS IS FOR CALCULATION, THE UPPER PART IS ONLY PLOTTING###
-    
-
-            # print('REAL DATA:',real_data)
 
 # plt.legend(['BEM','cd_2.0'])
 # print(np.mean(for_mae))

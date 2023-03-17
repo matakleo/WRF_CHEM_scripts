@@ -1,7 +1,7 @@
 from cmath import nan
 from turtle import right
 from typing import Counter
-from wrf import (getvar, interplevel, smooth2d, to_np, latlon_coords, get_cartopy, cartopy_xlim, cartopy_ylim)
+from wrf import (getvar, interplevel, smooth2d, to_np, latlon_coords, get_cartopy, cartopy_xlim, rh,tk)
 from all_functions import Extract_Track_Data, hurricane_eye_3,list_ncfiles,Extract_the_shit2
 from cartopy.mpl.gridliner import LongitudeFormatter, LATITUDE_FORMATTER
 from cartopy.feature import NaturalEarthFeature
@@ -93,15 +93,39 @@ for dir in dirs:
     vmax_set=306
     label='WSPD [m/s]'
 
+
+
+
+
+
+
     height = (getvar(Data, "height_agl",timeidx = idx))
 
     height_one_lvl_more=int(np.mean(height[height_lvl+1]))
 
     lats1, lons1 = latlon_coords(height[0])
-    height=int(np.mean(height[height_lvl]))
+    # height=int(np.mean(height[height_lvl]))
     PBLH=getvar(Data,'PBLH',0)
 
-    print(float(PBLH[24]))
+    print(float(PBLH[24,12]))
+
+
+    qv=getvar(Data,"QVAPOR",0)
+    qv=interplevel(qv,height,54)
+
+    Pressure=getvar(Data,"P",0)
+    
+
+    potential_temp=getvar(Data, "T",0)
+    
+
+    temperature=tk(Pressure,potential_temp,meta=True, units='K')
+    temperature=interplevel(temperature,height,50)
+    Pressure=interplevel(Pressure,height,54)
+    potential_temp=interplevel(potential_temp,height,54)
+    print(temperature)
+
+    rel_hum=rh(qv,Pressure,temperature)
     
     # total_wind[MASKING!=13]=nan
     # total_wind_one_lvl_higher[MASKING!=13]=nan

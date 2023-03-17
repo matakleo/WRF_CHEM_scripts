@@ -161,7 +161,7 @@ months = 12
 months =['Aug','Dec','Jan','Jul','Jun','May','Nov','Oct','Sep'] #,'Jul','Aug','Sep','Oct','Nov','Dec']
 # months =['Jan','Feb','Mar','Jun','Aug','Sep','Oct',]
 
-CHEM_ELE='carbon_monoxide'
+CHEM_ELE='pm25'
 
 # CAMS stations taken into consideration
 cams_stations=['CAMS404_WSPD','CAMS1052_WSPD','CAMS695_WSPD',\

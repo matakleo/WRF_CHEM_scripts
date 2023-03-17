@@ -84,7 +84,7 @@ keys_for_dict = ['CAMS404','CAMS1052','CAMS695','CAMS53','CAMS409','CAMS8','CAMS
 keys_for_chems=['WSPD','temperature','pm25','ozone','nitric_oxide','nitrogen_dioxide','carbon_monoxide','relative_humidity','PBLH']
 
 months=['Jan','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-urb_dirs=['SLUC_ust10']
+urb_dirs=['SLUC_ust10','SLUC']
 
 
 time_idx=0
@@ -152,40 +152,60 @@ for month in months:
 
             carbon_monoxide=getvar(data, "co",time_idx)
             carbon_monoxide=carbon_monoxide[0]
-
+            #print('carbon mono shape',np.shape(carbon_monoxide))
             #chem variabsl#
             pm_2_5 = getvar(data, "PM2_5_DRY",time_idx)
             pm_2_5=pm_2_5[0]
 
-            qv=getvar(data,"Q2",time_idx)
-
-
-            Pressure=getvar(data,"PSFC",time_idx)
-
-            pm10 = getvar(data, "PM10",time_idx)
+            pm10=getvar(data, "PM10",time_idx)
             pm10=pm10[0]
-            
+
             ozone=getvar(data, "o3",time_idx)
             ozone=ozone[0]
 
-            PBLH=getvar(data,'PBLH',time_idx)
+            qv_surface=getvar(data,"Q2",time_idx)
+            
+
+            Pressure=getvar(data,"P",time_idx)
+            Pressure_surface=getvar(data,"PSFC",time_idx)
+
+            potential_temperature=getvar(data,"T",time_idx)
+
+            actual_temperature=tk(Pressure,potential_temperature,meta=True, units='K')
+
 
             nitric_oxide=getvar(data, "no",time_idx)
             nitric_oxide=nitric_oxide[0]
 
+
+            PBLH=getvar(data, "PBLH",time_idx) 
+            print('initialize PBLH,',PBLH)
+            
             nitric_dioxide=getvar(data, "no2",time_idx)
             nitric_dioxide=nitric_dioxide[0]
             #met variabls#
 
             u10=getvar(data, "U10",time_idx)
             v10=getvar(data, "V10",time_idx)
-            outdoor_temperature=getvar(data, "T2",time_idx)
+
+            surface_temp=getvar(data, "T2",time_idx)
             stations_counter=0
             two_same_stations_counter=0
+            
             #rel hum calculation
-            rel_hum=rh(qv,Pressure,outdoor_temperature)
+
+            surface_rel_hum=rh(qv_surface,Pressure_surface,surface_temp)
 
             for measur_station in measuring_stations:
+
+                Pressure=getvar(data,"P",time_idx)
+
+
+                potential_temperature=getvar(data,"T",time_idx)
+
+                actual_temperature=tk(Pressure,potential_temperature,meta=True, units='K')
+
+                rel_hum =surface_rel_hum
 
                 wspd=math.sqrt(u10[measur_station]**2+v10[measur_station]**2)
 
@@ -258,12 +278,11 @@ for month in months:
                     Pressure=getvar(data,"P",time_idx)
                     Pressure=interplevel(Pressure,height,73)
 
-                    potential_temp=getvar(data, "T",time_idx)
-                    potential_temp=interplevel(potential_temp,height,73)
+                    actual_temperature=interplevel(actual_temperature,height,73)
 
-                    temperature=tk(Pressure,potential_temp,meta=True, units='K')
+                    # temperature=tk(Pressure,potential_temp,meta=True, units='K')
 
-                    rel_hum=rh(qv,Pressure,temperature)
+                    rel_hum=rh(qv,Pressure,actual_temperature)
 
 
                 # CAMS 416, at 10m elevation, no changes needed
@@ -285,7 +304,7 @@ for month in months:
 
                     wspd=wspd*np.log(14/0.14)/np.log(10/0.14) 
 
-                PBLH=PBLH[measur_station]
+                pblh_per_file=(float(PBLH[measur_station]))
 
                 pm_per_file=(float(pm_2_5[measur_station]))
                 pm10_per_file=(float(pm10[measur_station]))
@@ -298,7 +317,7 @@ for month in months:
                 ## CO IS WRONG!!!
                 carbon_monoxide_per_file=(1000*float(carbon_monoxide[measur_station]))
 
-                surface_temperature_per_file=(float(outdoor_temperature[measur_station]*9/5-459.67))
+                surface_temperature_per_file=(float(surface_temp[measur_station]*9/5-459.67))
 # keys_for_chems=['WSPD','pm25','ozone','nitric_oxide','nitrogen_dioxide','carbon_monoxide']
                 # print('this is dict val',stations_dict[keys_for_dict[stations_counter]]['WSPD'])
                 stations_dict[keys_for_dict[stations_counter]]['WSPD'].append(wspd_per_file)
@@ -309,7 +328,7 @@ for month in months:
                 stations_dict[keys_for_dict[stations_counter]]['nitric_oxide'].append(no_per_file)
                 stations_dict[keys_for_dict[stations_counter]]['nitrogen_dioxide'].append(no2_per_file)
                 stations_dict[keys_for_dict[stations_counter]]['carbon_monoxide'].append(carbon_monoxide_per_file)
-                stations_dict[keys_for_dict[stations_counter]]['PBLH'].append(PBLH)
+                stations_dict[keys_for_dict[stations_counter]]['PBLH'].append(pblh_per_file)
 
 
 

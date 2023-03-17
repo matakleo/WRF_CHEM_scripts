@@ -85,8 +85,8 @@ CAMS603_pos,CAMS403_pos,CAMS167_pos,CAMS1029_pos,CAMS169_pos,CAMS670_pos,CAMS102
 keys_for_chems=['WSPD','temperature','pm25','ozone','nitric_oxide','nitrogen_dioxide','carbon_monoxide','PBLH','relative_humidity']
 
 #months=['Oct','Feb','Mar'] #,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-months=['Jan','Feb','Mar','Apr','May','Jun'] #,'Jul','Aug','Sep','Oct','Nov','Dec'] #,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-urb_dirs=['No_Urb_aer_fdb_0'] #,'No_Urb']
+months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] #,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+urb_dirs=['BEM','No_Urb']
 
 
 time_idx=0
@@ -140,11 +140,7 @@ for month in months:
         for ncfile in ncfiles:
             print('workin on: ',ncfile)
             # surface_temperature_per_file=[]
-            # pm_per_file=[]
-            # no_per_file=[]
-            # no2_per_file=[]
-            # wspd_per_file=[]
-            # ozone_per_file=[]
+
 
 
             ########## load the data ##########
@@ -165,9 +161,15 @@ for month in months:
             ozone=getvar(data, "o3",time_idx)
             ozone=ozone[0]
 
-            qv=getvar(data,"Q2",time_idx)
+            qv_surface=getvar(data,"Q2",time_idx)
+            
 
-            Pressure=getvar(data,"PSFC",time_idx)
+            Pressure=getvar(data,"P",time_idx)
+            Pressure_surface=getvar(data,"PSFC",time_idx)
+
+            potential_temperature=getvar(data,"T",time_idx)
+
+            actual_temperature=tk(Pressure,potential_temperature,meta=True, units='K')
 
 
             nitric_oxide=getvar(data, "no",time_idx)
@@ -175,7 +177,7 @@ for month in months:
 
 
             PBLH=getvar(data, "PBLH",time_idx) 
-
+            print('initialize PBLH,',PBLH)
             
             nitric_dioxide=getvar(data, "no2",time_idx)
             nitric_dioxide=nitric_dioxide[0]
@@ -184,18 +186,25 @@ for month in months:
             u10=getvar(data, "U10",time_idx)
             v10=getvar(data, "V10",time_idx)
 
-            outdoor_temperature=getvar(data, "T2",time_idx)
+            surface_temp=getvar(data, "T2",time_idx)
             stations_counter=0
             two_same_stations_counter=0
             
             #rel hum calculation
 
-            rel_hum=rh(qv,Pressure,outdoor_temperature)
+            surface_rel_hum=rh(qv_surface,Pressure_surface,surface_temp)
 
             for measur_station in measuring_stations:
+                Pressure=getvar(data,"P",time_idx)
+
+
+                potential_temperature=getvar(data,"T",time_idx)
+
+                actual_temperature=tk(Pressure,potential_temperature,meta=True, units='K')
+
+                rel_hum =surface_rel_hum
 
                 wspd=math.sqrt(u10[measur_station]**2+v10[measur_station]**2)
-
                 ##station based wspd##
                 if measur_station==CAMS404_pos:
                         wspd=getvar(data, "wspd",time_idx)
@@ -219,12 +228,11 @@ for month in months:
                     Pressure=getvar(data,"P",time_idx)
                     Pressure=interplevel(Pressure,height,24)
 
-                    potential_temp=getvar(data, "T",time_idx)
-                    potential_temp=interplevel(potential_temp,height,24)
+                    actual_temperature=interplevel(actual_temperature,height,24)
 
-                    temperature=tk(Pressure,potential_temp,meta=True, units='K')
+                    # temperature=tk(Pressure,potential_temp,meta=True, units='K')
 
-                    rel_hum=rh(qv,Pressure,temperature)
+                    rel_hum=rh(qv,Pressure,actual_temperature)
 
 
 
@@ -245,12 +253,9 @@ for month in months:
                     Pressure=getvar(data,"P",time_idx)
                     Pressure=interplevel(Pressure,height,13)
 
-                    potential_temp=getvar(data, "T",time_idx)
-                    potential_temp=interplevel(potential_temp,height,13)
+                    actual_temperature=interplevel(actual_temperature,height,24)
 
-                    temperature=tk(Pressure,potential_temp,meta=True, units='K')
-
-                    rel_hum=rh(qv,Pressure,temperature)
+                    rel_hum=rh(qv,Pressure,actual_temperature)
 
 
                     #167 7m
@@ -293,12 +298,9 @@ for month in months:
                     Pressure=getvar(data,"P",time_idx)
                     Pressure=interplevel(Pressure,height,73)
 
-                    potential_temp=getvar(data, "T",time_idx)
-                    potential_temp=interplevel(potential_temp,height,73)
+                    actual_temperature=interplevel(actual_temperature,height,24)
 
-                    temperature=tk(Pressure,potential_temp,meta=True, units='K')
-
-                    rel_hum=rh(qv,Pressure,temperature)
+                    rel_hum=rh(qv,Pressure,actual_temperature)
 
 
                 # CAMS 416, at 10m elevation, no changes needed
@@ -330,10 +332,13 @@ for month in months:
                 # print('ozone',1000*float(ozone[measur_station]))
                 wspd_per_file=(2.23693629*float(wspd))
                 ## CO IS WRONG!!!
-                PBLH=float(PBLH[measur_station])
+                #print('now at measure station try 2',(PBLH[0,1]))
+                #print('now at measure station',(PBLH[measur_station]))
+                #PBLH=PBLH[measur_station]
                 carbon_monoxide_per_file=(1000*float(carbon_monoxide[measur_station]))
                 #print('rel hum',float(rel_hum[measur_station]))
-                surface_temperature_per_file=(float(outdoor_temperature[measur_station]*9/5-459.67))
+                pblh_per_file=(float(PBLH[measur_station]))
+                surface_temperature_per_file=(float(surface_temp[measur_station]*9/5-459.67))
 # keys_for_chems=['WSPD','pm25','ozone','nitric_oxide','nitrogen_dioxide','carbon_monoxide']
                 # print('this is dict val',stations_dict[keys_for_dict[stations_counter]]['WSPD'])
                 stations_dict[keys_for_dict[stations_counter]]['WSPD'].append(wspd_per_file)
@@ -345,7 +350,7 @@ for month in months:
                 stations_dict[keys_for_dict[stations_counter]]['nitric_oxide'].append(no_per_file)
                 stations_dict[keys_for_dict[stations_counter]]['nitrogen_dioxide'].append(no2_per_file)
                 stations_dict[keys_for_dict[stations_counter]]['carbon_monoxide'].append(carbon_monoxide_per_file)
-                stations_dict[keys_for_dict[stations_counter]]['PBLH'].append(PBLH)
+                stations_dict[keys_for_dict[stations_counter]]['PBLH'].append(pblh_per_file)
 
 
                 stations_counter+=1
