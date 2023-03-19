@@ -22,7 +22,7 @@ def find_nearest(array, value):
 
 #check the output folder!!!!
 
-Input_Dir = '/Users/lmatak/Downloads/wes-coldens/'
+Input_Dir = '/Users/lmatak/Downloads/all/WRF_CHEM_CONTOURING/no_temp_change/'
 
 #what you wanna get:?
 var="PM2_5_DRY"
@@ -89,21 +89,28 @@ CAMS_POSITIONS=[CAMS404_pos,cams1052_pos,CAMS695_pos,cams53_pos,CAMS409_pos,CAMS
 
 # these are for two domain run
 
-# CAMS1_pos=([67],[69])
-# CAMS55_pos=([67],[69])
-# CAMS35_pos=([66],[71])
-# CAMS695_pos=([66],[67])
-# CAMS416_pos=([66],[68])
-# cams53_pos= ([66],[65])
-# cams169_pos=([66],[69])
-# cams403_pos=([67],[69])
-
+cams404_pos=([ 68 ],[ 68 ])
+cams1052_pos=([ 68 ],[ 67 ])
+cams695_pos=([ 66 ],[ 67 ])
+cams53_pos=([ 66 ],[ 65 ])
+cams409_pos=([ 65 ],[ 65 ])
+cams8_pos=([ 70 ],[ 68 ])
+cams416_pos=([ 66 ],[ 68 ])
+cams1_pos=([ 67 ],[ 69 ])
+cams603_pos=([ 67 ],[ 70 ])
+cams403_pos=([ 67 ],[ 69 ])
+cams167_pos=([ 67 ],[ 69 ])
+cams1029_pos=([ 66 ],[ 69 ])
+cams169_pos=([ 66 ],[ 69 ])
+cams670_pos=([ 66 ],[ 69 ])
+cams1020_pos=([ 66 ],[ 69 ])
+cams1049_pos=([ 66 ],[ 69 ])
 
 time_idx=0
 os.chdir(Input_Dir)
 ncfiles = []
 ########## list to hold the wrfout files ##########
-for file in glob.glob(Input_Dir+'wrfout_d03*'):
+for file in glob.glob(Input_Dir+'wrfout_d02*'):
     ncfiles.append(file)
 
 
@@ -197,7 +204,8 @@ for ncfile in ncfiles[0:1]:
     ## inteeger positions
     ## The positioning is right, so left column is left column and right column is right column!
     for cams in range(len(cams_lats)):
-        print(cams_names[cams]+' lat=',int(find_nearest(T2.XLAT,cams_lats[cams])/len(T2.XLAT)), cams_names[cams]+' lon=',find_nearest(T2.XLONG[10],cams_longs[cams])) 
+        # print(cams_names[cams]+' lat=',int(find_nearest(T2.XLAT,cams_lats[cams])/len(T2.XLAT)), cams_names[cams]+' lon=',find_nearest(T2.XLONG[10],cams_longs[cams])) 
+        print(cams_names[cams]+'_pos=([',int(find_nearest(T2.XLAT,cams_lats[cams])/len(T2.XLAT)), '],[',find_nearest(T2.XLONG[10],cams_longs[cams]),'])') 
         # print(height[0][cams_names[cams]])
         lat=np.array(ll_to_xy(data,cams_lats[cams],cams_longs[cams]))[1]
         lon=np.array(ll_to_xy(data,cams_lats[cams],cams_longs[cams]))[0]

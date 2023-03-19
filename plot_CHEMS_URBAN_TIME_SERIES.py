@@ -7,7 +7,7 @@ import glob
 import os
 import pandas as pd
 
-urban_names=['No_urb','SLUC','SLUC_ust10'] #,'MYJ_Default_BEM']
+urban_names=['No_Urb_YSU','No_Urb'] #,'MYJ_Default_BEM']
 PBLS=["MYJ"]
 simulations_dir='/Users/lmatak/Downloads/all/WRF_CHEM_TIME_SERIES/'
 
@@ -159,10 +159,11 @@ def get_real_data_chem(cams_station,month,chem_name):
 
 
 
-# months=['Jan','Feb']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+# months=['Apr']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 # months=['Jan','Feb','Mar','Apr','May','Jun']
-# months=['Jul','Aug','Sep','Oct','Nov','Dec']
-months=['Aug','Dec','Jan','Oct','May','Nov']
+months=['Apr']
+#,'Aug','Sep','Oct','Nov','Dec']
+# months=['Aug','Dec','Jan','Oct','May','Nov']
 
 fig, axes = plt.subplots(nrows=2, ncols=3,figsize=(16,9)) 
 fig.subplots_adjust(hspace=0.55,bottom=0.2)
@@ -173,9 +174,9 @@ row=0
 col=0
 for_mae=[]
 # chem_comp='wind'
-chem_comp='relative_humidity'
+chem_comp='pm25'
 
-cams='CAMS695_'+chem_comp
+cams='CAMS416_'+chem_comp
 
 if chem_comp!='PBLH':
 

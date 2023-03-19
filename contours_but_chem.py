@@ -45,6 +45,8 @@ three_dom_lats=np.array([29.67430877685547,29.771469116210938,29.739097595214844
 three_dom_lons=np.array([-95.1346435546875,-95.22166442871094,-95.25896453857422,-95.29625701904297,-95.34598541259766])
 
 
+
+both_temps=[]
 col=0
 
 row=0
@@ -87,6 +89,7 @@ for dir in dirs:
     total_wind_one_lvl_higher=ozone[1]
 
     temperature=getvar(Data,'T2',0)
+    both_temps.append(np.array(temperature))
     vmin_set=300
     vmin_one_lvl_higher=vmin_set
     vmax_one_lvl_higher=total_wind.max()
@@ -107,7 +110,7 @@ for dir in dirs:
     # height=int(np.mean(height[height_lvl]))
     PBLH=getvar(Data,'PBLH',0)
 
-    print(float(PBLH[24,12]))
+    # print(float(PBLH[24,12]))
 
 
     qv=getvar(Data,"QVAPOR",0)
@@ -119,53 +122,58 @@ for dir in dirs:
     potential_temp=getvar(Data, "T",0)
     
 
-    temperature=tk(Pressure,potential_temp,meta=True, units='K')
-    temperature=interplevel(temperature,height,50)
-    Pressure=interplevel(Pressure,height,54)
-    potential_temp=interplevel(potential_temp,height,54)
-    print(temperature)
+    # temperature=tk(Pressure,potential_temp,meta=True, units='K')
+    # temperature=interplevel(temperature,height,50)
+    # print(temperature)
+    # Pressure=interplevel(Pressure,height,54)
+    # potential_temp=interplevel(potential_temp,height,54)
+    # print(temperature)
 
-    rel_hum=rh(qv,Pressure,temperature)
-    
-    # total_wind[MASKING!=13]=nan
-    # total_wind_one_lvl_higher[MASKING!=13]=nan
+    # rel_hum=rh(qv,Pressure,temperature)
 
-
-    
-
-#     ax[0,col].contourf(to_np(lons1),to_np(lats1), (temperature), 250,  vmin=vmin_set,vmax=vmax_set,     transform=crs.PlateCarree(), 
-#         cmap=my_cmap1)    
-
-#     ax[0,col].scatter(mid_downtown_lon,mid_downtown_lat,s=15,c='black',transform=crs.PlateCarree())    
-#     ax[0,col].scatter(three_dom_lons,three_dom_lats,s=15,c='cyan',transform=crs.PlateCarree())
-#     ax[0,col].set_title(dirs[dir_num]+', at: '+str(height)+'m, : '+str(time_of_the_day)+':00 h')
-#     ax[0,col].background_patch.set_facecolor('black')  
-
-#     # ax[1,col].contourf(to_np(lons1),to_np(lats1), (temperature), 250,  vmin=vmin_set,vmax=vmax_set,     transform=crs.PlateCarree(), 
-#     #     cmap=my_cmap1)    
-
-#     # ax[1,col].scatter(mid_downtown_lon,mid_downtown_lat,s=15,c='black',transform=crs.PlateCarree())    
-#     # ax[1,col].scatter(three_dom_lons,three_dom_lats,s=15,c='cyan',transform=crs.PlateCarree())
-#     # ax[1,col].set_title('at height: '+str(height_one_lvl_more)+'m, at time: '+str(time_of_the_day)+':00 h')
-#     # ax[1,col].background_patch.set_facecolor('black')  
-#     dir_num+=1
-#     col+=1
-#     # if dir_num==3:
-#     #     dir_
 
 
     
 
+    ax[0,col].contourf(to_np(lons1),to_np(lats1), (temperature), 250,  vmin=vmin_set,vmax=vmax_set,     transform=crs.PlateCarree(), 
+        cmap=my_cmap1)    
 
-# norm1 = mpl.colors.Normalize(vmin=vmin_set,vmax=vmax_set)
+    ax[0,col].scatter(mid_downtown_lon,mid_downtown_lat,s=15,c='black',transform=crs.PlateCarree())    
+    ax[0,col].scatter(three_dom_lons,three_dom_lats,s=15,c='cyan',transform=crs.PlateCarree())
+    
+    ax[0,col].background_patch.set_facecolor('black')  
 
-#                 #xstart ystart xend yend#
+    # ax[1,col].contourf(to_np(lons1),to_np(lats1), (temperature), 250,  vmin=vmin_set,vmax=vmax_set,     transform=crs.PlateCarree(), 
+    #     cmap=my_cmap1)    
+
+    # ax[1,col].scatter(mid_downtown_lon,mid_downtown_lat,s=15,c='black',transform=crs.PlateCarree())    
+    # ax[1,col].scatter(three_dom_lons,three_dom_lats,s=15,c='cyan',transform=crs.PlateCarree())
+    # ax[1,col].set_title('at height: '+str(height_one_lvl_more)+'m, at time: '+str(time_of_the_day)+':00 h')
+    # ax[1,col].background_patch.set_facecolor('black')  
+    dir_num+=1
+    col+=1
+    # if dir_num==3:
+    #     dir_
+
+vmin_set=0
+vmax_set=1
+
+diff_in_temp=both_temps[1]-both_temps[0]
+ax[1,0].contourf(to_np(lons1),to_np(lats1), (diff_in_temp), 25,  vmin=vmin_set,vmax=vmax_set,     transform=crs.PlateCarree(), 
+        cmap=my_cmap1)
+
+    
+
+
+norm1 = mpl.colors.Normalize(vmin=vmin_set,vmax=vmax_set)
+
+                #xstart ystart xend yend#
                 
-# cax = plt.axes([0.83, 0.050, 0.01, 0.81])
-# plt.subplots_adjust(bottom=0.001, right=0.8, top=0.9)
+cax = plt.axes([0.83, 0.050, 0.01, 0.81])
+plt.subplots_adjust(bottom=0.001, right=0.8, top=0.9)
 
-# cbar1=fig.colorbar(mpl.cm.ScalarMappable(norm=norm1, cmap=my_cmap1),
-# cax=cax, orientation='vertical',  extend='max', fraction=0.03,
-# label=var_to_plot)
+cbar1=fig.colorbar(mpl.cm.ScalarMappable(norm=norm1, cmap=my_cmap1),
+cax=cax, orientation='vertical',  extend='max', fraction=0.03,
+label=var_to_plot)
 
-# plt.show()
+plt.show()
