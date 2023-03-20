@@ -7,7 +7,7 @@ import glob
 import os
 import pandas as pd
 
-urban_names=['No_Urb_YSU','No_Urb'] #,'MYJ_Default_BEM']
+urban_names=['No_Urb','No_Urb_YSU'] #,'MYJ_Default_BEM']
 PBLS=["MYJ"]
 simulations_dir='/Users/lmatak/Downloads/all/WRF_CHEM_TIME_SERIES/'
 
@@ -157,12 +157,11 @@ def get_real_data_chem(cams_station,month,chem_name):
 
 
 
+domain=3
 
-
-# months=['Apr']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+months=['Apr']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 # months=['Jan','Feb','Mar','Apr','May','Jun']
-months=['Apr']
-#,'Aug','Sep','Oct','Nov','Dec']
+# months=['Jul','Aug','Sep','Oct','Nov','Dec']
 # months=['Aug','Dec','Jan','Oct','May','Nov']
 
 fig, axes = plt.subplots(nrows=2, ncols=3,figsize=(16,9)) 
@@ -174,9 +173,9 @@ row=0
 col=0
 for_mae=[]
 # chem_comp='wind'
-chem_comp='pm25'
+chem_comp='PBLH'
 
-cams='CAMS416_'+chem_comp
+cams='CAMS1_'+chem_comp
 
 if chem_comp!='PBLH':
 
@@ -202,7 +201,7 @@ if chem_comp!='PBLH':
             axes[row,col].set_title(month)
             # axes[row,col].set_ylim([0,100])
             for urban in urban_names:
-                sim_data=simulations_dir+'/'+urban+'/'+urban+"_"+month+'.csv'
+                sim_data=simulations_dir+'/'+urban+'/'+urban+"_"+month+'_'+str(domain)+'.csv'
                 # print(sim_data)
 
                 temp_sim=[]
@@ -232,7 +231,7 @@ if chem_comp!='PBLH':
                 axes[row,col].plot(wspd_sim,label=urban,linewidth=2,)
 
 
-                axes[row,col].xaxis.set_major_locator(ticker.NullLocator())
+                # axes[row,col].xaxis.set_major_locator(ticker.NullLocator())
                 len_of_shortest=check_longer(wspd_sim,real_winds)
                 print(len_of_shortest)
                 wspd_sim=wspd_sim[0:len_of_shortest]
@@ -244,11 +243,11 @@ if chem_comp!='PBLH':
                     mask[a] = False
                     real_winds = real_winds[mask,...]
                     wspd_sim=wspd_sim[mask,...]
-                axes[row,col].annotate((urban,str(round(calculate_mae(wspd_sim,real_winds), 2))),
-                xy=(-0.2, -0.2), xycoords='axes points',
-                xytext=(150,-20+some_counter*(-25) ), textcoords='offset points',
+                # axes[row,col].annotate((urban,str(round(calculate_mae(wspd_sim,real_winds), 2))),
+                # xy=(-0.2, -0.2), xycoords='axes points',
+                # xytext=(150,-20+some_counter*(-25) ), textcoords='offset points',
                 
-                horizontalalignment='right', verticalalignment='bottom')
+                # horizontalalignment='right', verticalalignment='bottom')
 
                 # print('corr',str(round(correlation, 2)))
 
@@ -305,8 +304,8 @@ else:
             axes[row,col].plot(wspd_sim,label=urban,linewidth=2,)
             axes[row,col].set_title(month)
 
-
-            axes[row,col].xaxis.set_major_locator(ticker.NullLocator())
+            # axes[row,col].xaxis.set_major_locator()
+            # axes[row,col].xaxis.set_major_locator(ticker.NullLocator())
 
 
 
@@ -319,7 +318,7 @@ else:
 
 # plt.legend(['BEM','cd_2.0'])
 # print(np.mean(for_mae))
-fig.suptitle(cams,size=20)
+fig.suptitle(cams+'_domain_'+str(domain),size=20)
 
 # plt.bar(['wrf','log'],[2.827,2.9043])
 axes[0,1].legend()

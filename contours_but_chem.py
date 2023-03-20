@@ -27,11 +27,11 @@ my_cmap1.set_bad((0,0,0))
 
 
 # dirs=['BEM_default','BEP_default',]#'clz_1000','clz_100']
-dirs=['no_temp_change','sst_p_2'] #,'BEM_ust_10_in_LSM',]#'clz_1000','clz_100']
+dirs=['sst_p_2','no_temp_change'] #,'BEM_ust_10_in_LSM',]#'clz_1000','clz_100']
 # dirs=['BEM_default','BEM_change_tke_100','BEM_change_mom_5',]
 dir_num=0
 i=0
-file_in_dir=0
+file_in_dir=3
 height_lvl=0
 # var_to_plot='TKE'
 var_to_plot='T2'
