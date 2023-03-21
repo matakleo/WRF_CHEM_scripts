@@ -31,7 +31,7 @@ dirs=['sst_p_2','no_temp_change'] #,'BEM_ust_10_in_LSM',]#'clz_1000','clz_100']
 # dirs=['BEM_default','BEM_change_tke_100','BEM_change_mom_5',]
 dir_num=0
 i=0
-file_in_dir=3
+file_in_dir=5
 height_lvl=0
 # var_to_plot='TKE'
 var_to_plot='T2'
@@ -156,10 +156,10 @@ for dir in dirs:
     #     dir_
 
 vmin_set=0
-vmax_set=1
+vmax_set=2
 
-diff_in_temp=both_temps[1]-both_temps[0]
-ax[1,0].contourf(to_np(lons1),to_np(lats1), (diff_in_temp), 25,  vmin=vmin_set,vmax=vmax_set,     transform=crs.PlateCarree(), 
+diff_in_temp=both_temps[0]-both_temps[1]
+ax[1,0].contourf(to_np(lons1),to_np(lats1), (diff_in_temp), 255,  vmin=vmin_set,vmax=vmax_set,     transform=crs.PlateCarree(), 
         cmap=my_cmap1)
 
     

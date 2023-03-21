@@ -151,7 +151,8 @@ fig.subplots_adjust(top=0.85,hspace=0.2)
 
 simulations_dir='/Users/lmatak/Downloads/all/WRF_CHEM_TIME_SERIES/'
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
-urb=['BEM','No_Urb','SLUC']
+urb=['BEM','No_Urb','SLUC','BEM_cd_3.0']
+domain=3
 
 
 # urb=['MYJ_Default_BEM','MYJ_Decreased_Buildings',]
@@ -159,9 +160,9 @@ urb=['BEM','No_Urb','SLUC']
 # HOW MANY MONTHS IN CALCULATION, SHOULD ALWAYS BE 12, UNLESS DEBUGGING !!!
 months = 12
 # months =['Aug',','Jan','Jul','Jun','May','Nov','Oct','Sep'] #,'Jul','Aug','Sep','Oct','Nov','Dec']
-months =['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+months =['Jan','Feb','Mar','Aug','Sep','Oct','Nov',]
 
-CHEM_ELE='nitrogen_dioxide'
+CHEM_ELE='relative_humidity'
 
 # CAMS stations taken into consideration
 cams_stations=['CAMS404_WSPD','CAMS1052_WSPD','CAMS695_WSPD',\
@@ -239,9 +240,10 @@ for urban_simulation in urb:
 
     turb_sim_dir=simulations_dir+urban_simulation
     # Collect all the simulation CSVs (12 months = 12 csvs), adn sort them
-    for file in glob.glob(turb_sim_dir+'/*.csv'):
+    for file in glob.glob(turb_sim_dir+'/*'+str(domain)+'.csv'):
             sim_data.append(file)
     sim_data.sort()
+    print(sim_data)
 
     #once we have all the simulated data gathered in a list, we loop through the months
     #variable months is just a number, and should always be set to 12
@@ -418,9 +420,9 @@ for urban_sim in urb:
     for_plot_counter+=1
 #add the horizontal lines
 
-# ax[1,2].axhline(y = avg_values(dict_for_averaging_all_cams,'MYJ_Default_No_Urb'), color = 'b', linestyle = '--')
-# ax[1,2].axhline(y = avg_values(dict_for_averaging_all_cams,'MYJ_Default_BEM'), color = 'orange', linestyle = ':')
-# ax[1,2].axhline(y = avg_values(dict_for_averaging_all_cams,'MYJ_Default_SLUC'), color = 'green', linestyle = '-.')  
+# ax[1,2].axhline(y = avg_values(dict_for_averaging_all_cams,'No_Urb'), color = 'b', linestyle = '--')
+# ax[1,2].axhline(y = avg_values(dict_for_averaging_all_cams,'BEM'), color = 'orange', linestyle = ':')
+# ax[1,2].axhline(y = avg_values(dict_for_averaging_all_cams,'SLUC'), color = 'green', linestyle = '-.')  
 ax[1,2].set_title('all stations AVERAGE',size=15)    
 
 plt.setp(plt.gcf().get_axes(), xticks=[])
@@ -431,7 +433,7 @@ plt.rc('legend',fontsize=13)
 
 # ax[0,2].axis("off")
 # ax[0,2].legend(h, l,ncol=2,frameon=False) 
-fig.suptitle(CHEM_ELE,size=15)
+fig.suptitle(CHEM_ELE+' domain_'+str(domain),size=15)
 ax[0,1].legend(h, l,ncol=7,frameon=False,loc='upper center',bbox_to_anchor=(0.4, 1.55))
 plt.show()
 
