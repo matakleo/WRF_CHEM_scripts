@@ -176,9 +176,9 @@ row=0
 col=0
 for_mae=[]
 # chem_comp='wind'
-chem_comp='ozone'
+chem_comp='pm25'
 
-cams='CAMS403_'+chem_comp
+cams='CAMS416_'+chem_comp
 
 if chem_comp!='PBLH':
 

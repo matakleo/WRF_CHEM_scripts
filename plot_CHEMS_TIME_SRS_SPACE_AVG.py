@@ -7,7 +7,7 @@ import glob
 import os
 import pandas as pd
 
-urban_names=['No_Urb','BEM','SLUC'] #,'MYJ_Default_BEM']
+urban_names=['No_Urb','No_Urb_CLDCHEM','No_Urb_DTs','No_Urb_DUST','No_Urb_LBC',] #,'MYJ_Default_BEM']
 PBLS=["MYJ"]
 simulations_dir='/Users/lmatak/Downloads/all/WRF_CHEM_TIME_SERIES/'
 
@@ -160,7 +160,6 @@ def get_real_data_chem(cams_station,month,chem_name):
 domain=3
 
 # months=['Apr']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 # months=['Jul','Aug','Sep','Oct','Nov','Dec']
 # months=['Aug','Dec','Jan','Oct','May','Nov']
 
@@ -176,32 +175,62 @@ row=0
 col=0
 for_mae=[]
 # chem_comp='wind'
-chem_comp='ozone'
+chem_comp='nitrogen_dioxide'
 
-cams='CAMS403_'+chem_comp
+
+if chem_comp=='ozone':
+    cams_stations=['CAMS695_ozone','CAMS53_ozone','CAMS409_ozone','CAMS8_ozone',\
+        'CAMS416_ozone','CAMS603_ozone','CAMS1_ozone','CAMS403_ozone']
+elif chem_comp=='nitric_oxide':
+    cams_stations=['CAMS1052_nitric_oxide','CAMS53_nitric_oxide','CAMS8_nitric_oxide','CAMS416_nitric_oxide',\
+        'CAMS1_nitric_oxide','CAMS603_nitric_oxide','CAMS403_nitric_oxide']
+elif chem_comp=='nitrogen_dioxide':
+    cams_stations=['CAMS1052_nitrogen_dioxide','CAMS53_nitrogen_dioxide','CAMS8_nitrogen_dioxide','CAMS416_nitrogen_dioxide',\
+        'CAMS1_nitrogen_dioxide','CAMS603_nitrogen_dioxide','CAMS403_nitrogen_dioxide']
+elif chem_comp=='pm25':
+    cams_stations=['CAMS8_pm25','CAMS416_pm25',\
+        'CAMS1_pm25','CAMS403_pm25']
+elif chem_comp=='carbon_monoxide':
+    cams_stations=['CAMS1052_carbon_monoxide','CAMS695_carbon_monoxide',\
+        'CAMS403_carbon_monoxide']
+elif chem_comp=='relative_humidity':
+    cams_stations=['CAMS8_relative_humidity','CAMS416_relative_humidity','CAMS695_relative_humidity',\
+        'CAMS403_relative_humidity']
+elif chem_comp=='wind':
+    cams_stations=['CAMS404_WSPD','CAMS1052_WSPD','CAMS695_WSPD',\
+    'CAMS53_WSPD','CAMS409_WSPD','CAMS8_WSPD','CAMS416_WSPD',\
+        'CAMS1_WSPD','CAMS603_WSPD','CAMS403_WSPD','CAMS167_WSPD'\
+            ,'CAMS1029_WSPD','CAMS169_WSPD','CAMS670_WSPD','CAMS1020_WSPD','CAMS1049_WSPD']
+elif chem_comp=='temperature':
+    cams_stations=['CAMS1_temperature', 'CAMS404_temperature','CAMS1052_temperature' \
+    ,'CAMS409_temperature',\
+    'CAMS416_temperature','CAMS603_temperature',\
+        'CAMS403_temperature','CAMS167_temperature','CAMS1029_temperature',\
+    'CAMS169_temperature','CAMS1020_temperature',]
+
+
+month='Apr'
 
 if chem_comp!='PBLH':
 
-    for month in months:
+    for cams in cams_stations:
+
+            
+ 
+
 
             real_winds=np.array(get_real_data_chem(cams[0:-len(chem_comp)],month,chem_comp))
-            
-            # axes[row,col].plot(moving_average(real_winds,6),label='obs',linewidth=3,color='black')
 
-            
-            # if chem_comp!='wind'or'temperature':
-            #     real_winds=real_winds[24:]
-            # real_winds=real_winds[24:]
-            # print(real_winds)
             a=check_numbers(real_winds)
             real_winds[a]=None
-            # print(a)
-            
-            # a=check_numbers(real_winds)
+          
             # real_winds[a]=None
-            axes[row,col].plot(real_winds,label='obs',linewidth=3,color='black')
+            if row<4:
+
+                axes[row,col].plot(real_winds,label='obs',linewidth=3,color='black')
+           
+                axes[row,col].set_title(cams)
             some_counter=0
-            axes[row,col].set_title(month)
 
             dict_for_avgs['real_vals'].append(real_winds)
 
@@ -212,18 +241,19 @@ if chem_comp!='PBLH':
    
                     
                 sim_data=simulations_dir+'/'+urban+'/'+urban+"_"+month+'_'+str(domain)+'.csv'
-                # print(sim_data)
+                
 
                 temp_sim=[]
                 wspd_sim=[]
                 
                 # print(sim_data)
 
-    
-                temp_sim=Extract_by_name(sim_data,temp_sim,'Temperature')
-                if chem_comp=='wind':
-                    cams=cams[0:-len(chem_comp)]+'WSPD'
+ 
+                # if chem_comp=='wind':
+                #     cams=cams+'WSPD'
                 wspd_sim=np.array(Extract_by_name(sim_data,wspd_sim,cams))
+
+                print(wspd_sim)
                 if chem_comp=='carbon_monoxide':
                     wspd_sim=np.array(wspd_sim)/1000
                 
@@ -237,8 +267,8 @@ if chem_comp!='PBLH':
                     wspd_sim=wspd_sim[5:-1]
                 # wspd_sim=wspd_sim[24:]
                 
-
-                axes[row,col].plot(wspd_sim,label=urban,linewidth=2,)
+                if row<4:
+                    axes[row,col].plot(wspd_sim,label=urban,linewidth=2,)
 
 
                 # axes[row,col].xaxis.set_major_locator(ticker.NullLocator())
@@ -277,6 +307,7 @@ if chem_comp!='PBLH':
             if col==3:
                 row+=1
                 col=0
+            
 
 
             ### THIS IS FOR CALCULATION, THE UPPER PART IS ONLY PLOTTING###
@@ -285,7 +316,9 @@ if chem_comp!='PBLH':
                 # print('REAL DATA:',real_data)
 
 else:
-    for month in months:
+    #CAMS169 e.g.
+        cams=cams[0:-len(chem_comp)]
+
         for urban in urban_names:
             sim_data=simulations_dir+'/'+urban+'/'+urban+"_"+month+'_'+str(domain)+'.csv'
             # print(sim_data)
@@ -298,7 +331,7 @@ else:
 
 
             if chem_comp=='wind':
-                cams=cams[0:-len(chem_comp)]+'WSPD'
+                cams=cams+'WSPD'
             wspd_sim=np.array(Extract_by_name(sim_data,wspd_sim,cams))
             if chem_comp=='carbon_monoxide':
                 wspd_sim=np.array(wspd_sim)/1000
@@ -325,13 +358,13 @@ else:
 
         col+=1
         if col==3:
-            row=1
+            row+=1
             col=0
 
 
 # plt.legend(['BEM','cd_2.0'])
 # print(np.mean(for_mae))
-fig.suptitle(cams+'_domain_'+str(domain),size=20)
+fig.suptitle(month+'_domain_'+str(domain),size=20)
 
 # plt.bar(['wrf','log'],[2.827,2.9043])
 axes[0,1].legend()
@@ -344,7 +377,7 @@ axes[0,1].legend()
 
 for urban in urban_names:
     for i in range(len(dict_for_avgs[urban])):
-        print('urban is',urban,' i is ',i)
+        # print('urban is',urban,' i is ',i)
         ##for real avgs also:
         if len(dict_for_avgs['real_vals'][i])<72:
             dict_for_avgs['real_vals'][i]=np.pad(dict_for_avgs['real_vals'][i], (0, 72-len(dict_for_avgs['real_vals'][i])), mode='constant', constant_values=np.nan)

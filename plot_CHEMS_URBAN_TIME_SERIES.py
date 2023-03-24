@@ -173,7 +173,7 @@ row=0
 col=0
 for_mae=[]
 # chem_comp='wind'
-chem_comp='PBLH'
+chem_comp='ozone'
 
 cams='CAMS1_'+chem_comp
 
