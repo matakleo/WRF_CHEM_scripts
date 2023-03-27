@@ -34,7 +34,7 @@ i=0
 file_in_dir=5
 height_lvl=0
 # var_to_plot='TKE'
-var_to_plot='T2'
+var_to_plot='o3'
 
 
 mid_downtown_lon=-95.3621823

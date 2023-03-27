@@ -37,6 +37,7 @@ def avg_values(d, key):
         # print('indices where no num:',a)
         # print('lenght of vals b4 correction:',len(values))
     values = [e for e in values if e is not None]
+    print(d,key)
     # if len(a)>0:
         # print('lenght of vals after correction:',len(values))
     
@@ -151,7 +152,7 @@ fig.subplots_adjust(top=0.85,hspace=0.2)
 
 simulations_dir='/Users/lmatak/Downloads/all/WRF_CHEM_TIME_SERIES/'
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
-urb=['BEM','No_Urb','SLUC','BEM_cd_3.0']
+urb=['No_Urb','No_Urb_YSU','SLUC','SLUC_YSU']
 domain=3
 
 
@@ -160,9 +161,9 @@ domain=3
 # HOW MANY MONTHS IN CALCULATION, SHOULD ALWAYS BE 12, UNLESS DEBUGGING !!!
 months = 12
 # months =['Aug',','Jan','Jul','Jun','May','Nov','Oct','Sep'] #,'Jul','Aug','Sep','Oct','Nov','Dec']
-months =['Jan','Feb','Mar','Aug','Sep','Oct','Nov',]
+months =['Apr','Jul','Dec',]
 
-CHEM_ELE='relative_humidity'
+CHEM_ELE='wind'
 
 # CAMS stations taken into consideration
 cams_stations=['CAMS404_WSPD','CAMS1052_WSPD','CAMS695_WSPD',\

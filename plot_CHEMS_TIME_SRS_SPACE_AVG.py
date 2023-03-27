@@ -7,7 +7,7 @@ import glob
 import os
 import pandas as pd
 
-urban_names=['No_Urb','No_Urb_CLDCHEM','No_Urb_DTs','No_Urb_DUST','No_Urb_LBC',] #,'MYJ_Default_BEM']
+urban_names=['No_Urb','No_Urb_YSU','SLUC','SLUC_YSU',] #,'MYJ_Default_BEM']
 PBLS=["MYJ"]
 simulations_dir='/Users/lmatak/Downloads/all/WRF_CHEM_TIME_SERIES/'
 
@@ -175,7 +175,7 @@ row=0
 col=0
 for_mae=[]
 # chem_comp='wind'
-chem_comp='nitrogen_dioxide'
+chem_comp='pm25'
 
 
 if chem_comp=='ozone':
@@ -209,7 +209,7 @@ elif chem_comp=='temperature':
     'CAMS169_temperature','CAMS1020_temperature',]
 
 
-month='Apr'
+month='Dec'
 
 if chem_comp!='PBLH':
 
@@ -367,7 +367,7 @@ else:
 fig.suptitle(month+'_domain_'+str(domain),size=20)
 
 # plt.bar(['wrf','log'],[2.827,2.9043])
-axes[0,1].legend()
+fig.legend(['Obs','No_Urb_MYJ','No_Urb_YSU','SLUC_MYJ','SLUC_YSU'])
 
 
 
@@ -386,6 +386,6 @@ for urban in urban_names:
             dict_for_avgs[urban][i]=np.pad(dict_for_avgs[urban][i], (0, 72-len(dict_for_avgs[urban][i])), mode='constant', constant_values=np.nan)
     axes[4,1].plot(np.nanmean(dict_for_avgs[urban],axis=0),label=urban,linewidth=2,)
 axes[4,1].plot(np.nanmean(dict_for_avgs['real_vals'],axis=0,dtype=float),label='obs',linewidth=3,color='black')
-
+axes[4,1].set_title('all stations AVERAGE')
 
 plt.show()

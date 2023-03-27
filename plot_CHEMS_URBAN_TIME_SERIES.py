@@ -7,7 +7,7 @@ import glob
 import os
 import pandas as pd
 
-urban_names=['No_Urb','No_Urb_YSU'] #,'MYJ_Default_BEM']
+urban_names=['SLUC','SLUC_YSU'] #,'MYJ_Default_BEM']
 PBLS=["MYJ"]
 simulations_dir='/Users/lmatak/Downloads/all/WRF_CHEM_TIME_SERIES/'
 
@@ -159,7 +159,7 @@ def get_real_data_chem(cams_station,month,chem_name):
 
 domain=3
 
-months=['Apr']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+months=['Apr','Jul','Dec']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 # months=['Jan','Feb','Mar','Apr','May','Jun']
 # months=['Jul','Aug','Sep','Oct','Nov','Dec']
 # months=['Aug','Dec','Jan','Oct','May','Nov']
@@ -173,7 +173,7 @@ row=0
 col=0
 for_mae=[]
 # chem_comp='wind'
-chem_comp='ozone'
+chem_comp='pm25'
 
 cams='CAMS1_'+chem_comp
 
