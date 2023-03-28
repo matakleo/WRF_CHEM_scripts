@@ -15,6 +15,7 @@ import math
 import numpy as np
 import matplotlib.patches as mpatches
 
+
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import os
 import cartopy.feature as cfeature
@@ -31,7 +32,7 @@ dirs=['Dec_wrfinps','Jun_wrfinps'] #,'BEM_ust_10_in_LSM',]#'clz_1000','clz_100']
 # dirs=['BEM_default','BEM_change_tke_100','BEM_change_mom_5',]
 dir_num=0
 i=0
-file_in_dir=5
+file_in_dir=4
 height_lvl=0
 # var_to_plot='TKE'
 var_to_plot='o3'
@@ -60,23 +61,25 @@ for dir in dirs:
     print('the directory is: ',Input_Dir)
     idx=0
 
-    Data = Dataset(ncfiles[file_in_dir])
+    fh = Dataset(ncfiles[file_in_dir],mode='r')
     print('the ncfile is: ',ncfiles[file_in_dir])
     print('----------------------------')
-    # LAI=np.array(getvar(Data, "LANDMASK", timeidx = idx))
-    # lakemask=np.array(getvar(Data, "LAKEMASK", timeidx = idx))
-    # ZNT=np.array(getvar(Data, "U10", timeidx = idx))
-    # TEMP=np.array(getvar(Data, "AKHS", timeidx = idx))
-    # TKE=np.array(getvar(Data, "TKE_PBL", timeidx = idx))
-    # z0=np.array(getvar(Data, "Z0", timeidx = idx))
-    # wspd=np.array(getvar(Data, "wspd", timeidx = idx))
-    # # ust=np.array(getvar(Data, "tke", timeidx = idx))
-    # MASKING=np.array(getvar(Data, "LU_INDEX", timeidx = idx))
-    # u10=getvar(Data, "U10", timeidx = idx)
-    # v10=getvar(Data, "V10", timeidx = idx)
-    # something=getvar(Data, "EXCH_M", timeidx = idx)
-    # print(Data)
-    pm25=Data['E_PM25J']
+
+    lons = fh.variables['XLONG'][0][0]
+    lats = fh.variables['XLAT']
+    lst2 = [item[0] for item in lats[0]]
+    
+
+    # pm25 = fh.variables['E_PM25I'][0][0][:]
+    pm25 = fh.variables['o3'][0][0][:]
+    print('lons=',np.shape(lons),'lats=',np.shape(lst2),'var to plot=',np.shape(pm25))
+
+
+
+
+    # lon, lat = np.meshgrid(lons, lats)
+
+
 
 
     ##time of the day$$
@@ -100,9 +103,9 @@ for dir in dirs:
 
     # height_one_lvl_more=int(np.mean(height[height_lvl+1]))
 
-    lats1, lons1 = Data['XLAT'],Data['XLONG']
 
-    print(lats1)
+
+    
     # height=int(np.mean(height[height_lvl]))
     # PBLH=getvar(Data,'PBLH',0)
 
@@ -130,14 +133,15 @@ for dir in dirs:
 
 
     
-
-    ax[0,col].contourf(to_np(lons1),to_np(lats1), (pm25), 250,  vmin=0,vmax=1,     transform=crs.PlateCarree(), 
+    both_temps.append(pm25)
+    ax[0,col].contourf((lons),(lst2), (pm25), 250,  vmin=pm25.min(),vmax=pm25.max(),     transform=crs.PlateCarree(), 
         cmap=my_cmap1)    
 
     ax[0,col].scatter(mid_downtown_lon,mid_downtown_lat,s=15,c='black',transform=crs.PlateCarree())    
     ax[0,col].scatter(three_dom_lons,three_dom_lats,s=15,c='cyan',transform=crs.PlateCarree())
+    ax[0,col].set_title('ozone - domain 3')
     
-    ax[0,col].background_patch.set_facecolor('black')  
+    # ax[0,col].background_patch.set_facecolor('black')  
 
     # ax[1,col].contourf(to_np(lons1),to_np(lats1), (temperature), 250,  vmin=vmin_set,vmax=vmax_set,     transform=crs.PlateCarree(), 
     #     cmap=my_cmap1)    
@@ -155,21 +159,21 @@ vmin_set=0
 vmax_set=2
 
 diff_in_temp=both_temps[0]-both_temps[1]
-ax[1,0].contourf(to_np(lons1),to_np(lats1), (diff_in_temp), 255,  vmin=vmin_set,vmax=vmax_set,     transform=crs.PlateCarree(), 
+ax[1,0].contourf((lons),(lst2),  (diff_in_temp), 255,  vmin=diff_in_temp.min(),vmax=diff_in_temp.max(),     transform=crs.PlateCarree(), 
         cmap=my_cmap1)
 
     
 
 
-norm1 = mpl.colors.Normalize(vmin=vmin_set,vmax=vmax_set)
+# norm1 = mpl.colors.Normalize(vmin=vmin_set,vmax=vmax_set)
 
-                #xstart ystart xend yend#
+#                 #xstart ystart xend yend#
                 
-cax = plt.axes([0.83, 0.050, 0.01, 0.81])
-plt.subplots_adjust(bottom=0.001, right=0.8, top=0.9)
+# cax = plt.axes([0.83, 0.050, 0.01, 0.81])
+# plt.subplots_adjust(bottom=0.001, right=0.8, top=0.9)
 
-cbar1=fig.colorbar(mpl.cm.ScalarMappable(norm=norm1, cmap=my_cmap1),
-cax=cax, orientation='vertical',  extend='max', fraction=0.03,
-label=var_to_plot)
+# cbar1=fig.colorbar(mpl.cm.ScalarMappable(norm=norm1, cmap=my_cmap1),
+# cax=cax, orientation='vertical',  extend='max', fraction=0.03,
+# label=var_to_plot)
 
 plt.show()
