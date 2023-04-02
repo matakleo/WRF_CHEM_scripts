@@ -27,11 +27,11 @@ my_cmap1.set_bad((0,0,0))
 
 
 # dirs=['BEM_default','BEP_default',]#'clz_1000','clz_100']
-dirs=['Dec_wrfinps','Jun_wrfinps'] #,'BEM_ust_10_in_LSM',]#'clz_1000','clz_100']
+dirs=['Feb_wrfoutpd3','Feb_wrfoutpd2',] #,'BEM_ust_10_in_LSM',]#'clz_1000','clz_100']
 # dirs=['BEM_default','BEM_change_tke_100','BEM_change_mom_5',]
 dir_num=0
 i=0
-file_in_dir=5
+file_in_dir=2
 height_lvl=0
 # var_to_plot='TKE'
 var_to_plot='o3'
@@ -56,38 +56,48 @@ for dir in dirs:
     # Input_Dir = '/Users/lmatak/Downloads/URBAN_SCHEME_CONTOURING/different_times/'+dir
     os.chdir(Input_Dir)
     ncfiles=[]
-    ncfiles = os.listdir(Input_Dir)
+    # ncfiles = os.listdir()
+    nfiles=list_ncfiles(Input_Dir,ncfiles)
     print('the directory is: ',Input_Dir)
     idx=0
 
     Data = Dataset(ncfiles[file_in_dir])
     print('the ncfile is: ',ncfiles[file_in_dir])
     print('----------------------------')
-    # LAI=np.array(getvar(Data, "LANDMASK", timeidx = idx))
-    # lakemask=np.array(getvar(Data, "LAKEMASK", timeidx = idx))
-    # ZNT=np.array(getvar(Data, "U10", timeidx = idx))
-    # TEMP=np.array(getvar(Data, "AKHS", timeidx = idx))
-    # TKE=np.array(getvar(Data, "TKE_PBL", timeidx = idx))
-    # z0=np.array(getvar(Data, "Z0", timeidx = idx))
-    # wspd=np.array(getvar(Data, "wspd", timeidx = idx))
-    # # ust=np.array(getvar(Data, "tke", timeidx = idx))
-    # MASKING=np.array(getvar(Data, "LU_INDEX", timeidx = idx))
-    # u10=getvar(Data, "U10", timeidx = idx)
-    # v10=getvar(Data, "V10", timeidx = idx)
-    # something=getvar(Data, "EXCH_M", timeidx = idx)
-    # print(Data)
-    pm25=Data['E_PM25J']
+    LAI=np.array(getvar(Data, "LANDMASK", timeidx = idx))
+    lakemask=np.array(getvar(Data, "LAKEMASK", timeidx = idx))
+    ZNT=np.array(getvar(Data, "U10", timeidx = idx))
+    TEMP=np.array(getvar(Data, "AKHS", timeidx = idx))
+    TKE=np.array(getvar(Data, "TKE_PBL", timeidx = idx))
+    z0=np.array(getvar(Data, "Z0", timeidx = idx))
+    wspd=np.array(getvar(Data, "wspd", timeidx = idx))
+    # ust=np.array(getvar(Data, "tke", timeidx = idx))
+    MASKING=np.array(getvar(Data, "LU_INDEX", timeidx = idx))
+    u10=getvar(Data, "U10", timeidx = idx)
+    v10=getvar(Data, "V10", timeidx = idx)
+    something=getvar(Data, "EXCH_M", timeidx = idx)
+    ozone=getvar(Data, "o3", timeidx = idx)
 
 
     ##time of the day$$
-    # time_of_the_day=(int(ncfiles[file_in_dir][-8:-6])-5)
-    # if time_of_the_day<0:
-    #     time_of_the_day=24-abs(time_of_the_day)
+    time_of_the_day=(int(ncfiles[file_in_dir][-8:-6])-5)
+    if time_of_the_day<0:
+        time_of_the_day=24-abs(time_of_the_day)
 
 
 
-    # temperature=getvar(Data,'T2',0)
-    # both_temps.append(np.array(temperature))
+    total_wind=ozone[height_lvl]
+    total_wind_one_lvl_higher=ozone[1]
+
+    ozone=ozone[0]
+
+    temperature=getvar(Data,'T2',0)
+    both_temps.append(np.array(ozone))
+    vmin_set=ozone.min()
+    vmin_one_lvl_higher=vmin_set
+    vmax_one_lvl_higher=total_wind.max()
+    vmax_set=ozone.max()
+    label='WSPD [m/s]'
 
 
 
@@ -95,43 +105,40 @@ for dir in dirs:
 
 
 
+    height = (getvar(Data, "height_agl",timeidx = idx))
 
-    # height = (getvar(Data, "height_agl",timeidx = idx))
+    height_one_lvl_more=int(np.mean(height[height_lvl+1]))
 
-    # height_one_lvl_more=int(np.mean(height[height_lvl+1]))
-
-    lats1, lons1 = Data['XLAT'],Data['XLONG']
-
-    print(lats1)
+    lats1, lons1 = latlon_coords(height[0])
     # height=int(np.mean(height[height_lvl]))
-    # PBLH=getvar(Data,'PBLH',0)
+    PBLH=getvar(Data,'PBLH',0)
 
     # print(float(PBLH[24,12]))
 
 
-#     qv=getvar(Data,"QVAPOR",0)
-#     qv=interplevel(qv,height,54)
+    qv=getvar(Data,"QVAPOR",0)
+    qv=interplevel(qv,height,54)
 
-#     Pressure=getvar(Data,"P",0)
+    Pressure=getvar(Data,"P",0)
     
 
-#     potential_temp=getvar(Data, "T",0)
+    potential_temp=getvar(Data, "T",0)
     
 
-#     # temperature=tk(Pressure,potential_temp,meta=True, units='K')
-#     # temperature=interplevel(temperature,height,50)
-#     # print(temperature)
-#     # Pressure=interplevel(Pressure,height,54)
-#     # potential_temp=interplevel(potential_temp,height,54)
-#     # print(temperature)
+    # temperature=tk(Pressure,potential_temp,meta=True, units='K')
+    # temperature=interplevel(temperature,height,50)
+    # print(temperature)
+    # Pressure=interplevel(Pressure,height,54)
+    # potential_temp=interplevel(potential_temp,height,54)
+    # print(temperature)
 
-#     # rel_hum=rh(qv,Pressure,temperature)
+    # rel_hum=rh(qv,Pressure,temperature)
 
 
 
     
 
-    ax[0,col].contourf(to_np(lons1),to_np(lats1), (pm25), 250,  vmin=0,vmax=1,     transform=crs.PlateCarree(), 
+    ax[0,col].contourf(to_np(lons1),to_np(lats1), (ozone), 250,  vmin=vmin_set,vmax=vmax_set,     transform=crs.PlateCarree(), 
         cmap=my_cmap1)    
 
     ax[0,col].scatter(mid_downtown_lon,mid_downtown_lat,s=15,c='black',transform=crs.PlateCarree())    

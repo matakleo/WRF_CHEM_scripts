@@ -6,8 +6,9 @@ from all_functions import Extract_by_name, Extract_the_shit2
 import glob
 import os
 import pandas as pd
+fig, axes = plt.subplots(nrows=5, ncols=3,figsize=(16,9),sharex='col') 
+urban_names=['No_Urb_YSU','SLUC','SLUC_ust10'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
 
-urban_names=['No_Urb','No_Urb_YSU','SLUC','SLUC_YSU',] #,'MYJ_Default_BEM']
 PBLS=["MYJ"]
 simulations_dir='/Users/lmatak/Downloads/all/WRF_CHEM_TIME_SERIES/'
 
@@ -163,7 +164,7 @@ domain=3
 # months=['Jul','Aug','Sep','Oct','Nov','Dec']
 # months=['Aug','Dec','Jan','Oct','May','Nov']
 
-fig, axes = plt.subplots(nrows=5, ncols=3,figsize=(16,9),sharex='col') 
+
 fig.subplots_adjust(hspace=0.25,bottom=0.1)
 
 real_data = []
@@ -175,7 +176,8 @@ row=0
 col=0
 for_mae=[]
 # chem_comp='wind'
-chem_comp='pm25'
+chem_comp='wind'
+month='Apr'
 
 
 if chem_comp=='ozone':
@@ -209,7 +211,7 @@ elif chem_comp=='temperature':
     'CAMS169_temperature','CAMS1020_temperature',]
 
 
-month='Dec'
+
 
 if chem_comp!='PBLH':
 
@@ -367,7 +369,7 @@ else:
 fig.suptitle(month+'_domain_'+str(domain),size=20)
 
 # plt.bar(['wrf','log'],[2.827,2.9043])
-fig.legend(['Obs','No_Urb_MYJ','No_Urb_YSU','SLUC_MYJ','SLUC_YSU'])
+
 
 
 
@@ -387,5 +389,7 @@ for urban in urban_names:
     axes[4,1].plot(np.nanmean(dict_for_avgs[urban],axis=0),label=urban,linewidth=2,)
 axes[4,1].plot(np.nanmean(dict_for_avgs['real_vals'],axis=0,dtype=float),label='obs',linewidth=3,color='black')
 axes[4,1].set_title('all stations AVERAGE')
+
+fig.legend()
 
 plt.show()

@@ -152,7 +152,7 @@ fig.subplots_adjust(top=0.85,hspace=0.2)
 
 simulations_dir='/Users/lmatak/Downloads/all/WRF_CHEM_TIME_SERIES/'
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
-urb=['No_Urb','No_Urb_YSU','SLUC','SLUC_YSU']
+urb=['No_Urb','No_Urb_YSU','SLUC','SLUC_YSU','SLUC_ust10_YSU']
 domain=3
 
 
@@ -163,7 +163,7 @@ months = 12
 # months =['Aug',','Jan','Jul','Jun','May','Nov','Oct','Sep'] #,'Jul','Aug','Sep','Oct','Nov','Dec']
 months =['Apr','Jul','Dec',]
 
-CHEM_ELE='wind'
+CHEM_ELE='relative_humidity'
 
 # CAMS stations taken into consideration
 cams_stations=['CAMS404_WSPD','CAMS1052_WSPD','CAMS695_WSPD',\

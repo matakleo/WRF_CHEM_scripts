@@ -28,11 +28,11 @@ my_cmap1.set_bad((0,0,0))
 
 
 # dirs=['BEM_default','BEP_default',]#'clz_1000','clz_100']
-dirs=['Dec_wrfinps','Jun_wrfinps'] #,'BEM_ust_10_in_LSM',]#'clz_1000','clz_100']
+dirs=['Feb_wrfinps_12z','Feb_wrfinps_0z'] #,'BEM_ust_10_in_LSM',]#'clz_1000','clz_100']
 # dirs=['BEM_default','BEM_change_tke_100','BEM_change_mom_5',]
 dir_num=0
 i=0
-file_in_dir=4
+file_in_dir=-1
 height_lvl=0
 # var_to_plot='TKE'
 var_to_plot='o3'
@@ -57,89 +57,52 @@ for dir in dirs:
     # Input_Dir = '/Users/lmatak/Downloads/URBAN_SCHEME_CONTOURING/different_times/'+dir
     os.chdir(Input_Dir)
     ncfiles=[]
-    ncfiles = os.listdir(Input_Dir)
+    ncfiles = sorted(os.listdir(Input_Dir))
     print('the directory is: ',Input_Dir)
+    # print(sorted(ncfiles))
     idx=0
 
     fh = Dataset(ncfiles[file_in_dir],mode='r')
     print('the ncfile is: ',ncfiles[file_in_dir])
     print('----------------------------')
 
-    lons = fh.variables['XLONG'][0][0]
-    lats = fh.variables['XLAT']
-    lst2 = [item[0] for item in lats[0]]
+    if dir != 'Jun_wrfoutputs':
+        lons = fh.variables['XLONG'][0]
+        lats = fh.variables['XLAT']
+        pm25 = fh.variables['E_PM25I'][0][0][:]
+        lst2 = [item[0] for item in lats]
+    else:
+        pm25=getvar(fh, "PM2_5_DRY", timeidx = idx)[0]
+        height = (getvar(fh, "height_agl",timeidx = idx))
+        lats, lons = latlon_coords(height[0])
+        lst2=lats
     
+    print('pm25 min',pm25.min(),'pm25 max',pm25.max())
 
-    # pm25 = fh.variables['E_PM25I'][0][0][:]
-    pm25 = fh.variables['o3'][0][0][:]
-    print('lons=',np.shape(lons),'lats=',np.shape(lst2),'var to plot=',np.shape(pm25))
-
-
-
-
-    # lon, lat = np.meshgrid(lons, lats)
-
-
-
-
-    ##time of the day$$
-    # time_of_the_day=(int(ncfiles[file_in_dir][-8:-6])-5)
-    # if time_of_the_day<0:
-    #     time_of_the_day=24-abs(time_of_the_day)
-
-
-
-    # temperature=getvar(Data,'T2',0)
-    # both_temps.append(np.array(temperature))
-
-
-
-
-
-
-
-
-    # height = (getvar(Data, "height_agl",timeidx = idx))
-
-    # height_one_lvl_more=int(np.mean(height[height_lvl+1]))
-
-
+    # print(lats)
+    # print('lons=',np.shape(lons),'lats=',np.shape(lats),'var to plot=',np.shape(pm25))
 
     
-    # height=int(np.mean(height[height_lvl]))
-    # PBLH=getvar(Data,'PBLH',0)
-
-    # print(float(PBLH[24,12]))
-
-
-#     qv=getvar(Data,"QVAPOR",0)
-#     qv=interplevel(qv,height,54)
-
-#     Pressure=getvar(Data,"P",0)
     
 
-#     potential_temp=getvar(Data, "T",0)
     
+    # pm25 = fh.variables['o3'][0][0][:]
+    # print('lons=',np.shape(lons),'lats=',np.shape(lst2),'var to plot=',np.shape(pm25))
+    # print(lons)
 
-#     # temperature=tk(Pressure,potential_temp,meta=True, units='K')
-#     # temperature=interplevel(temperature,height,50)
-#     # print(temperature)
-#     # Pressure=interplevel(Pressure,height,54)
-#     # potential_temp=interplevel(potential_temp,height,54)
-#     # print(temperature)
 
-#     # rel_hum=rh(qv,Pressure,temperature)
+
 
 
 
     
     both_temps.append(pm25)
-    ax[0,col].contourf((lons),(lst2), (pm25), 250,  vmin=pm25.min(),vmax=pm25.max(),     transform=crs.PlateCarree(), 
+    ax[0,col].contourf((lons),(lst2), (pm25), 250,  vmin=9.0538643e-03,vmax=0.05518611,     transform=crs.PlateCarree(), 
         cmap=my_cmap1)    
 
     ax[0,col].scatter(mid_downtown_lon,mid_downtown_lat,s=15,c='black',transform=crs.PlateCarree())    
     ax[0,col].scatter(three_dom_lons,three_dom_lats,s=15,c='cyan',transform=crs.PlateCarree())
-    ax[0,col].set_title('ozone - domain 3')
+    # ax[0,col].set_title('ozone - domain 3')
     
     # ax[0,col].background_patch.set_facecolor('black')  
 
@@ -158,8 +121,11 @@ for dir in dirs:
 vmin_set=0
 vmax_set=2
 
+
+
 diff_in_temp=both_temps[0]-both_temps[1]
-ax[1,0].contourf((lons),(lst2),  (diff_in_temp), 255,  vmin=diff_in_temp.min(),vmax=diff_in_temp.max(),     transform=crs.PlateCarree(), 
+print('diff min',diff_in_temp.min(),'diff max',diff_in_temp.max())
+ax[1,0].contourf((lons),(lst2),  (diff_in_temp), 255,  vmin=9.0538643e-04,vmax=0.005518611,     transform=crs.PlateCarree(), 
         cmap=my_cmap1)
 
     
