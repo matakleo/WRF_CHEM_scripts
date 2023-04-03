@@ -22,7 +22,7 @@ def find_nearest(array, value):
 
 #check the output folder!!!!
 
-Input_Dir = '/Users/lmatak/Downloads/all/WRF_CHEM_CONTOURING/no_temp_change/'
+Input_Dir = '/Users/lmatak/Downloads/all/WRF_CHEM_CONTOURING/Jun_wrfoutputs/'
 
 #what you wanna get:?
 var="PM2_5_DRY"
@@ -76,6 +76,7 @@ cams169_pos=([58],[70])
 cams670_pos=( [58] , [70] )
 cams1020_pos=( [56] , [70] )
 CAMS1049_pos=( [58] , [73] )
+cams698_pos=([ 107 ],[ 52 ])
 
 CAMS_POSITIONS=[CAMS404_pos,cams1052_pos,CAMS695_pos,cams53_pos,CAMS409_pos,CAMS8_pos,CAMS416_pos,CAMS1_pos,\
     CAMS603_pos,CAMS403_pos,CAMS167_pos,CAMS1029_pos,cams670_pos,cams1020_pos,CAMS1049_pos] 
@@ -110,7 +111,7 @@ time_idx=0
 os.chdir(Input_Dir)
 ncfiles = []
 ########## list to hold the wrfout files ##########
-for file in glob.glob(Input_Dir+'wrfout_d02*'):
+for file in glob.glob(Input_Dir+'wrfout_d03*'):
     ncfiles.append(file)
 
 
@@ -164,13 +165,16 @@ cams1020_lon=-95.253598
 cams1049_lat=29.703208
 cams1049_lon=-95.221947
 
+cams698_lat=30.236111
+cams698_lon=-95.483056
+
 cams=3
 cams_names=['cams404','cams1052','cams695','cams53','cams409','cams8','cams416','cams1','cams603','cams403','cams167','cams1029','cams169',\
-    'cams670','cams1020','cams1049'] #
+    'cams670','cams1020','cams1049','cams698'] #
 cams_lats=[cams404_lat,cams1052_lat,cams695_lat,cams53_lat,cams409_lat,cams8_lat,cams416_lat,cams1_lat,\
-    cams603_lat,cams403_lat,cams167_lat,cams1029_lat,cams169_lat,cams670_lat,cams1020_lat,cams1049_lat]
+    cams603_lat,cams403_lat,cams167_lat,cams1029_lat,cams169_lat,cams670_lat,cams1020_lat,cams1049_lat,cams698_lat]
 cams_longs=[cams404_lon,cams1052_lon,cams695_lon,cams53_lon,cams409_lon,cams8_lon,cams416_lon,cams1_lon,\
-    cams603_lon,cams403_lon,cams167_lon,cams1029_lon,cams169_lon,cams670_lon,cams1020_lon,cams1049_lon]#
+    cams603_lon,cams403_lon,cams167_lon,cams1029_lon,cams169_lon,cams670_lon,cams1020_lon,cams1049_lon,cams698_lon]#
 
 
 
