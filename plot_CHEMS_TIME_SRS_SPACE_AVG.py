@@ -7,7 +7,7 @@ import glob
 import os
 import pandas as pd
 fig, axes = plt.subplots(nrows=5, ncols=3,figsize=(16,9),sharex='col') 
-urban_names=['No_Urb_YSU','SLUC','SLUC_ust10'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
+urban_names=['No_Urb_IO_STYL','No_Urb_anth','BEM'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
 
 PBLS=["MYJ"]
 simulations_dir='/Users/lmatak/Downloads/all/WRF_CHEM_TIME_SERIES/'
@@ -176,13 +176,13 @@ row=0
 col=0
 for_mae=[]
 # chem_comp='wind'
-chem_comp='wind'
+chem_comp='ozone'
 month='Apr'
 
 
 if chem_comp=='ozone':
     cams_stations=['CAMS695_ozone','CAMS53_ozone','CAMS409_ozone','CAMS8_ozone',\
-        'CAMS416_ozone','CAMS603_ozone','CAMS1_ozone','CAMS403_ozone']
+        'CAMS416_ozone','CAMS603_ozone','CAMS1_ozone','CAMS403_ozone','CAMS698_ozone']
 elif chem_comp=='nitric_oxide':
     cams_stations=['CAMS1052_nitric_oxide','CAMS53_nitric_oxide','CAMS8_nitric_oxide','CAMS416_nitric_oxide',\
         'CAMS1_nitric_oxide','CAMS603_nitric_oxide','CAMS403_nitric_oxide']
