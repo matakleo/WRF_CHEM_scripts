@@ -7,7 +7,7 @@ import glob
 import os
 import pandas as pd
 fig, axes = plt.subplots(nrows=5, ncols=3,figsize=(16,9),sharex='col') 
-urban_names=['BEM_YSU','BEM_MYJ'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
+urban_names=['No_Urb','No_Urb_MYJ'] #,'SL_YSU','SL_MYJ','SL_UST2.5_YSU'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
 
 PBLS=["MYJ"]
 simulations_dir='/Users/lmatak/Downloads/all/WRF_CHEM_TIME_SERIES/'
@@ -182,8 +182,8 @@ row=0
 col=0
 for_mae=[]
 # chem_comp='wind'
-chem_comp='ozone'
-month='Jan'
+chem_comp='pm25'
+month='Nov'
 
 
 if chem_comp=='ozone':
@@ -218,16 +218,26 @@ elif chem_comp=='temperature':
 
 
 
-
 if chem_comp!='PBLH':
 
     for cams in cams_stations:
-
             
- 
+            if (chem_comp != 'carbon_monoxide' or chem_comp != 'relative_humidity'):
+                tmp_list=[]
+                # for tmp_cms in ['CAMS1_','CAMS403_']:
+                #     tmp_nums=(np.array(get_real_data_chem(tmp_cms,month,chem_comp)))
+                #     a=check_numbers(np.array(get_real_data_chem(tmp_cms,month,chem_comp)))
+                #     mask = np.ones(len(tmp_nums), dtype=bool)
+                #     mask[a] = False
+                #     tmp_nums = tmp_nums[mask,...]
+                #     tmp_nums=np.pad(tmp_nums,0, mode='constant', constant_values=np.nan)
+                #     print(tmp_nums)
+                #     tmp_list.append(tmp_nums)
+                # real_winds=np.nanmean(tmp_list,axis=0)
+                real_winds=np.array(get_real_data_chem(cams[0:-len(chem_comp)],month,chem_comp))
+            else:
 
-
-            real_winds=np.array(get_real_data_chem(cams[0:-len(chem_comp)],month,chem_comp))
+                real_winds=np.array(get_real_data_chem(cams[0:-len(chem_comp)],month,chem_comp))
 
             a=check_numbers(real_winds)
             real_winds[a]=None
@@ -393,8 +403,8 @@ for urban in urban_names:
 
         if len(dict_for_avgs[urban][i])<72:
             dict_for_avgs[urban][i]=np.pad(dict_for_avgs[urban][i], (0, 72-len(dict_for_avgs[urban][i])), mode='constant', constant_values=np.nan)
-#     axes[4,1].plot(np.nanmean(dict_for_avgs[urban],axis=0),label=urban,linewidth=2,)
-# axes[4,1].plot(np.nanmean(dict_for_avgs['real_vals'],axis=0,dtype=float),label='obs',linewidth=3,color='black')
+    axes[4,1].plot(np.nanmean(dict_for_avgs[urban],axis=0),label=urban,linewidth=2,)
+axes[4,1].plot(np.nanmean(dict_for_avgs['real_vals'],axis=0,dtype=float),label='obs',linewidth=3,color='black')
 axes[4,1].set_title('all stations AVERAGE')
 
 fig.legend()

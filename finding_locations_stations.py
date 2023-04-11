@@ -22,12 +22,17 @@ def find_nearest(array, value):
 
 #check the output folder!!!!
 
-Input_Dir = '/Users/lmatak/Downloads/all/WRF_CHEM_CONTOURING/Jun_wrfoutputs/'
+Input_Dir = '/Users/lmatak/Downloads/all/WRF_CHEM_CONTOURING/Jun_wrfinps/'
 
 #what you wanna get:?
 var="PM2_5_DRY"
 #at what altitude?
 alt=50
+
+
+#### FOR BIG TSK +2 DOMAIN : ####
+
+
 
 
 # ###FOR LES DOMAIN FOUR, BIG PME####

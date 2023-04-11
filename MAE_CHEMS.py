@@ -152,8 +152,8 @@ fig.subplots_adjust(top=0.85,hspace=0.2)
 
 simulations_dir='/Users/lmatak/Downloads/all/WRF_CHEM_TIME_SERIES/'
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
-urb=['No_Urb','No_Urb_YSU','SLUC','SLUC_YSU','SLUC_ust10_YSU','No_Urb_anth']
-domain=3
+urb=['No_Urb_MYJ','No_Urb_YSU','SL_YSU','SL_MYJ','SL_UST2.5_YSU','BEM_YSU','BEM_MYJ']
+domain=2
 
 
 # urb=['MYJ_Default_BEM','MYJ_Decreased_Buildings',]
@@ -161,9 +161,9 @@ domain=3
 # HOW MANY MONTHS IN CALCULATION, SHOULD ALWAYS BE 12, UNLESS DEBUGGING !!!
 months = 12
 # months =['Aug',','Jan','Jul','Jun','May','Nov','Oct','Sep'] #,'Jul','Aug','Sep','Oct','Nov','Dec']
-months =['Apr'] #,'Jul','Dec',]
+months =['Jan','Mar','May','Jul','Sep','Nov']
 
-CHEM_ELE='nitric_oxide'
+CHEM_ELE='nitrogen_dioxide'
 
 # CAMS stations taken into consideration
 cams_stations=['CAMS404_WSPD','CAMS1052_WSPD','CAMS695_WSPD',\
