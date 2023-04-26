@@ -32,7 +32,23 @@ alt=50
 
 #### FOR BIG TSK +2 DOMAIN : ####
 
-
+CAMS404_pos=([ 53 ],[ 53 ])
+CAMS1052_pos=([ 53 ],[ 52 ])
+CAMS695_pos=([ 52 ],[ 52 ])
+CAMS53_pos=([ 51 ],[ 51 ])
+CAMS409_pos=([ 51 ],[ 51 ])
+CAMS8_pos=([ 54 ],[ 52 ])
+CAMS416_pos=([ 51 ],[ 53 ])
+CAMS1_pos=([ 52 ],[ 53 ])
+CAMS603_pos=([ 52 ],[ 54 ])
+CAMS403_pos=([ 52 ],[ 53 ])
+CAMS167_pos=([ 52 ],[ 53 ])
+CAMS1029_pos=([ 52 ],[ 53 ])
+CAMS169_pos=([ 52 ],[ 53 ])
+CAMS670_pos=([ 51 ],[ 53 ])
+CAMS1020_pos=([ 51 ],[ 53 ])
+CAMS1049_pos=([ 51 ],[ 53 ])
+CAMS698_pos=([ 57 ],[ 51 ])
 
 
 # ###FOR LES DOMAIN FOUR, BIG PME####

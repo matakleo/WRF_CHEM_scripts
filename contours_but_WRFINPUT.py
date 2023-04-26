@@ -28,7 +28,7 @@ my_cmap1.set_bad((0,0,0))
 
 
 # dirs=['BEM_default','BEP_default',]#'clz_1000','clz_100']
-dirs=['Feb_wrfinps_12z','Feb_wrfinps_0z'] #,'BEM_ust_10_in_LSM',]#'clz_1000','clz_100']
+dirs=['Does_wor','Doesnt_wor'] #,'BEM_ust_10_in_LSM',]#'clz_1000','clz_100']
 # dirs=['BEM_default','BEM_change_tke_100','BEM_change_mom_5',]
 dir_num=0
 i=0
@@ -71,11 +71,13 @@ for dir in dirs:
         lats = fh.variables['XLAT']
         pm25 = fh.variables['E_PM25I'][0][0][:]
         lst2 = [item[0] for item in lats]
+        print('firsts/')
     else:
         pm25=getvar(fh, "PM2_5_DRY", timeidx = idx)[0]
         height = (getvar(fh, "height_agl",timeidx = idx))
         lats, lons = latlon_coords(height[0])
         lst2=lats
+        #E_PM_10
     
     print('pm25 min',pm25.min(),'pm25 max',pm25.max())
 
@@ -143,3 +145,20 @@ ax[1,0].contourf((lons),(lst2),  (diff_in_temp), 255,  vmin=9.0538643e-04,vmax=0
 # label=var_to_plot)
 
 plt.show()
+
+
+# conda activate Leo
+# python
+
+# import netCDF4
+# import os
+
+
+# for file in glob.glob(os.getcwd()/wrfche*):
+#     print file
+    
+#     ncfile = netCDF4.Dataset(file, mode='r+')
+#     var = ncfile.variables['E_PM_10'][:]
+#     var[var < 0] = 0
+#     ncfile.variables['E_PM_10'][:] = var
+#     ncfile.close()

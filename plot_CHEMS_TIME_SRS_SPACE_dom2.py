@@ -7,7 +7,7 @@ import glob
 import os
 import pandas as pd
 fig, axes = plt.subplots(nrows=5, ncols=3,figsize=(16,9),sharex='col') 
-urban_names=['No_Urb','No_Urb_MYJ'] #,'SL_YSU','SL_MYJ','SL_UST2.5_YSU'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
+urban_names=['SL_YSU','No_Urb_YSU'] #,'SL_YSU','SL_MYJ','SL_UST2.5_YSU'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
 
 PBLS=["MYJ"]
 simulations_dir='/Users/lmatak/Downloads/all/WRF_CHEM_TIME_SERIES/'
@@ -182,8 +182,8 @@ row=0
 col=0
 for_mae=[]
 # chem_comp='wind'
-chem_comp='pm25'
-month='Nov'
+chem_comp='nitrogen_dioxide'
+month='Jan'
 
 
 if chem_comp=='ozone':
@@ -241,7 +241,7 @@ if chem_comp!='PBLH':
 
             a=check_numbers(real_winds)
             real_winds[a]=None
-            real_winds=real_winds[24:]
+            real_winds=real_winds
           
             # real_winds[a]=None
             if row<4:
@@ -280,10 +280,10 @@ if chem_comp!='PBLH':
 
                 if (month== 'Jan' or month=='Feb' or month=='Mar' or month=='Dec'):
 
-                    wspd_sim=wspd_sim[6+24:]
+                    wspd_sim=wspd_sim[6:]
                 else:
 
-                    wspd_sim=wspd_sim[5+24:-1]
+                    wspd_sim=wspd_sim[5:-1]
                 # wspd_sim=wspd_sim[24:]
                 
                 if row<4:

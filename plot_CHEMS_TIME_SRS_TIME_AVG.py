@@ -7,7 +7,7 @@ import glob
 import os
 import pandas as pd
 
-urban_names=['SLUC'] #,'BEM','SLUC'] #,'MYJ_Default_BEM']
+urban_names=['No_Urb'] #,'BEM','SLUC'] #,'MYJ_Default_BEM']
 PBLS=["MYJ"]
 simulations_dir='/Users/lmatak/Downloads/all/WRF_CHEM_TIME_SERIES/'
 
