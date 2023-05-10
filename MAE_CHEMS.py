@@ -150,9 +150,9 @@ fig.subplots_adjust(top=0.85,hspace=0.2)
 
 # Calculate the mean absolute error for each month
 
-simulations_dir='/Users/lmatak/Downloads/all/WRF_CHEM_TIME_SERIES/'
+simulations_dir='/Users/lmatak/Downloads/temp_foold/all/WRF_CHEM_TIME_SERIES/'
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
-urb=['No_Urb_MYJ','No_Urb_YSU','SL_YSU','SL_MYJ','SL_UST2.5_YSU','BEM_YSU','BEM_MYJ']
+urb=['NU_YSU','NU_MYJ','BEM_YSU','BEM_MYJ','SL_YSU','SL_MYJ','SL_YSU_UST10',]
 domain=2
 
 
@@ -161,9 +161,9 @@ domain=2
 # HOW MANY MONTHS IN CALCULATION, SHOULD ALWAYS BE 12, UNLESS DEBUGGING !!!
 months = 12
 # months =['Aug',','Jan','Jul','Jun','May','Nov','Oct','Sep'] #,'Jul','Aug','Sep','Oct','Nov','Dec']
-months =['Jan','Mar','May','Jul','Sep','Nov']
+months =['Jan','Mar','Apr']
 
-CHEM_ELE='nitrogen_dioxide'
+CHEM_ELE='relative_humidity'
 
 # CAMS stations taken into consideration
 cams_stations=['CAMS404_WSPD','CAMS1052_WSPD','CAMS695_WSPD',\
@@ -222,7 +222,8 @@ error_dict={}
 
 #dictionary used for plotting the averaged error over all the cams
 dict_for_averaging_all_cams = {}
-
+start=20
+stop=40
 
 ### the loop goes like this: MYJ_Default_No_Urb --> each month --> each cams station, then MYJ_Default_BEM --> each month --> each cams station,
 for urban_simulation in urb:
@@ -291,9 +292,9 @@ for urban_simulation in urb:
             print('real ',cams_name_for_real_data,month_name_for_real_data)
             real_data=np.array(get_real_data(cams_name_for_real_data,month_name_for_real_data,CHEM_ELE))
             # print(cams_name_for_real_data,month_name_for_real_data)
-            if cams_station[-(len(CHEM_ELE)+1):]!='wind' or 'temperature':
-                real_data=real_data[24:]
-                simulation_month=simulation_month[24:]
+        # if cams_station[-(len(CHEM_ELE)+1):]!='wind' or 'temperature':
+            real_data=real_data[start:stop]
+            simulation_month=simulation_month[start:stop]
             # if cams_station[-(len(CHEM_ELE)+1):]=='carbon_monoxide': 
             #     simulation_month=np.array(simulation_month)/1000
 

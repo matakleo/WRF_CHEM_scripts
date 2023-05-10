@@ -132,7 +132,7 @@ time_idx=0
 os.chdir(Input_Dir)
 ncfiles = []
 ########## list to hold the wrfout files ##########
-for file in glob.glob(Input_Dir+'wrfout_d03*'):
+for file in glob.glob(Input_Dir+'wrfout_d01*'):
     ncfiles.append(file)
 
 

@@ -7,9 +7,9 @@ import glob
 import os
 import pandas as pd
 
-urban_names=['No_Urb'] #,'BEM','SLUC'] #,'MYJ_Default_BEM']
-PBLS=["MYJ"]
-simulations_dir='/Users/lmatak/Downloads/all/WRF_CHEM_TIME_SERIES/'
+urban_names=['NU_MYJ','SL_YSU','BEM_YSU','BEM_MYJ','SL_MYJ','SL_YSU_UST10',] #,'BEM','SLUC'] #,'MYJ_Default_BEM']
+PBLS=["YSU"]
+simulations_dir='/Users/lmatak/Downloads/temp_foold/all/WRF_CHEM_TIME_SERIES/'
 
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
 
@@ -157,14 +157,14 @@ def get_real_data_chem(cams_station,month,chem_name):
 
 
 
-domain=3
+domain=2
 
 # months=['Apr']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 # months=['Jul','Aug','Sep','Oct','Nov','Dec']
 # months=['Aug','Dec','Jan','Oct','May','Nov']
 
-fig, axes = plt.subplots(nrows=5, ncols=3,figsize=(16,9),sharex='col') 
+fig, axes = plt.subplots(nrows=5, ncols=3,figsize=(16,9)) 
 fig.subplots_adjust(hspace=0.25,bottom=0.1)
 
 real_data = []
@@ -176,9 +176,9 @@ row=0
 col=0
 for_mae=[]
 # chem_comp='wind'
-chem_comp='pm25'
+chem_comp='wind'
 
-cams='CAMS416_'+chem_comp
+cams='CAMS403_'+chem_comp
 
 if chem_comp!='PBLH':
 
@@ -193,9 +193,12 @@ if chem_comp!='PBLH':
             #     real_winds=real_winds[24:]
             # real_winds=real_winds[24:]
             # print(real_winds)
+            real_winds=np.append([None,None,None,None,None,None], real_winds)
             a=check_numbers(real_winds)
             real_winds[a]=None
-            # print(a)
+            
+            # real_winds=[0,0,0,0,0,0]+real_winds
+            print(real_winds)
             
             # a=check_numbers(real_winds)
             # real_winds[a]=None
@@ -227,21 +230,13 @@ if chem_comp!='PBLH':
                 if chem_comp=='carbon_monoxide':
                     wspd_sim=np.array(wspd_sim)/1000
                 
-                # print(len(wspd_sim),sim_data,cams)
-
-                if (month== 'Jan' or month=='Feb' or month=='Mar' or month=='Dec'):
-
-                    wspd_sim=wspd_sim[6:]
-                else:
-
-                    wspd_sim=wspd_sim[5:-1]
-                # wspd_sim=wspd_sim[24:]
-                
-
-                axes[row,col].plot(wspd_sim,label=urban,linewidth=2,)
 
 
-                # axes[row,col].xaxis.set_major_locator(ticker.NullLocator())
+                axes[row,col].plot(np.arange(0,len(wspd_sim),1),wspd_sim,label=urban,linewidth=2,)
+
+
+
+                # axes[row,col].xaxis.set_label(np.arange(0,len(wspd_sim),1))
                 len_of_shortest=check_longer(wspd_sim,real_winds)
                 # print(len_of_shortest)
                 wspd_sim=wspd_sim[0:len_of_shortest]
