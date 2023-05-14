@@ -152,7 +152,7 @@ fig.subplots_adjust(top=0.85,hspace=0.2)
 
 simulations_dir='/Users/lmatak/Downloads/temp_foold/all/WRF_CHEM_TIME_SERIES/'
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
-urb=['NU_YSU','NU_MYJ','BEM_YSU','BEM_MYJ','SL_YSU','SL_MYJ','SL_YSU_UST10',]
+urb=['NU_YSU','NU_MYJ','BEM_YSU','BEM_MYJ',]
 domain=2
 
 
@@ -160,10 +160,10 @@ domain=2
 
 # HOW MANY MONTHS IN CALCULATION, SHOULD ALWAYS BE 12, UNLESS DEBUGGING !!!
 months = 12
-# months =['Aug',','Jan','Jul','Jun','May','Nov','Oct','Sep'] #,'Jul','Aug','Sep','Oct','Nov','Dec']
-months =['Jan','Mar','Apr']
+months =['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] #,'Jul','Aug','Sep','Oct','Nov','Dec']
+# months =['Jan','Mar','Apr']
 
-CHEM_ELE='relative_humidity'
+CHEM_ELE='nitrogen_dioxide'
 
 # CAMS stations taken into consideration
 cams_stations=['CAMS404_WSPD','CAMS1052_WSPD','CAMS695_WSPD',\
@@ -222,8 +222,8 @@ error_dict={}
 
 #dictionary used for plotting the averaged error over all the cams
 dict_for_averaging_all_cams = {}
-start=20
-stop=40
+start=24
+stop=-1
 
 ### the loop goes like this: MYJ_Default_No_Urb --> each month --> each cams station, then MYJ_Default_BEM --> each month --> each cams station,
 for urban_simulation in urb:

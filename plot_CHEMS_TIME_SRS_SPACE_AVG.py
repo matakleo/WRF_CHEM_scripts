@@ -6,11 +6,15 @@ from all_functions import Extract_by_name, Extract_the_shit2
 import glob
 import os
 import pandas as pd
-fig, axes = plt.subplots(nrows=5, ncols=3,figsize=(16,9),sharex='col') 
-urban_names=['No_Urb_YSU_TP0','No_Urb_YSU_TP2'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
+fig, axes = plt.subplots(nrows=5, ncols=3,figsize=(16,9),) 
+
+
+
+urban_names=['NU_YSU','SL_YSU_UST10','SL_YSU','SL_YSU_UST0.5'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
+# urban_names=['NU_YSU','NU_MYJ',] #'BEM_MYJ','BEM_YSU','No_Urb_old_emiss','SL_MYJ','SL_YSU'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
 
 PBLS=["MYJ"]
-simulations_dir='/Users/lmatak/Downloads/all/WRF_CHEM_TIME_SERIES/'
+simulations_dir='/Users/lmatak/Downloads/temp_foold/all/WRF_CHEM_TIME_SERIES/'
 
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
 
@@ -141,23 +145,23 @@ def get_real_data_chem(cams_station,month,chem_name):
     target_date = '2019-'+month_num+'-01'
     target_date2= '2019-'+month_num+'-02'
     target_date3='2019-'+month_num+'-03'
-    target_date4='2019-'+month_num+'-04'
-    target_date5='2019-'+month_num+'-05'
-    target_date6='2019-'+month_num+'-06'
-    target_date7 = '2019-'+month_num+'-07'
-    target_date8= '2019-'+month_num+'-08'
-    target_date9 = '2019-'+month_num+'-09'
-    target_date10 = '2019-'+month_num+'-10'
-    target_date11= '2019-'+month_num+'-11'
-    target_date12= '2019-'+month_num+'-12'
-    target_date13= '2019-'+month_num+'-13'
-    target_date14= '2019-'+month_num+'-14'
-    target_date15= '2019-'+month_num+'-15'
-    target_date16= '2019-'+month_num+'-16'
-    target_date17= '2019-'+month_num+'-17'
-    target_date18= '2019-'+month_num+'-18'
-    target_date19= '2019-'+month_num+'-19'
-    target_date20= '2019-'+month_num+'-20'
+    # target_date4='2019-'+month_num+'-04'
+    # target_date5='2019-'+month_num+'-05'
+    # target_date6='2019-'+month_num+'-06'
+    # target_date7 = '2019-'+month_num+'-07'
+    # target_date8= '2019-'+month_num+'-08'
+    # target_date9 = '2019-'+month_num+'-09'
+    # target_date10 = '2019-'+month_num+'-10'
+    # target_date11= '2019-'+month_num+'-11'
+    # target_date12= '2019-'+month_num+'-12'
+    # target_date13= '2019-'+month_num+'-13'
+    # target_date14= '2019-'+month_num+'-14'
+    # target_date15= '2019-'+month_num+'-15'
+    # target_date16= '2019-'+month_num+'-16'
+    # target_date17= '2019-'+month_num+'-17'
+    # target_date18= '2019-'+month_num+'-18'
+    # target_date19= '2019-'+month_num+'-19'
+    # target_date20= '2019-'+month_num+'-20'
 
 
     # Retrieve data for the target date
@@ -166,26 +170,26 @@ def get_real_data_chem(cams_station,month,chem_name):
     col1 = np.array(df.loc[target_date])
     col2 = np.array(df.loc[target_date2])
     col3 = np.array(df.loc[target_date3])
-    col4 = np.array(df.loc[target_date4])
-    col5 = np.array(df.loc[target_date5])
-    col6 = np.array(df.loc[target_date6])
-    col7 = np.array(df.loc[target_date7])
-    col8 = np.array(df.loc[target_date8])
-    col9 = np.array(df.loc[target_date9])
-    col10 = np.array(df.loc[target_date10])
-    col11 = np.array(df.loc[target_date11])
-    col12 = np.array(df.loc[target_date12])
-    col13 = np.array(df.loc[target_date13])
-    col14 = np.array(df.loc[target_date14])
-    col15 = np.array(df.loc[target_date15])
-    col16 = np.array(df.loc[target_date16])
-    col17 = np.array(df.loc[target_date17])
-    col18 = np.array(df.loc[target_date18])
-    col19 = np.array(df.loc[target_date19])
-    col20 = np.array(df.loc[target_date20])
+    # col4 = np.array(df.loc[target_date4])
+    # col5 = np.array(df.loc[target_date5])
+    # col6 = np.array(df.loc[target_date6])
+    # col7 = np.array(df.loc[target_date7])
+    # col8 = np.array(df.loc[target_date8])
+    # col9 = np.array(df.loc[target_date9])
+    # col10 = np.array(df.loc[target_date10])
+    # col11 = np.array(df.loc[target_date11])
+    # col12 = np.array(df.loc[target_date12])
+    # col13 = np.array(df.loc[target_date13])
+    # col14 = np.array(df.loc[target_date14])
+    # col15 = np.array(df.loc[target_date15])
+    # col16 = np.array(df.loc[target_date16])
+    # col17 = np.array(df.loc[target_date17])
+    # col18 = np.array(df.loc[target_date18])
+    # col19 = np.array(df.loc[target_date19])
+    # col20 = np.array(df.loc[target_date20])
 
-    # target_data=(np.concatenate((col1,col2,col3),axis=0))
-    target_data=(np.concatenate((col1,col2,col3,col4,col5,col6,col7,col8,col9,col10,col11,col12,col13,col14,col15,col16,col17,col18,col19,col20),axis=0))
+    target_data=(np.concatenate((col1,col2,col3),axis=0))
+    # target_data=(np.concatenate((col1,col2,col3,col4,col5,col6,col7,col8,col9,col10,col11,col12,col13,col14,col15,col16,col17,col18,col19,col20),axis=0))
     # # Concatenate the columns into one DataFrame
 
 
@@ -194,7 +198,7 @@ def get_real_data_chem(cams_station,month,chem_name):
 
 
 
-domain=3
+domain=2
 
 # months=['Apr']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 # months=['Jul','Aug','Sep','Oct','Nov','Dec']
@@ -212,8 +216,8 @@ row=0
 col=0
 for_mae=[]
 # chem_comp='wind'
-chem_comp='so'
-month='Aug'
+chem_comp='wind'
+month='Mar'
 
 
 if chem_comp=='ozone':
@@ -248,7 +252,7 @@ elif chem_comp=='temperature':
 start=72-72
 stop=-1
 
-
+tick_laels=np.arange(0,80,1)
 
 if chem_comp!='PBLH':
 
@@ -260,7 +264,7 @@ if chem_comp!='PBLH':
 
             real_winds=np.array(get_real_data_chem(cams[0:-len(chem_comp)],month,chem_comp))
             real_winds=np.append([None,None,None,None,None,None,], real_winds)
-            print(real_winds)
+            # print(real_winds)
             a=check_numbers(real_winds)
             real_winds[a]=None
             real_winds=real_winds[start:]
@@ -268,7 +272,7 @@ if chem_comp!='PBLH':
             # real_winds[a]=None
             if row<4:
 
-                axes[row,col].plot(real_winds,label='obs',linewidth=3,color='black')
+                axes[row,col].plot(tick_laels[0:len(real_winds)],real_winds,label='obs',linewidth=3,color='black')
            
                 axes[row,col].set_title(cams)
             some_counter=0
@@ -292,7 +296,9 @@ if chem_comp!='PBLH':
  
                 # if chem_comp=='wind':
                 #     cams=cams+'WSPD'
+                print(cams)
                 wspd_sim=np.array(Extract_by_name(sim_data,wspd_sim,cams))
+                
 
                 # print(wspd_sim)
                 if chem_comp=='carbon_monoxide':
@@ -307,9 +313,12 @@ if chem_comp!='PBLH':
 
                 #     wspd_sim=wspd_sim[5+start:-1]
                 # wspd_sim=wspd_sim[24:]
+                print(wspd_sim)
                 
                 if row<4:
-                    axes[row,col].plot(wspd_sim,label=urban,linewidth=2,)
+                    axes[row,col].plot(tick_laels[0:len(wspd_sim)],wspd_sim,label=urban,linewidth=2,)
+                    axes[row,col].set_xticks(np.arange(0,80,6))
+                    axes[row,col].set_xticklabels([18,24,6,12,18,24,6,12,18,24,6,12,18,24])
 
 
                 # axes[row,col].xaxis.set_major_locator(ticker.NullLocator())
@@ -327,6 +336,7 @@ if chem_comp!='PBLH':
 
 
                 dict_for_avgs[urban].append(wspd_sim)
+
                 # axes[row,col].annotate((urban,str(round(calculate_mae(wspd_sim,real_winds), 2))),
                 # xy=(-0.2, -0.2), xycoords='axes points',
                 # xytext=(150,-20+some_counter*(-25) ), textcoords='offset points',
@@ -358,7 +368,7 @@ if chem_comp!='PBLH':
 
 else:
     #CAMS169 e.g.
-        cams=cams[0:-len(chem_comp)]
+        cams=CAMS1
 
         for urban in urban_names:
             sim_data=simulations_dir+'/'+urban+'/'+urban+"_"+month+'_'+str(domain)+'.csv'
@@ -428,7 +438,8 @@ for urban in urban_names:
 #     axes[4,1].plot(np.nanmean(dict_for_avgs[urban],axis=0),label=urban,linewidth=2,)
 # axes[4,1].plot(np.nanmean(dict_for_avgs['real_vals'],axis=0,dtype=float),label='obs',linewidth=3,color='black')
 axes[4,1].set_title('all stations AVERAGE')
-
-fig.legend()
+urban_names.insert(0,'Observed')
+plt.subplots_adjust(hspace=0.7)
+fig.legend(urban_names)
 
 plt.show()

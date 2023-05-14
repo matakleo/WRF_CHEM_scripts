@@ -7,7 +7,7 @@ import glob
 import os
 import pandas as pd
 
-urban_names=['NU_MYJ','SL_YSU','BEM_YSU','BEM_MYJ','SL_MYJ','SL_YSU_UST10',] #,'BEM','SLUC'] #,'MYJ_Default_BEM']
+urban_names=['SL_YSU'] #,'BEM','SLUC'] #,'MYJ_Default_BEM']
 PBLS=["YSU"]
 simulations_dir='/Users/lmatak/Downloads/temp_foold/all/WRF_CHEM_TIME_SERIES/'
 
@@ -176,7 +176,7 @@ row=0
 col=0
 for_mae=[]
 # chem_comp='wind'
-chem_comp='wind'
+chem_comp='pm25'
 
 cams='CAMS403_'+chem_comp
 
@@ -330,6 +330,7 @@ fig.suptitle(cams+'_domain_'+str(domain),size=20)
 
 # plt.bar(['wrf','log'],[2.827,2.9043])
 axes[0,1].legend()
+
 
 
 

@@ -10,7 +10,7 @@ fig, axes = plt.subplots(nrows=5, ncols=3,figsize=(16,9),sharex='col')
 urban_names=['SL_YSU','No_Urb_YSU'] #,'SL_YSU','SL_MYJ','SL_UST2.5_YSU'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
 
 PBLS=["MYJ"]
-simulations_dir='/Users/lmatak/Downloads/all/WRF_CHEM_TIME_SERIES/'
+simulations_dir='/Users/lmatak/Downloads/temp_foold/all/WRF_CHEM_TIME_SERIES/'
 
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
 
