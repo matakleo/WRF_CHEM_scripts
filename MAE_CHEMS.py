@@ -37,7 +37,7 @@ def avg_values(d, key):
         # print('indices where no num:',a)
         # print('lenght of vals b4 correction:',len(values))
     values = [e for e in values if e is not None]
-    print(d,key)
+    # print(d,key)
     # if len(a)>0:
         # print('lenght of vals after correction:',len(values))
     
@@ -152,7 +152,8 @@ fig.subplots_adjust(top=0.85,hspace=0.2)
 
 simulations_dir='/Users/lmatak/Downloads/temp_foold/all/WRF_CHEM_TIME_SERIES/'
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
-urb=['NU_YSU','NU_MYJ','BEM_YSU','BEM_MYJ',]
+urb=['BEM_MYJ','BEM_MYJ_cd_2.0']
+# urb=['BEM_YSU','BEM_MYJ','BEM_old_MYJ','BEM_mix_MYJ','BEM_mode_MYJ']
 domain=2
 
 
@@ -160,10 +161,10 @@ domain=2
 
 # HOW MANY MONTHS IN CALCULATION, SHOULD ALWAYS BE 12, UNLESS DEBUGGING !!!
 months = 12
-months =['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] #,'Jul','Aug','Sep','Oct','Nov','Dec']
-# months =['Jan','Mar','Apr']
+# months =['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] #,'Jul','Aug','Sep','Oct','Nov','Dec']
+months =['Jan']
 
-CHEM_ELE='nitrogen_dioxide'
+CHEM_ELE='wind'
 
 # CAMS stations taken into consideration
 cams_stations=['CAMS404_WSPD','CAMS1052_WSPD','CAMS695_WSPD',\
@@ -222,12 +223,12 @@ error_dict={}
 
 #dictionary used for plotting the averaged error over all the cams
 dict_for_averaging_all_cams = {}
-start=24
+start=16
 stop=-1
 
 ### the loop goes like this: MYJ_Default_No_Urb --> each month --> each cams station, then MYJ_Default_BEM --> each month --> each cams station,
 for urban_simulation in urb:
-    print('urban directory number:',run_number+1,'/',len(urb))
+    # print('urban directory number:',run_number+1,'/',len(urb))
 
     #the list that would hold the csvs of the simulated data, clean it each loop so it doesn't accumulate, that is why it is here
     sim_data=[]
@@ -245,7 +246,7 @@ for urban_simulation in urb:
     for file in glob.glob(turb_sim_dir+'/*'+str(domain)+'.csv'):
             sim_data.append(file)
     sim_data.sort()
-    print(sim_data)
+    # print(sim_data)
 
     #once we have all the simulated data gathered in a list, we loop through the months
     #variable months is just a number, and should always be set to 12
@@ -267,10 +268,11 @@ for urban_simulation in urb:
             #actual wspd points from simulation
             for i in range(len(sim_data)):
                 if month in sim_data[i]:
-                    print('simulation',cams_station[0:-(len(CHEM_ELE)+1)],month,sim_data[i])
+                    # print('simulation',cams_station[0:-(len(CHEM_ELE)+1)],month,sim_data[i])
                     simulation_month=np.array(Extract_by_name(sim_data[i],wspd_sim,cams_station))
-            print('exited loop')
-
+            # print('exited loop')
+            if len(simulation_month) < 75:
+                print(month,urban_simulation+' is not done fully! its length is '+str(len(simulation_month)))
 
           
 
@@ -289,7 +291,7 @@ for urban_simulation in urb:
                 simulation_month=simulation_month[5:-1]
 
             # get the real data
-            print('real ',cams_name_for_real_data,month_name_for_real_data)
+            # print('real ',cams_name_for_real_data,month_name_for_real_data)
             real_data=np.array(get_real_data(cams_name_for_real_data,month_name_for_real_data,CHEM_ELE))
             # print(cams_name_for_real_data,month_name_for_real_data)
         # if cams_station[-(len(CHEM_ELE)+1):]!='wind' or 'temperature':
@@ -300,6 +302,7 @@ for urban_simulation in urb:
 
             
             len_of_shortest=check_longer(simulation_month,real_data)
+            # print(len_of_shortest)
             
 
             simulation_month=simulation_month[0:len_of_shortest]
@@ -309,7 +312,7 @@ for urban_simulation in urb:
                 continue
 
             if len(a)>0:
-                print('sim len',len(simulation_month),'real len',len(real_data))
+                # print('sim len',len(simulation_month),'real len',len(real_data))
                 
                 mask = np.ones(len(real_data), dtype=bool)
                 mask[a] = False
@@ -322,8 +325,10 @@ for urban_simulation in urb:
 
             kge, r, alpha, beta = he.evaluator(he.kge, simulation_month.tolist(), real_data.tolist())
             
-
-            mae=calculate_mae(simulation_month, real_data)
+            if CHEM_ELE=='carbon_monoxide':
+                mae=calculate_mae(simulation_month/1000, real_data/1000)
+            else:
+                mae=calculate_mae(simulation_month, real_data)
 
 
             # print(mae)

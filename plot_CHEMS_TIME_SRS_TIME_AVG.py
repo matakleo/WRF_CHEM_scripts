@@ -7,7 +7,8 @@ import glob
 import os
 import pandas as pd
 
-urban_names=['SL_YSU'] #,'BEM','SLUC'] #,'MYJ_Default_BEM']
+urban_names=['BEM_MYJ','BEM_MYJ_cd_2.0'] #,'BEM','SLUC'] #,'MYJ_Default_BEM']
+# urban_names=['NU_YSU','NU_old_YSU','NU_mode_YSU']
 PBLS=["YSU"]
 simulations_dir='/Users/lmatak/Downloads/temp_foold/all/WRF_CHEM_TIME_SERIES/'
 
@@ -159,7 +160,7 @@ def get_real_data_chem(cams_station,month,chem_name):
 
 domain=2
 
-# months=['Apr']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+# months=['Mar','Apr',]#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 # months=['Jul','Aug','Sep','Oct','Nov','Dec']
 # months=['Aug','Dec','Jan','Oct','May','Nov']
@@ -176,7 +177,7 @@ row=0
 col=0
 for_mae=[]
 # chem_comp='wind'
-chem_comp='pm25'
+chem_comp='wind'
 
 cams='CAMS403_'+chem_comp
 
@@ -212,61 +213,63 @@ if chem_comp!='PBLH':
             for urban in urban_names:
                 if urban not in dict_for_avgs.keys():
                     dict_for_avgs[urban]=[]
-   
+                try:
+                        
+                    sim_data=simulations_dir+'/'+urban+'/'+urban+"_"+month+'_'+str(domain)+'.csv'
+                    # print(sim_data)
+
+                    temp_sim=[]
+                    wspd_sim=[]
                     
-                sim_data=simulations_dir+'/'+urban+'/'+urban+"_"+month+'_'+str(domain)+'.csv'
-                # print(sim_data)
+                    # print(sim_data)
 
-                temp_sim=[]
-                wspd_sim=[]
-                
-                # print(sim_data)
-
-    
-                temp_sim=Extract_by_name(sim_data,temp_sim,'Temperature')
-                if chem_comp=='wind':
-                    cams=cams[0:-len(chem_comp)]+'WSPD'
-                wspd_sim=np.array(Extract_by_name(sim_data,wspd_sim,cams))
-                if chem_comp=='carbon_monoxide':
-                    wspd_sim=np.array(wspd_sim)/1000
-                
+                    
+                    temp_sim=Extract_by_name(sim_data,temp_sim,'Temperature')
+                    if chem_comp=='wind':
+                        cams=cams[0:-len(chem_comp)]+'WSPD'
+                    wspd_sim=np.array(Extract_by_name(sim_data,wspd_sim,cams))
+                    if chem_comp=='carbon_monoxide':
+                        wspd_sim=np.array(wspd_sim)/1000
+                    
 
 
-                axes[row,col].plot(np.arange(0,len(wspd_sim),1),wspd_sim,label=urban,linewidth=2,)
+                    axes[row,col].plot(np.arange(0,len(wspd_sim),1),wspd_sim,label=urban,linewidth=2,)
 
 
 
-                # axes[row,col].xaxis.set_label(np.arange(0,len(wspd_sim),1))
-                len_of_shortest=check_longer(wspd_sim,real_winds)
-                # print(len_of_shortest)
-                wspd_sim=wspd_sim[0:len_of_shortest]
-                real_winds=real_winds[0:len_of_shortest]
-                if len(a)>0:
+                    # axes[row,col].xaxis.set_label(np.arange(0,len(wspd_sim),1))
+                    len_of_shortest=check_longer(wspd_sim,real_winds)
+                    # print(len_of_shortest)
+                    wspd_sim=wspd_sim[0:len_of_shortest]
+                    real_winds=real_winds[0:len_of_shortest]
+                    if len(a)>0:
 
-                    a=check_numbers(real_winds)
-                    mask = np.ones(len(real_winds), dtype=bool)
-                    mask[a] = False
-                    real_winds = real_winds[mask,...]
-                    wspd_sim=wspd_sim[mask,...]
-
-
-                dict_for_avgs[urban].append(wspd_sim)
-                # axes[row,col].annotate((urban,str(round(calculate_mae(wspd_sim,real_winds), 2))),
-                # xy=(-0.2, -0.2), xycoords='axes points',
-                # xytext=(150,-20+some_counter*(-25) ), textcoords='offset points',
-                
-                # horizontalalignment='right', verticalalignment='bottom')
-
-                # print('corr',str(round(correlation, 2)))
-
-                # axes[row,col].plot(moving_average(wspd_sim,6),label=urban[4:],linewidth=2,)
-                # if chem_comp!='wind'or'temperature':
-                #     wspd_sim=wspd_sim[24:]
-                
+                        a=check_numbers(real_winds)
+                        mask = np.ones(len(real_winds), dtype=bool)
+                        mask[a] = False
+                        real_winds = real_winds[mask,...]
+                        wspd_sim=wspd_sim[mask,...]
 
 
-                
-                some_counter+=1
+                    dict_for_avgs[urban].append(wspd_sim)
+                    # axes[row,col].annotate((urban,str(round(calculate_mae(wspd_sim,real_winds), 2))),
+                    # xy=(-0.2, -0.2), xycoords='axes points',
+                    # xytext=(150,-20+some_counter*(-25) ), textcoords='offset points',
+                    
+                    # horizontalalignment='right', verticalalignment='bottom')
+
+                    # print('corr',str(round(correlation, 2)))
+
+                    # axes[row,col].plot(moving_average(wspd_sim,6),label=urban[4:],linewidth=2,)
+                    # if chem_comp!='wind'or'temperature':
+                    #     wspd_sim=wspd_sim[24:]
+                    
+
+
+                    
+                    some_counter+=1
+                except:
+                    continue
 
             col+=1
             if col==3:
@@ -329,7 +332,7 @@ else:
 fig.suptitle(cams+'_domain_'+str(domain),size=20)
 
 # plt.bar(['wrf','log'],[2.827,2.9043])
-axes[0,1].legend()
+axes[0,0].legend()
 
 
 

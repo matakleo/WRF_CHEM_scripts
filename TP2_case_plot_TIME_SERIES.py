@@ -8,11 +8,11 @@ import numpy.ma as ma
 import os
 import pandas as pd
 fig, axes = plt.subplots(nrows=1, ncols=1,figsize=(16,9),) 
-urban_names=['No_Urb_YSU_TP0','No_Urb_YSU_TP2'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
+urban_names=['temp_p0','No_Urb_YSU_TP2'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
 
 PBLS=["MYJ"]
 simulations_dir='/Users/lmatak/Downloads/temp_foold/all/WRF_CHEM_TIME_SERIES/'
-urban_names=['No_Urb_YSU_TP0','No_Urb_YSU_TP2'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
+urban_names=['temp_p0','temp_p2'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
 
 
 
@@ -270,7 +270,7 @@ chem_comp='so'
 month='Aug'
 start=72-72
 stop=-1
-vars_to_plot=['rainc'] #,'nitric_oxide','nitrogen_dioxide','pm25','carbon_monoxide','relative_humidity','wind','temperature']
+vars_to_plot=['ozone'] #,'nitric_oxide','nitrogen_dioxide','pm25','carbon_monoxide','relative_humidity','wind','temperature']
 
 if vars_to_plot[0]!='rainc':
 
@@ -292,17 +292,18 @@ if vars_to_plot[0]!='rainc':
 
             wspd_sim=[]
 
-    #                 # print(sim_data)
+            print(sim_data)
 
     
             if var_to_plot=='wind':
                 var_to_plot='WSPD'
+            print((sim_data,wspd_sim,var_to_plot))    
             wspd_sim=np.array(Extract_by_name(sim_data,wspd_sim,var_to_plot))
-            print(len(wspd_sim))
+            
             
             plt.plot(wspd_sim,linewidth=3,label=urban)
 
-    plt.plot(real_data_to_plot,label='real') 
+    plt.plot(real_data_to_plot,label='observerd',linestyle=':') 
 else:
     for urban in urban_names:
         tmp_rain=[]
@@ -336,142 +337,3 @@ else:
 plt.title(var_to_plot)
 plt.legend()
 plt.show()        
-
-#                 # print(wspd_sim)
-#                 if chem_comp=='carbon_monoxide':
-#                     wspd_sim=np.array(wspd_sim)/1000
-                
-#                 # print(len(wspd_sim),sim_data,cams)
-
-#                 # if (month== 'Jan' or month=='Feb' or month=='Mar' or month=='Dec'):
-
-#                 #     wspd_sim=wspd_sim[6+start:]
-#                 # else:
-
-#                 #     wspd_sim=wspd_sim[5+start:-1]
-#                 # wspd_sim=wspd_sim[24:]
-                
-#                 if row<4:
-#                     axes[row,col].plot(wspd_sim,label=urban,linewidth=2,)
-
-
-#                 # axes[row,col].xaxis.set_major_locator(ticker.NullLocator())
-#                 len_of_shortest=check_longer(wspd_sim,real_winds)
-#                 # print(len_of_shortest)
-#                 wspd_sim=wspd_sim[0:len_of_shortest]
-#                 real_winds=real_winds[0:len_of_shortest]
-#                 if len(a)>0:
-
-#                     a=check_numbers(real_winds)
-#                     mask = np.ones(len(real_winds), dtype=bool)
-#                     mask[a] = False
-#                     real_winds = real_winds[mask,...]
-#                     wspd_sim=wspd_sim[mask,...]
-
-
-#                 dict_for_avgs[urban].append(wspd_sim)
-#                 # axes[row,col].annotate((urban,str(round(calculate_mae(wspd_sim,real_winds), 2))),
-#                 # xy=(-0.2, -0.2), xycoords='axes points',
-#                 # xytext=(150,-20+some_counter*(-25) ), textcoords='offset points',
-                
-#                 # horizontalalignment='right', verticalalignment='bottom')
-
-#                 # print('corr',str(round(correlation, 2)))
-
-#                 # axes[row,col].plot(moving_average(wspd_sim,6),label=urban[4:],linewidth=2,)
-#                 # if chem_comp!='wind'or'temperature':
-#                 #     wspd_sim=wspd_sim[24:]
-                
-
-
-                
-#                 some_counter+=1
-
-#             col+=1
-#             if col==3:
-#                 row+=1
-#                 col=0
-            
-
-
-#             ### THIS IS FOR CALCULATION, THE UPPER PART IS ONLY PLOTTING###
-        
-
-#                 # print('REAL DATA:',real_data)
-
-# else:
-#     #CAMS169 e.g.
-#         cams=cams[0:-len(chem_comp)]
-
-#         for urban in urban_names:
-#             sim_data=simulations_dir+'/'+urban+'/'+urban+"_"+month+'_'+str(domain)+'.csv'
-#             # print(sim_data)
-
-#             temp_sim=[]
-#             wspd_sim=[]
-            
-#             # print(sim_data)
-
-
-
-#             if chem_comp=='wind':
-#                 cams=cams+'WSPD'
-#             wspd_sim=np.array(Extract_by_name(sim_data,wspd_sim,cams))
-#             if chem_comp=='carbon_monoxide':
-#                 wspd_sim=np.array(wspd_sim)/1000
-            
-#             # print(len(wspd_sim),sim_data,cams)
-
-#             if (month== 'Jan' or month=='Feb' or month=='Mar' or month=='Dec'):
-
-#                 wspd_sim=wspd_sim[6:]
-#             else:
-
-#                 wspd_sim=wspd_sim[5:-1]
-#             # wspd_sim=wspd_sim[24:]
-            
-
-#             axes[row,col].plot(wspd_sim,label=urban,linewidth=2,)
-#             axes[row,col].set_title(month)
-
-#             # axes[row,col].xaxis.set_major_locator()
-#             # axes[row,col].xaxis.set_major_locator(ticker.NullLocator())
-
-
-
-
-#         col+=1
-#         if col==3:
-#             row+=1
-#             col=0
-
-
-# # plt.legend(['BEM','cd_2.0'])
-# # print(np.mean(for_mae))
-# fig.suptitle(month+'_domain_'+str(domain),size=20)
-
-# # plt.bar(['wrf','log'],[2.827,2.9043])
-
-
-
-
-
-# # print(len(np.mean(dict_for_avgs['real_vals'],axis=0)))
-# # print(len(np.mean(dict_for_avgs['No_Urb'],axis=0)))
-
-# for urban in urban_names:
-#     for i in range(len(dict_for_avgs[urban])):
-#         # print('urban is',urban,' i is ',i)
-#         ##for real avgs also:
-#         if len(dict_for_avgs['real_vals'][i])<72:
-#             dict_for_avgs['real_vals'][i]=np.pad(dict_for_avgs['real_vals'][i], (0, 72-len(dict_for_avgs['real_vals'][i])), mode='constant', constant_values=np.nan)
-
-#         if len(dict_for_avgs[urban][i])<72:
-#             dict_for_avgs[urban][i]=np.pad(dict_for_avgs[urban][i], (0, 72-len(dict_for_avgs[urban][i])), mode='constant', constant_values=np.nan)
-# #     axes[4,1].plot(np.nanmean(dict_for_avgs[urban],axis=0),label=urban,linewidth=2,)
-# # axes[4,1].plot(np.nanmean(dict_for_avgs['real_vals'],axis=0,dtype=float),label='obs',linewidth=3,color='black')
-# axes[4,1].set_title('all stations AVERAGE')
-
-# fig.legend()
-
-# plt.show()

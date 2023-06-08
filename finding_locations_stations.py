@@ -22,7 +22,7 @@ def find_nearest(array, value):
 
 #check the output folder!!!!
 
-Input_Dir = '/Users/lmatak/Downloads/all/WRF_CHEM_CONTOURING/Jun_wrfinps/'
+Input_Dir = '/Users/lmatak/Downloads/chem_outputs_test_contor/wrfout_d04_for_stattions_locations/'
 
 #what you wanna get:?
 var="PM2_5_DRY"
@@ -30,7 +30,7 @@ var="PM2_5_DRY"
 alt=50
 
 
-#### FOR BIG TSK +2 DOMAIN : ####
+#### FOR BIG TSK +2 three DOMAIN run : ####
 
 CAMS404_pos=([ 53 ],[ 53 ])
 CAMS1052_pos=([ 53 ],[ 52 ])
@@ -49,6 +49,29 @@ CAMS670_pos=([ 51 ],[ 53 ])
 CAMS1020_pos=([ 51 ],[ 53 ])
 CAMS1049_pos=([ 51 ],[ 53 ])
 CAMS698_pos=([ 57 ],[ 51 ])
+
+
+
+#### FOR BIG TSK +2 FOUR DOMAIN run : ####
+
+cams404_pos=([ 55 ],[ 57 ])
+cams1052_pos=([ 55 ],[ 54 ])
+cams695_pos=([ 52 ],[ 55 ])
+cams53_pos=([ 51 ],[ 51 ])
+cams409_pos=([ 49 ],[ 52 ])
+cams8_pos=([ 58 ],[ 56 ])
+cams416_pos=([ 51 ],[ 57 ])
+cams1_pos=([ 54 ],[ 59 ])
+cams603_pos=([ 53 ],[ 60 ])
+cams403_pos=([ 52 ],[ 58 ])
+cams167_pos=([ 52 ],[ 58 ])
+cams1029_pos=([ 52 ],[ 58 ])
+cams169_pos=([ 52 ],[ 58 ])
+cams670_pos=([ 51 ],[ 58 ])
+cams1020_pos=([ 51 ],[ 58 ])
+cams1049_pos=([ 51 ],[ 59 ])
+cams698_pos=([ 69 ],[ 51 ])
+
 
 
 # ###FOR LES DOMAIN FOUR, BIG PME####
@@ -132,7 +155,7 @@ time_idx=0
 os.chdir(Input_Dir)
 ncfiles = []
 ########## list to hold the wrfout files ##########
-for file in glob.glob(Input_Dir+'wrfout_d01*'):
+for file in glob.glob(Input_Dir+'wrfout_d04*'):
     ncfiles.append(file)
 
 

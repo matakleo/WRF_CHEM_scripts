@@ -6,9 +6,9 @@ import glob
 import os
 import pandas as pd
 from sklearn.metrics import mean_absolute_error
-urban_names=['MYJ_Default_No_Urb','MYJ_CHEM_No_Urb'] #,'MYJ_Default_BEM']
+urban_names=['MYJ_new_WRF_urb_sims_no_chem_MYJ','MYJ_old_WRF_urb_sims_no_chem_MYJ'] #,'MYJ_Default_BEM']
 PBLS=["MYJ"]
-simulations_dir='/Users/lmatak/Downloads/all/URBAN_TIME_SERIES_MAE/with_scaling/'
+simulations_dir='/Users/lmatak/Downloads/temp_foold/all/URBAN_TIME_SERIES_MAE/with_scaling/'
 
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
 
@@ -156,9 +156,9 @@ def get_real_data(cams_station,month):
 
 # months=['Jan','Feb']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 # months=['Jan','Feb','Mar','Apr','May','Jun']
-months=['Jul','Aug','Sep','Oct','Nov','Dec']
+months=['Aug','Feb','Jul','Nov']
 
-fig, axes = plt.subplots(nrows=2, ncols=3,figsize=(16,9)) 
+fig, axes = plt.subplots(nrows=2, ncols=2,figsize=(16,9)) 
 fig.subplots_adjust(hspace=0.35)
 
 real_data = []
@@ -182,6 +182,7 @@ for month in months:
 
             real_winds = real_winds[mask,...]
         # axes[row,col].plot(moving_average(real_winds,6),label='obs',linewidth=3,color='black')
+        print(row,col)
         axes[row,col].plot(real_winds,label='obs',linewidth=3,color='black')
         some_counter=0
         for urban in urban_names:
@@ -233,7 +234,7 @@ for month in months:
             some_counter+=1
 
         col+=1
-        if col==3:
+        if col==2:
             row=1
             col=0
 
@@ -248,5 +249,6 @@ print(np.mean(for_mae))
 fig.suptitle(cams,size=20)
 
 # plt.bar(['wrf','log'],[2.827,2.9043])
-plt.legend()
+plt.legend(['New Code','Old Code'])
+axes[0,1].legend()
 plt.show()

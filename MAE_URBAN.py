@@ -141,17 +141,15 @@ fig.subplots_adjust(top=0.85,hspace=0.2)
 
 # Calculate the mean absolute error for each month
 
-simulations_dir='/Users/lmatak/Downloads/all/URBAN_TIME_SERIES_MAE/with_scaling/'
+simulations_dir='/Users/lmatak/Downloads/temp_foold/all/URBAN_TIME_SERIES_MAE/with_scaling/'
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
-urb=['MYJ_Default_No_Urb','MYJ_Default_BEM','MYJ_Default_SLUC','MYJ_Ustar_10_SLUC', \
-     'MYJ_Ustar_20_SLUC','MYJ_Ustar_5_SLUC','MYJ_Increased_Buildings','MYJ_Decreased_Buildings','MYJ_cd_0.5','MYJ_cd_2.0','MYJ_cd_3.0','MYJ_cd_4.0',\
-         'MYJ_Mom_0.2','MYJ_Mom_0.5','MYJ_Mom_2.0','MYJ_Mom_5.0' ]
+urb=['MYJ_new_WRF_urb_sims_no_chem_MYJ','MYJ_old_WRF_urb_sims_no_chem_MYJ' ]
 
 # urb=['MYJ_Default_BEM','MYJ_Decreased_Buildings',]
 
 # HOW MANY MONTHS IN CALCULATION, SHOULD ALWAYS BE 12, UNLESS DEBUGGING !!!
 months = 12
-months =['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+months =['Jul','Aug','Nov','Feb']
 
 # CAMS stations taken into consideration
 cams_stations=['CAMS404_WSPD','CAMS1052_WSPD','CAMS695_WSPD',\
@@ -196,7 +194,7 @@ for urban_simulation in urb:
 
     #once we have all the simulated data gathered in a list, we loop through the months
     #variable months is just a number, and should always be set to 12
-    for month_number in range(months):
+    for month_number in range(len(months)):
         #the mae calculation starts from zero for each month
         mae=0
         for cams_station in cams_stations:
@@ -371,12 +369,12 @@ for urban_sim in urb:
         ax[1,2].bar(bar_x_offset,avg_values(dict_for_averaging_all_cams,urban_sim),width=0.4,edgecolor='black')
             
     for_plot_counter+=1
-#add the horizontal lines
+# #add the horizontal lines
 
-ax[1,2].axhline(y = avg_values(dict_for_averaging_all_cams,'MYJ_Default_No_Urb'), color = 'b', linestyle = '--')
-ax[1,2].axhline(y = avg_values(dict_for_averaging_all_cams,'MYJ_Default_BEM'), color = 'orange', linestyle = ':')
-ax[1,2].axhline(y = avg_values(dict_for_averaging_all_cams,'MYJ_Default_SLUC'), color = 'green', linestyle = '-.')  
-ax[1,2].set_title('all stations AVERAGE',size=15)    
+# ax[1,2].axhline(y = avg_values(dict_for_averaging_all_cams,'MYJ_Default_No_Urb'), color = 'b', linestyle = '--')
+# ax[1,2].axhline(y = avg_values(dict_for_averaging_all_cams,'MYJ_Default_BEM'), color = 'orange', linestyle = ':')
+# ax[1,2].axhline(y = avg_values(dict_for_averaging_all_cams,'MYJ_Default_SLUC'), color = 'green', linestyle = '-.')  
+# ax[1,2].set_title('all stations AVERAGE',size=15)    
 
 plt.setp(plt.gcf().get_axes(), xticks=[])
 #get the legend values from one of the axis

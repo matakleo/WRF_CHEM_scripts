@@ -10,8 +10,8 @@ fig, axes = plt.subplots(nrows=5, ncols=3,figsize=(16,9),)
 
 
 
-urban_names=['NU_YSU','SL_YSU_UST10','SL_YSU','SL_YSU_UST0.5'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
-# urban_names=['NU_YSU','NU_MYJ',] #'BEM_MYJ','BEM_YSU','No_Urb_old_emiss','SL_MYJ','SL_YSU'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
+urban_names=['BEM_MYJ','BEM_MYJ_cd_2.0'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
+# urban_names=['NU_MYJ','BEM_MYJ','BEM_MYJ_change_urban',] #'BEM_MYJ','BEM_YSU','No_Urb_old_emiss','SL_MYJ','SL_YSU'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
 
 PBLS=["MYJ"]
 simulations_dir='/Users/lmatak/Downloads/temp_foold/all/WRF_CHEM_TIME_SERIES/'
@@ -217,7 +217,7 @@ col=0
 for_mae=[]
 # chem_comp='wind'
 chem_comp='wind'
-month='Mar'
+month='Oct'
 
 
 if chem_comp=='ozone':
@@ -249,19 +249,31 @@ elif chem_comp=='temperature':
     'CAMS416_temperature','CAMS603_temperature',\
         'CAMS403_temperature','CAMS167_temperature','CAMS1029_temperature',\
     'CAMS169_temperature','CAMS1020_temperature',]
+# elif chem_comp=='temperature':
+#     cams_stations=[
+#         'CAMS403_temperature']
+no_obs_data=['PBLH','HFX','QFX','LH']
+if chem_comp in no_obs_data:
+    cams_stations=['CAMS403_'+chem_comp]
+# if chem_comp=='QFX':
+#     cams_stations=['CAMS403_QFX']
+# if chem_comp=='QFX':
+#     cams_stations=['CAMS403_QFX']    
+
+
 start=72-72
 stop=-1
+num_to_analyze=0
 
 tick_laels=np.arange(0,80,1)
 
-if chem_comp!='PBLH':
+if chem_comp not in no_obs_data:
+
+    # print('chem comp is',chem_comp)
 
     for cams in cams_stations:
 
             
- 
-
-
             real_winds=np.array(get_real_data_chem(cams[0:-len(chem_comp)],month,chem_comp))
             real_winds=np.append([None,None,None,None,None,None,], real_winds)
             # print(real_winds)
@@ -296,8 +308,9 @@ if chem_comp!='PBLH':
  
                 # if chem_comp=='wind':
                 #     cams=cams+'WSPD'
-                print(cams)
+                # print(cams)
                 wspd_sim=np.array(Extract_by_name(sim_data,wspd_sim,cams))
+                print(urban,'len of field',len(wspd_sim))
                 
 
                 # print(wspd_sim)
@@ -313,13 +326,16 @@ if chem_comp!='PBLH':
 
                 #     wspd_sim=wspd_sim[5+start:-1]
                 # wspd_sim=wspd_sim[24:]
-                print(wspd_sim)
+                # print(wspd_sim)
                 
                 if row<4:
-                    axes[row,col].plot(tick_laels[0:len(wspd_sim)],wspd_sim,label=urban,linewidth=2,)
-                    axes[row,col].set_xticks(np.arange(0,80,6))
-                    axes[row,col].set_xticklabels([18,24,6,12,18,24,6,12,18,24,6,12,18,24])
-
+                    axes[row,col].plot(wspd_sim[0:stop],label=urban,linewidth=2,)
+                    # axes[row,col].set_xticks(np.arange(0,80,6))
+                    # axes[row,col].set_xticklabels([18,24,6,12,18,24,6,12,18,24,6,12,18,24])
+                    axes[row,col].set_xticks(np.arange(0,80,5))
+                    # axes[row,col].set_ylim(0,50)
+                    axes[row,col].set_xticklabels(np.arange(0,80,5))
+                
 
                 # axes[row,col].xaxis.set_major_locator(ticker.NullLocator())
                 len_of_shortest=check_longer(wspd_sim,real_winds)
@@ -332,8 +348,15 @@ if chem_comp!='PBLH':
                     mask = np.ones(len(real_winds), dtype=bool)
                     mask[a] = False
                     real_winds = real_winds[mask,...]
-                    wspd_sim=wspd_sim[mask,...]
-
+                    # wspd_sim=wspd_sim[mask,...]
+                # print(cams[0:-len(chem_comp)])
+                
+                if cams[0:-len(chem_comp)-1]=='CAMS403':
+                    wspd_sim=np.array(Extract_by_name(sim_data,wspd_sim,cams))
+                    # num_to_analyze=0
+                    # print('at point ',num_to_analyze,chem_comp,urban,wspd_sim[num_to_analyze])
+                    # print('at point ',num_to_analyze,chem_comp,urban,wspd_sim[num_to_analyze])
+                    # print(urban,wspd_sim)
 
                 dict_for_avgs[urban].append(wspd_sim)
 
@@ -368,9 +391,11 @@ if chem_comp!='PBLH':
 
 else:
     #CAMS169 e.g.
-        cams=CAMS1
+        # cams='CAMS403_PBLH'
+    for cams in cams_stations:
 
         for urban in urban_names:
+            
             sim_data=simulations_dir+'/'+urban+'/'+urban+"_"+month+'_'+str(domain)+'.csv'
             # print(sim_data)
 
@@ -384,22 +409,29 @@ else:
             if chem_comp=='wind':
                 cams=cams+'WSPD'
             wspd_sim=np.array(Extract_by_name(sim_data,wspd_sim,cams))
+            print(chem_comp,urban,wspd_sim[num_to_analyze])
             if chem_comp=='carbon_monoxide':
                 wspd_sim=np.array(wspd_sim)/1000
+
+
+            axes[0,0].set_xticks(np.arange(0,80,5))
+            # axes[row,col].set_ylim(0,50)
+            axes[0,0].set_xticklabels(np.arange(0,80,5))   
             
             # print(len(wspd_sim),sim_data,cams)
 
-            if (month== 'Jan' or month=='Feb' or month=='Mar' or month=='Dec'):
+            # if (month== 'Jan' or month=='Feb' or month=='Mar' or month=='Dec'):
 
-                wspd_sim=wspd_sim[6:]
-            else:
+            #     wspd_sim=wspd_sim[6:]
+            # else:
 
-                wspd_sim=wspd_sim[5:-1]
+            #     wspd_sim=wspd_sim[5:-1]
             # wspd_sim=wspd_sim[24:]
             
 
             axes[row,col].plot(wspd_sim,label=urban,linewidth=2,)
             axes[row,col].set_title(month)
+            axes[0,0].set_title(cams)
 
             # axes[row,col].xaxis.set_major_locator()
             # axes[row,col].xaxis.set_major_locator(ticker.NullLocator())
@@ -411,6 +443,10 @@ else:
         if col==3:
             row+=1
             col=0
+
+    # axes[row,col].set_xticks(np.arange(0,80,6))
+    # axes[row,col].set_xticklabels([18,24,6,12,18,24,6,12,18,24,6,12,18,24])
+        
 
 
 # plt.legend(['BEM','cd_2.0'])
@@ -425,20 +461,21 @@ fig.suptitle(month+'_domain_'+str(domain),size=20)
 
 # print(len(np.mean(dict_for_avgs['real_vals'],axis=0)))
 # print(len(np.mean(dict_for_avgs['No_Urb'],axis=0)))
+if chem_comp not in no_obs_data:
+    for urban in urban_names:
+        for i in range(len(dict_for_avgs[urban])):
+            # print('urban is',urban,' i is ',i)
+            ##for real avgs also:
+            if len(dict_for_avgs['real_vals'][i])<72:
+                dict_for_avgs['real_vals'][i]=np.pad(dict_for_avgs['real_vals'][i], (0, 72-len(dict_for_avgs['real_vals'][i])), mode='constant', constant_values=np.nan)
 
-for urban in urban_names:
-    for i in range(len(dict_for_avgs[urban])):
-        # print('urban is',urban,' i is ',i)
-        ##for real avgs also:
-        if len(dict_for_avgs['real_vals'][i])<72:
-            dict_for_avgs['real_vals'][i]=np.pad(dict_for_avgs['real_vals'][i], (0, 72-len(dict_for_avgs['real_vals'][i])), mode='constant', constant_values=np.nan)
-
-        if len(dict_for_avgs[urban][i])<72:
-            dict_for_avgs[urban][i]=np.pad(dict_for_avgs[urban][i], (0, 72-len(dict_for_avgs[urban][i])), mode='constant', constant_values=np.nan)
-#     axes[4,1].plot(np.nanmean(dict_for_avgs[urban],axis=0),label=urban,linewidth=2,)
-# axes[4,1].plot(np.nanmean(dict_for_avgs['real_vals'],axis=0,dtype=float),label='obs',linewidth=3,color='black')
+            if len(dict_for_avgs[urban][i])<72:
+                dict_for_avgs[urban][i]=np.pad(dict_for_avgs[urban][i], (0, 72-len(dict_for_avgs[urban][i])), mode='constant', constant_values=np.nan)
+    #     axes[4,1].plot(np.nanmean(dict_for_avgs[urban],axis=0),label=urban,linewidth=2,)
+    # axes[4,1].plot(np.nanmean(dict_for_avgs['real_vals'],axis=0,dtype=float),label='obs',linewidth=3,color='black')
+    urban_names.insert(0,'Observed')
 axes[4,1].set_title('all stations AVERAGE')
-urban_names.insert(0,'Observed')
+
 plt.subplots_adjust(hspace=0.7)
 fig.legend(urban_names)
 

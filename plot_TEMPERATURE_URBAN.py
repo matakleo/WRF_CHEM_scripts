@@ -6,9 +6,9 @@ import glob
 import os
 import pandas as pd
 
-urban_names=['MYJ_Default_SLUC','MYJ_Default_BEM','MYJ_Default_No_Urb'] #,'MYJ_Default_BEM']
+urban_names=['MYJ_new_WRF_urb_sims_no_chem_MYJ','MYJ_old_WRF_urb_sims_no_chem_MYJ'] #,'MYJ_Default_BEM']
 PBLS=["MYJ"]
-simulations_dir='/Users/lmatak/Downloads/URBAN_TEMPERATURE_TIMES_SERIES/'
+simulations_dir='/Users/lmatak/Downloads/temp_foold/all/URBAN_TEMPERATURE_TIMES_SERIES/'
 
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
 
@@ -154,7 +154,7 @@ def get_real_data(cams_station,month):
 
 # months=['Jan','Feb']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 # months=['Jan','Feb','Mar','Apr','May','Jun']
-months=['Jul','Aug','Sep','Oct','Nov','Dec']
+months=['Aug','Feb','Jul','Nov']
 
 fig, axes = plt.subplots(nrows=2, ncols=3,figsize=(16,10)) 
 fig.subplots_adjust(hspace=0.35)
@@ -164,7 +164,7 @@ real_data = []
 row=0
 col=0
 for_mae=[]
-cams='CAMS1_temperature'
+cams='CAMS1052_temperature'
 
 for month in months:
 
@@ -232,5 +232,5 @@ print(np.mean(for_mae))
 fig.suptitle(cams,size=20)
 
 # plt.bar(['wrf','log'],[2.827,2.9043])
-plt.legend()
+axes[0,0].legend()
 plt.show()
