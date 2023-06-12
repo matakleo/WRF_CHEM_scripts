@@ -143,15 +143,21 @@ fig.subplots_adjust(top=0.85,hspace=0.2)
 
 # Calculate the mean absolute error for each month
 
-simulations_dir='/Users/lmatak/Downloads/URBAN_TEMPERATURE_TIMES_SERIES/'
+simulations_dir='/Users/lmatak/Downloads/temp_foold/all/URBAN_TEMPERATURE_TIMES_SERIES/'
+
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
-urb=['MYJ_new_WRF_urb_sims_no_chem_MYJ','MYJ_old_WRF_urb_sims_no_chem_MYJ' ]
+urb=['MYJ_new_WRF_urb_sims_no_chem_MYJ','MYJ_old_WRF_urb_sims_no_chem_MYJ']
 
 # urb=['MYJ_Default_BEM','MYJ_Decreased_Buildings',]
 
 # HOW MANY MONTHS IN CALCULATION, SHOULD ALWAYS BE 12, UNLESS DEBUGGING !!!
-months =['Jul','Aug','Nov','Feb']
 months = 12
+months =['Jul','Aug','Nov','Feb']
+
+# urb=['MYJ_Default_BEM','MYJ_Decreased_Buildings',]
+
+# HOW MANY MONTHS IN CALCULATION, SHOULD ALWAYS BE 12, UNLESS DEBUGGING !!!
+# months = 
 
 # CAMS stations taken into consideration
 cams_stations=['CAMS1_temperature', 'CAMS404_temperature','CAMS1052_temperature' \

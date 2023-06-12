@@ -28,11 +28,11 @@ my_cmap1.set_bad((0,0,0))
 
 
 # dirs=['BEM_default','BEP_default',]#'clz_1000','clz_100']
-dirs=['BEM_march','no_urb_march'] #,'BEM_ust_10_in_LSM',]#'clz_1000','clz_100']
+dirs=['BEM_outer_JUN_12','NU_outer_JUN_12'] #,'BEM_ust_10_in_LSM',]#'clz_1000','clz_100']
 # dirs=['BEM_default','BEM_change_tke_100','BEM_change_mom_5',]
 dir_num=0
 i=0
-file_in_dir=1
+file_in_dir=0
 height_lvl=0
 # var_to_plot='TKE'
 var_to_plot='o3'
@@ -69,7 +69,7 @@ for dir in dirs:
     if dir != 'Jun_wrfoutputs':
         lons = fh.variables['V_BTXE'][0]
         lats = fh.variables['V_BTYE']
-        pm25 = fh.variables['V_BYS'][9][2][:]
+        pm25 = fh.variables['U_BTXS'][9][2][:]
         lst2 = [item[0] for item in lats]
         print('firsts/')
     else:

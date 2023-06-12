@@ -22,7 +22,7 @@ def find_nearest(array, value):
 
 #check the output folder!!!!
 
-Input_Dir = '/Users/lmatak/Downloads/chem_outputs_test_contor/wrfout_d04_for_stattions_locations/'
+Input_Dir = '/Users/lmatak/Downloads/chem_outputs_test_contor/big_domain_with_temperature_incrase/'
 
 #what you wanna get:?
 var="PM2_5_DRY"
@@ -155,7 +155,7 @@ time_idx=0
 os.chdir(Input_Dir)
 ncfiles = []
 ########## list to hold the wrfout files ##########
-for file in glob.glob(Input_Dir+'wrfout_d04*'):
+for file in glob.glob(Input_Dir+'wrfout_d02*'):
     ncfiles.append(file)
 
 

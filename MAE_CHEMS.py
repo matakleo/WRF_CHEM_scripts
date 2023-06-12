@@ -152,7 +152,7 @@ fig.subplots_adjust(top=0.85,hspace=0.2)
 
 simulations_dir='/Users/lmatak/Downloads/temp_foold/all/WRF_CHEM_TIME_SERIES/'
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
-urb=['BEM_MYJ','BEM_MYJ_cd_2.0']
+urb=['SL_YSU','SL_YSU_added_anthro_UST_2.5','NU_YSU','NU_MYJ','BEM_YSU','BEM_MYJ']
 # urb=['BEM_YSU','BEM_MYJ','BEM_old_MYJ','BEM_mix_MYJ','BEM_mode_MYJ']
 domain=2
 
@@ -162,9 +162,9 @@ domain=2
 # HOW MANY MONTHS IN CALCULATION, SHOULD ALWAYS BE 12, UNLESS DEBUGGING !!!
 months = 12
 # months =['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] #,'Jul','Aug','Sep','Oct','Nov','Dec']
-months =['Jan']
+months =['Jan','Apr','Mar']
 
-CHEM_ELE='wind'
+CHEM_ELE='nitrogen_dioxide'
 
 # CAMS stations taken into consideration
 cams_stations=['CAMS404_WSPD','CAMS1052_WSPD','CAMS695_WSPD',\

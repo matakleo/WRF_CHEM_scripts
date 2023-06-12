@@ -10,11 +10,11 @@ fig, axes = plt.subplots(nrows=5, ncols=3,figsize=(16,9),)
 
 
 
-urban_names=['BEM_MYJ','BEM_MYJ_cd_2.0'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
+urban_names=['old_WRF_urb_sims_no_chem_MYJ'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
 # urban_names=['NU_MYJ','BEM_MYJ','BEM_MYJ_change_urban',] #'BEM_MYJ','BEM_YSU','No_Urb_old_emiss','SL_MYJ','SL_YSU'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
 
 PBLS=["MYJ"]
-simulations_dir='/Users/lmatak/Downloads/temp_foold/all/WRF_CHEM_TIME_SERIES/'
+simulations_dir='/Users/lmatak/Downloads/temp_foold/all/URBAN_TIME_SERIES_MAE/'
 
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
 
@@ -217,7 +217,7 @@ col=0
 for_mae=[]
 # chem_comp='wind'
 chem_comp='wind'
-month='Oct'
+month='Aug'
 
 
 if chem_comp=='ozone':

@@ -143,7 +143,7 @@ fig.subplots_adjust(top=0.85,hspace=0.2)
 
 simulations_dir='/Users/lmatak/Downloads/temp_foold/all/URBAN_TIME_SERIES_MAE/with_scaling/'
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
-urb=['MYJ_new_WRF_urb_sims_no_chem_MYJ','MYJ_old_WRF_urb_sims_no_chem_MYJ' ]
+urb=['MYJ_new_WRF_urb_sims_no_chem_MYJ','MYJ_old_WRF_urb_sims_no_chem_MYJ']
 
 # urb=['MYJ_Default_BEM','MYJ_Decreased_Buildings',]
 

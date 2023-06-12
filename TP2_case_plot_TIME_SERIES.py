@@ -248,7 +248,7 @@ def average_real_data(stations,chem_comp,month):
 
 
 
-domain=3
+domain=2
 
 # months=['Apr']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 # months=['Jul','Aug','Sep','Oct','Nov','Dec']
@@ -270,7 +270,7 @@ chem_comp='so'
 month='Aug'
 start=72-72
 stop=-1
-vars_to_plot=['ozone'] #,'nitric_oxide','nitrogen_dioxide','pm25','carbon_monoxide','relative_humidity','wind','temperature']
+vars_to_plot=['nitrogen_dioxide'] #,'nitric_oxide','nitrogen_dioxide','pm25','carbon_monoxide','relative_humidity','wind','temperature']
 
 if vars_to_plot[0]!='rainc':
 
@@ -326,13 +326,14 @@ else:
             print(len(wspd_sim))
             i=np.arange(0,len(wspd_sim)-1,1)
             
-            for j in range(len(wspd_sim)-1):
-                tmp_rain.append(wspd_sim[j+1]-wspd_sim[j])
+            # for j in range(len(wspd_sim)-1):
+            #     tmp_rain.append(wspd_sim[j+1]-wspd_sim[j])
                 
                 # plt.bar(i,wspd_sim[i+1]-wspd_sim[i])
             print(i)
             # print(tmp_rain)
-            plt.bar(i,tmp_rain,label=urban)
+            # plt.bar(i,tmp_rain,label=urban)
+            plt.plot(wspd_sim,label=urban)
        
 plt.title(var_to_plot)
 plt.legend()
