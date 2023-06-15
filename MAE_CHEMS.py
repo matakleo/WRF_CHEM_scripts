@@ -151,9 +151,10 @@ fig.subplots_adjust(top=0.85,hspace=0.2)
 # Calculate the mean absolute error for each month
 
 simulations_dir='/Users/lmatak/Downloads/temp_foold/all/WRF_CHEM_TIME_SERIES/'
+# simulations_dir='/Users/lmatak/Downloads/temp_foold/all/URBAN_TIME_SERIES_MAE/'
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
-urb=['SL_YSU','SL_YSU_added_anthro_UST_2.5','NU_YSU','NU_MYJ','BEM_YSU','BEM_MYJ']
-# urb=['BEM_YSU','BEM_MYJ','BEM_old_MYJ','BEM_mix_MYJ','BEM_mode_MYJ']
+# urb=['SL_YSU','SL_YSU_added_anthro_UST_2.5','NU_YSU','NU_MYJ','BEM_YSU','BEM_MYJ']
+urb=['BEM_MYJ','BEM_YSU','BEM_MYJ_cd_2.0']
 domain=2
 
 
@@ -162,9 +163,9 @@ domain=2
 # HOW MANY MONTHS IN CALCULATION, SHOULD ALWAYS BE 12, UNLESS DEBUGGING !!!
 months = 12
 # months =['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] #,'Jul','Aug','Sep','Oct','Nov','Dec']
-months =['Jan','Apr','Mar']
+months =['Jan','Apr','Oct','Aug','Nov']
 
-CHEM_ELE='nitrogen_dioxide'
+CHEM_ELE='wind'
 
 # CAMS stations taken into consideration
 cams_stations=['CAMS404_WSPD','CAMS1052_WSPD','CAMS695_WSPD',\
@@ -223,7 +224,7 @@ error_dict={}
 
 #dictionary used for plotting the averaged error over all the cams
 dict_for_averaging_all_cams = {}
-start=16
+start=10
 stop=-1
 
 ### the loop goes like this: MYJ_Default_No_Urb --> each month --> each cams station, then MYJ_Default_BEM --> each month --> each cams station,
@@ -254,6 +255,7 @@ for urban_simulation in urb:
         #the mae calculation starts from zero for each month
         mae=0
         for cams_station in cams_stations:
+            # print(cams_station)
 
 
             ###############################################################
@@ -374,7 +376,7 @@ for urban_simulation in urb:
             if row==3:
                 continue
                 
-            
+            print(cams[:-(len(CHEM_ELE)+1)])
             ax[row,col].bar(bar_x,avg_values(error_dict,cams[:-(len(CHEM_ELE)+1)]),width=0.3,label=urb[run_number],edgecolor='black')
             ax[row,col].set_title(cams[:-(len(CHEM_ELE)+1)])
 
@@ -394,7 +396,9 @@ for urban_simulation in urb:
                 row=2
                 col=0
             if row==3:
-                continue                
+                continue          
+
+            #if it dies on temperature, could be that CAMS409 has no data for March, so just delte it temporary      
             ax[row,col].bar(bar_x_offset,avg_values(error_dict,cams[:-(len(CHEM_ELE)+1)]),width=0.3,label=urb[run_number],edgecolor='black')
             ax[row,col].set_title(cams[:-(len(CHEM_ELE)+1)])
 
@@ -416,6 +420,7 @@ for urban_simulation in urb:
 #     #####################################################################################
 bar_x = 0
 for_plot_counter=0    
+print(dict_for_averaging_all_cams.keys())
 for urban_sim in urb:
     #if first plot just use x, for further ones offset by some value
     if for_plot_counter==0:

@@ -248,7 +248,7 @@ def average_real_data(stations,chem_comp,month):
 
 
 
-domain=2
+domain=3
 
 # months=['Apr']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 # months=['Jul','Aug','Sep','Oct','Nov','Dec']
@@ -270,7 +270,7 @@ chem_comp='so'
 month='Aug'
 start=72-72
 stop=-1
-vars_to_plot=['nitrogen_dioxide'] #,'nitric_oxide','nitrogen_dioxide','pm25','carbon_monoxide','relative_humidity','wind','temperature']
+vars_to_plot=['rainc'] #,'nitric_oxide','nitrogen_dioxide','pm25','carbon_monoxide','relative_humidity','wind','temperature']
 
 if vars_to_plot[0]!='rainc':
 

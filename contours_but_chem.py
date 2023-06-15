@@ -27,7 +27,7 @@ my_cmap1.set_bad((0,0,0))
 
 
 # dirs=['BEM_default','BEP_default',]#'clz_1000','clz_100']
-dirs=['Jul_new_wrf_no_chem_MYJ','Jul_old_wrf_no_chem_MYJ',] #,'BEM_ust_10_in_LSM',]#'clz_1000','clz_100']
+dirs=['Jan_new_wrf_no_chem_MYJ','Jan_old_wrf_no_chem_MYJ',] #,'BEM_ust_10_in_LSM',]#'clz_1000','clz_100']
 # dirs=['BEM_default','BEM_change_tke_100','BEM_change_mom_5',]
 dir_num=0
 i=0
@@ -75,7 +75,7 @@ for dir in dirs:
     MASKING=np.array(getvar(Data, "LU_INDEX", timeidx = idx))
     u10=getvar(Data, "U10", timeidx = idx)
     v10=getvar(Data, "V10", timeidx = idx)
-    drag_coeff=getvar(Data, "CD", timeidx = idx)
+    drag_coeff=getvar(Data, "UST", timeidx = idx)
     # something=getvar(Data, "EXCH_M", timeidx = idx)
     # ozone=getvar(Data, "o3", timeidx = idx)
 
@@ -94,11 +94,11 @@ for dir in dirs:
     ozone=ozone[0]
 
     temperature=getvar(Data,'T2',0)
-    both_temps.append(np.array(ozone))
-    vmin_set=ozone.min()
+    both_temps.append(np.array(drag_coeff))
+    vmin_set=0
     vmin_one_lvl_higher=vmin_set
     vmax_one_lvl_higher=total_wind.max()
-    vmax_set=ozone.max()
+    vmax_set=1
     label='WSPD [m/s]'
 
 
@@ -140,7 +140,7 @@ for dir in dirs:
 
     
 
-    ax[0,col].contourf(to_np(lons1),to_np(lats1), (u10), 250,  vmin=vmin_set,vmax=vmax_set,     transform=crs.PlateCarree(), 
+    ax[0,col].contourf(to_np(lons1),to_np(lats1), (drag_coeff), 250,  vmin=vmin_set,vmax=vmax_set,     transform=crs.PlateCarree(), 
         cmap=my_cmap1)    
 
     ax[0,col].scatter(mid_downtown_lon,mid_downtown_lat,s=15,c='black',transform=crs.PlateCarree())    
@@ -153,20 +153,20 @@ for dir in dirs:
 
     # ax[1,col].scatter(mid_downtown_lon,mid_downtown_lat,s=15,c='black',transform=crs.PlateCarree())    
     # ax[1,col].scatter(three_dom_lons,three_dom_lats,s=15,c='cyan',transform=crs.PlateCarree())
-    # ax[1,col].set_title('at height: '+str(height_one_lvl_more)+'m, at time: '+str(time_of_the_day)+':00 h')
+    ax[0,col].set_title(dir)
     # ax[1,col].background_patch.set_facecolor('black')  
     dir_num+=1
     col+=1
     # if dir_num==3:
     #     dir_
 
-vmin_set=0
-vmax_set=2
+vmin_set=-0.5
+vmax_set=0.5
 
 diff_in_temp=both_temps[0]-both_temps[1]
 ax[1,0].contourf(to_np(lons1),to_np(lats1), (diff_in_temp), 255,  vmin=vmin_set,vmax=vmax_set,     transform=crs.PlateCarree(), 
         cmap=my_cmap1)
-
+ax[1,0].set_title('Difference')
     
 
 
