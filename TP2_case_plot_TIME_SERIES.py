@@ -8,7 +8,7 @@ import numpy.ma as ma
 import os
 import pandas as pd
 fig, axes = plt.subplots(nrows=1, ncols=1,figsize=(16,9),) 
-urban_names=['temp_p0','No_Urb_YSU_TP2'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
+urban_names=['temp_p0','temp_p0'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
 
 PBLS=["MYJ"]
 simulations_dir='/Users/lmatak/Downloads/temp_foold/all/WRF_CHEM_TIME_SERIES/'
@@ -270,7 +270,7 @@ chem_comp='so'
 month='Aug'
 start=72-72
 stop=-1
-vars_to_plot=['rainc'] #,'nitric_oxide','nitrogen_dioxide','pm25','carbon_monoxide','relative_humidity','wind','temperature']
+vars_to_plot=['pm25'] #,'nitric_oxide','nitrogen_dioxide','pm25','carbon_monoxide','relative_humidity','wind','temperature']
 
 if vars_to_plot[0]!='rainc':
 
@@ -282,7 +282,7 @@ if vars_to_plot[0]!='rainc':
             list_of_stations_to_avg=get_stations(var_to_plot)  
             
             real_data_to_plot=average_real_data(list_of_stations_to_avg,var_to_plot,month)
-            print(len(real_data_to_plot))
+            # print(len(real_data_to_plot))
                     
                 
 
@@ -297,9 +297,9 @@ if vars_to_plot[0]!='rainc':
     
             if var_to_plot=='wind':
                 var_to_plot='WSPD'
-            print((sim_data,wspd_sim,var_to_plot))    
+               
             wspd_sim=np.array(Extract_by_name(sim_data,wspd_sim,var_to_plot))
-            
+            print((sim_data,var_to_plot,len(wspd_sim))) 
             
             plt.plot(wspd_sim,linewidth=3,label=urban)
 
@@ -334,6 +334,7 @@ else:
             # print(tmp_rain)
             # plt.bar(i,tmp_rain,label=urban)
             plt.plot(wspd_sim,label=urban)
+            plt.ylim(0,140)
        
 plt.title(var_to_plot)
 plt.legend()

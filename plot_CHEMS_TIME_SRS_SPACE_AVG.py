@@ -10,8 +10,8 @@ fig, axes = plt.subplots(nrows=5, ncols=3,figsize=(16,9),)
 
 
 
-urban_names=['BEM_MYJ','BEM_MYJ_cd_2.0'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
-# urban_names=['NU_MYJ','BEM_MYJ','BEM_MYJ_change_urban',] #'BEM_MYJ','BEM_YSU','No_Urb_old_emiss','SL_MYJ','SL_YSU'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
+# urban_names=['NU_MYJ','BEM_MYJ','BEM_MYJ_cd_2.0','BEM_MYJ_added_anthro','BEM_MYJ_added_anthro_cd_2.0','SL_4.2_MYJ_added_anthro_ust_2.5'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
+urban_names=['BEM_YSU_no_chemistry_hpbl_p250','BEM_YSU_no_chemistry_hpbl_p0',] #'BEM_MYJ','BEM_YSU','No_Urb_old_emiss','SL_MYJ','SL_YSU'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
 
 PBLS=["MYJ"]
 # simulations_dir='/Users/lmatak/Downloads/temp_foold/all/URBAN_TIME_SERIES_MAE/'
@@ -198,7 +198,7 @@ def get_real_data_chem(cams_station,month,chem_name):
 
 
 
-domain=2
+domain=1
 
 # months=['Apr']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 # months=['Jul','Aug','Sep','Oct','Nov','Dec']
@@ -216,7 +216,7 @@ row=0
 col=0
 for_mae=[]
 # chem_comp='wind'
-chem_comp='wind'
+chem_comp='PBLH'
 #'Jan','Apr','Oct','Aug',
 month='Aug'
 
@@ -253,9 +253,9 @@ elif chem_comp=='temperature':
 # elif chem_comp=='temperature':
 #     cams_stations=[
 #         'CAMS403_temperature']
-no_obs_data=['PBLH','HFX','QFX','LH']
+no_obs_data=['PBLH','HFX','QFX','LH','vertical_velocity']
 if chem_comp in no_obs_data:
-    cams_stations=['CAMS403_'+chem_comp]
+    cams_stations=['CAMS1_'+chem_comp]
 # if chem_comp=='QFX':
 #     cams_stations=['CAMS403_QFX']
 # if chem_comp=='QFX':

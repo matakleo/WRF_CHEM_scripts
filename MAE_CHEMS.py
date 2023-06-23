@@ -153,8 +153,8 @@ fig.subplots_adjust(top=0.85,hspace=0.2)
 simulations_dir='/Users/lmatak/Downloads/temp_foold/all/WRF_CHEM_TIME_SERIES/'
 # simulations_dir='/Users/lmatak/Downloads/temp_foold/all/URBAN_TIME_SERIES_MAE/'
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
-# urb=['SL_YSU','SL_YSU_added_anthro_UST_2.5','NU_YSU','NU_MYJ','BEM_YSU','BEM_MYJ']
-urb=['BEM_MYJ','BEM_YSU','BEM_MYJ_cd_2.0']
+urb=['NU_MYJ','BEM_MYJ','BEM_MYJ_cd_2.0','BEM_MYJ_added_anthro','BEM_MYJ_added_anthro_cd_2.0','SL_4.2_MYJ_added_anthro_ust_2.5']
+# urb=['BEM_MYJ','BEM_MYJ_cd_2.0','BEM_MYJ_added_anthro','BEM_MYJ_added_anthro_cd_2.0',]
 domain=2
 
 
@@ -163,9 +163,9 @@ domain=2
 # HOW MANY MONTHS IN CALCULATION, SHOULD ALWAYS BE 12, UNLESS DEBUGGING !!!
 months = 12
 # months =['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] #,'Jul','Aug','Sep','Oct','Nov','Dec']
-months =['Jan','Apr','Oct','Aug','Nov']
+months =['Jan','Apr','Jul','Oct']
 
-CHEM_ELE='wind'
+CHEM_ELE='pm25'
 
 # CAMS stations taken into consideration
 cams_stations=['CAMS404_WSPD','CAMS1052_WSPD','CAMS695_WSPD',\

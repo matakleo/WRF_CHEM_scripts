@@ -3,11 +3,11 @@ import matplotlib.pyplot as plt
 import wrf
 from netCDF4 import Dataset
 # Open the first wrfout file using xarray
-data1 = ('/Users/lmatak/Downloads/chem_outputs_test_contor/no_urb_march/wrfout_d01_2019-03-01_05')
+data1 = ('/Users/lmatak/Downloads/chem_outputs_test_contor/No_Urban/wrfout_d01_2019-08-02_16')
 data1=Dataset(data1)
 
 # Open the second wrfout file using xarray
-data2 = ('/Users/lmatak/Downloads/chem_outputs_test_contor/BEM_march/wrfout_d01_2019-03-01_05')
+data2 = ('/Users/lmatak/Downloads/chem_outputs_test_contor/BEM/wrfout_d01_2019-08-02_16')
 data2=Dataset(data2)
 # Extract the land use variable (LU_INDEX) from both files
 land_use1 = wrf.getvar(data1, 'LU_INDEX')

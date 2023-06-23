@@ -7,7 +7,7 @@ import glob
 import os
 import pandas as pd
 
-urban_names=['BEM_MYJ','BEM_MYJ_cd_2.0'] #,'BEM','SLUC'] #,'MYJ_Default_BEM']
+urban_names=['NU_MYJ','BEM_MYJ','BEM_MYJ_cd_2.0','BEM_MYJ_added_anthro','BEM_MYJ_added_anthro_cd_2.0','SL_4.2_MYJ_added_anthro_ust_2.5'] #,'BEM','SLUC'] #,'MYJ_Default_BEM']
 # urban_names=['NU_YSU','NU_old_YSU','NU_mode_YSU']
 PBLS=["YSU"]
 simulations_dir='/Users/lmatak/Downloads/temp_foold/all/WRF_CHEM_TIME_SERIES/'

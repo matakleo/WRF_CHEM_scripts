@@ -6,9 +6,9 @@ import glob
 import os
 import pandas as pd
 from sklearn.metrics import mean_absolute_error
-urban_names=['MYJ_new_WRF_urb_sims_no_chem_MYJ','MYJ_old_WRF_urb_sims_no_chem_MYJ'] #,'MYJ_Default_BEM']
+urban_names=['new_WRF_urb_sims_no_chem_MYJ','new_WRF_urb_sims_no_chem_MYJ_cd_2.0','old_WRF_urb_sims_no_chem_MYJ'] #,'MYJ_Default_BEM']
 PBLS=["MYJ"]
-simulations_dir='/Users/lmatak/Downloads/temp_foold/all/URBAN_TIME_SERIES_MAE/with_scaling/'
+simulations_dir='/Users/lmatak/Downloads/temp_foold/all/URBAN_TIME_SERIES_MAE/'
 
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
 
@@ -149,14 +149,14 @@ def get_real_data(cams_station,month):
 
     return target_data
 
-
+domain=2
 
 
 
 
 # months=['Jan','Feb']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 # months=['Jan','Feb','Mar','Apr','May','Jun']
-months=['Aug','Feb','Jul','Nov']
+months=['Jan','Apr','Jul','Oct']
 
 fig, axes = plt.subplots(nrows=2, ncols=2,figsize=(16,9)) 
 fig.subplots_adjust(hspace=0.35)
@@ -188,7 +188,7 @@ for month in months:
         for urban in urban_names:
             print(urban)
 
-            sim_data=simulations_dir+'/'+urban+'/'+urban[4:]+"_"+month+'.csv'
+            sim_data=simulations_dir+'/'+urban+'/'+urban[:]+"_"+month+'_'+str(domain)+'.csv'
             # print()
             temp_sim=[]
             wspd_sim=[]
@@ -227,7 +227,7 @@ for month in months:
 
 
             # axes[row,col].plot(moving_average(wspd_sim,6),label=urban[4:],linewidth=2,)
-            axes[row,col].plot(wspd_sim,label=urban[4:],linewidth=2,)
+            axes[row,col].plot(wspd_sim,label=urban[:],linewidth=2,)
 
             axes[row,col].set_title(month)
             axes[row,col].set_ylim(0,20)
@@ -249,6 +249,6 @@ print(np.mean(for_mae))
 fig.suptitle(cams,size=20)
 
 # plt.bar(['wrf','log'],[2.827,2.9043])
-plt.legend(['New Code','Old Code'])
+# plt.legend(['New Code','Old Code'])
 axes[0,1].legend()
 plt.show()
