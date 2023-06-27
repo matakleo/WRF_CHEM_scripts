@@ -8,7 +8,7 @@ import numpy.ma as ma
 import os
 import pandas as pd
 fig, axes = plt.subplots(nrows=1, ncols=1,figsize=(16,9),) 
-urban_names=['temp_p0','temp_p0'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
+urban_names=['temp_p0','temp_p2'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
 
 PBLS=["MYJ"]
 simulations_dir='/Users/lmatak/Downloads/temp_foold/all/WRF_CHEM_TIME_SERIES/'
@@ -215,7 +215,7 @@ def get_stations(chem_comp):
     elif chem_comp=='relative_humidity':
         cams_stations=['CAMS8_relative_humidity','CAMS416_relative_humidity','CAMS695_relative_humidity',\
             'CAMS403_relative_humidity']
-    elif chem_comp=='wind':
+    elif chem_comp=='wind' or 'wspd_100m':
         cams_stations=['CAMS404_WSPD','CAMS1052_WSPD','CAMS695_WSPD',\
         'CAMS53_WSPD','CAMS409_WSPD','CAMS8_WSPD','CAMS416_WSPD',\
             'CAMS1_WSPD','CAMS603_WSPD','CAMS403_WSPD','CAMS167_WSPD'\
@@ -281,7 +281,7 @@ if vars_to_plot[0]!='rainc':
 
             list_of_stations_to_avg=get_stations(var_to_plot)  
             
-            real_data_to_plot=average_real_data(list_of_stations_to_avg,var_to_plot,month)
+            # real_data_to_plot=average_real_data(list_of_stations_to_avg,var_to_plot,month)
             # print(len(real_data_to_plot))
                     
                 
@@ -303,7 +303,7 @@ if vars_to_plot[0]!='rainc':
             
             plt.plot(wspd_sim,linewidth=3,label=urban)
 
-    plt.plot(real_data_to_plot,label='observerd',linestyle=':') 
+    # plt.plot(real_data_to_plot,label='observerd',linestyle=':') 
 else:
     for urban in urban_names:
         tmp_rain=[]

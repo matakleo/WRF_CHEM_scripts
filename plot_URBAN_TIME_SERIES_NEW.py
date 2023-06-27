@@ -6,9 +6,10 @@ import glob
 import os
 import pandas as pd
 from sklearn.metrics import mean_absolute_error
-urban_names=['new_WRF_urb_sims_no_chem_MYJ','new_WRF_urb_sims_no_chem_MYJ_cd_2.0','old_WRF_urb_sims_no_chem_MYJ'] #,'MYJ_Default_BEM']
+urban_names=['NU_MYJ','BEM_MYJ','BEM_MYJ_added_anthro_cd_2.0','BEM_MYJ_added_half_anthro_cd_2.0'] #,'MYJ_Default_BEM']
 PBLS=["MYJ"]
-simulations_dir='/Users/lmatak/Downloads/temp_foold/all/URBAN_TIME_SERIES_MAE/'
+# simulations_dir='/Users/lmatak/Downloads/temp_foold/all/URBAN_TIME_SERIES_MAE/'
+simulations_dir='/Users/lmatak/Downloads/temp_foold/all/WRF_CHEM_TIME_SERIES/'
 
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
 

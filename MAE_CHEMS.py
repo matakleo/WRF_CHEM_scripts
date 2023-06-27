@@ -153,7 +153,7 @@ fig.subplots_adjust(top=0.85,hspace=0.2)
 simulations_dir='/Users/lmatak/Downloads/temp_foold/all/WRF_CHEM_TIME_SERIES/'
 # simulations_dir='/Users/lmatak/Downloads/temp_foold/all/URBAN_TIME_SERIES_MAE/'
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
-urb=['NU_MYJ','BEM_MYJ','BEM_MYJ_cd_2.0','BEM_MYJ_added_anthro','BEM_MYJ_added_anthro_cd_2.0','SL_4.2_MYJ_added_anthro_ust_2.5']
+urb=['NU_MYJ','NU_YSU','BEM_MYJ','SL_4.2_YSU_added_anthro_ust_10','SL_4.2_MYJ_added_anthro_ust_10','BEM_MYJ_added_anthro_cd_2.0','BEM_MYJ_added_half_anthro_cd_2.0']
 # urb=['BEM_MYJ','BEM_MYJ_cd_2.0','BEM_MYJ_added_anthro','BEM_MYJ_added_anthro_cd_2.0',]
 domain=2
 
@@ -165,7 +165,7 @@ months = 12
 # months =['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] #,'Jul','Aug','Sep','Oct','Nov','Dec']
 months =['Jan','Apr','Jul','Oct']
 
-CHEM_ELE='pm25'
+CHEM_ELE='relative_humidity'
 
 # CAMS stations taken into consideration
 cams_stations=['CAMS404_WSPD','CAMS1052_WSPD','CAMS695_WSPD',\
@@ -225,7 +225,7 @@ error_dict={}
 #dictionary used for plotting the averaged error over all the cams
 dict_for_averaging_all_cams = {}
 start=10
-stop=-1
+stop=55
 
 ### the loop goes like this: MYJ_Default_No_Urb --> each month --> each cams station, then MYJ_Default_BEM --> each month --> each cams station,
 for urban_simulation in urb:
@@ -446,7 +446,7 @@ plt.rc('legend',fontsize=13)
 # ax[0,2].axis("off")
 # ax[0,2].legend(h, l,ncol=2,frameon=False) 
 fig.suptitle(CHEM_ELE+' domain_'+str(domain),size=15)
-ax[0,1].legend(h, l,ncol=7,frameon=False,loc='upper center',bbox_to_anchor=(0.4, 1.55))
+ax[0,1].legend(h, l,ncol=6,frameon=False,loc='upper center',bbox_to_anchor=(0.4, 1.55))
 plt.show()
 
 
