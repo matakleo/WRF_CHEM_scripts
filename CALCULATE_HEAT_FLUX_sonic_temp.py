@@ -14,14 +14,19 @@ def average_array_elements(input_array,chunk):
 
     return averaged_array
 
-def comapre_hfxs(measured_hfx,dir='/Users/lmatak/Downloads/temp_foold/all/WRF_CHEM_TIME_SERIES/BEM_MYJ/',file='BEM_MYJ_Jul_2.csv'):
+def comapre_hfxs(measured_hfx,dir='/Users/lmatak/Downloads/temp_foold/all/WRF_CHEM_TIME_SERIES/BEM_MYJ_added_half_anthro_cd_4.0/',file='BEM_MYJ_added_half_anthro_cd_4.0_Jul_2.csv'):
     measured_hfx=measured_hfx
+    main_dir='/Users/lmatak/Downloads/temp_foold/all/WRF_CHEM_TIME_SERIES/'
+    files=[main_dir+'/BEM_MYJ_added_half_anthro_cd_4.0/BEM_MYJ_added_half_anthro_cd_4.0_Jul_2.csv',main_dir+'/BEM_BouLac/BEM_BouLac_Jul_2.csv',main_dir+'/BEM_MYJ/BEM_MYJ_Jul_2.csv',main_dir+'/BEM_YSU/BEM_YSU_Jul_2.csv',main_dir+'/NU_MYJ/NU_MYJ_Jul_2.csv',main_dir+'/NU_YSU/NU_YSU_Jul_2.csv',main_dir+'/SL_YSU/SL_YSU_Jul_2.csv']
     ##load the csv##
-    read_data_from_wrf = pd.read_csv(dir+file, skiprows=1,low_memory=False)  # Assuming tab-separated values
-    to_plot_from_wrf=np.array(read_data_from_wrf['CAMS695_HFX'][2:],dtype=float)
-    plt.plot(to_plot_from_wrf[0:24])
-    plt.plot(average_array_elements(measured_hfx,6))
-    plt.legend(['WRF output HFX - 01 - Jul 2019','measured HFX - 01 - Jun 2023'])
+    for file in files:
+        read_data_from_wrf = pd.read_csv(file, skiprows=1,low_memory=False)  # Assuming tab-separated values
+        to_plot_from_wrf=np.array(read_data_from_wrf['CAMS695_HFX'][2:],dtype=float)
+        plt.plot(to_plot_from_wrf[0:24])
+    plt.plot(average_array_elements(measured_hfx,6),linewidth=3)
+    plt.ylabel('HFX W/m^2')
+    
+    plt.legend(['BEM_added_anth','BEM_BouLac','BEM_MYJ','BEM_YSU','NU_MYJ','NU_YSU','SL_YSU','OBSERVED -Jun 28'])
 
     return
 def plot_virtual_theta_timeseries(virtual_theta_timeseries):
@@ -99,7 +104,7 @@ os.chdir(dir_with_files)
 print(dir_with_files)
 long_list_with_all=[]
 # Read the .dat file into a DataFrame, skipping the first three rows
-file_num=3
+file_num=-2
 sonic_files=[]
 temperature_files=[]
 for file in glob.glob(dir_with_files+'/Winds*'+'.csv'):

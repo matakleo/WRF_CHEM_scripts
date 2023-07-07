@@ -7,9 +7,9 @@ import os
 winds_list=[]
 height_list=[]
 number_of_pts=11
-urban_dirs=['Oct_BEM_MYJ','Oct_BEM_YSU','Oct_NU_MYJ','Oct_NU_YSU']
+urban_dirs=['Aug_temp_p0','Aug_temp_p2']
 
-snapshot_nmbr=45
+snapshot_nmbr=163
 
 fig, axes = plt.subplots(nrows=2, ncols=4,figsize=(16,9),sharey='row') 
 # fig.subplots_adjust(hspace=0.25,bottom=0.1)
@@ -17,7 +17,7 @@ fig, axes = plt.subplots(nrows=2, ncols=4,figsize=(16,9),sharey='row')
 
 # labels=['BEM_def','BEM_decrease','BEM_increase',]
 vars_to_plot=['no2','no','co','PM2_5_DRY','wspd','T','rh','o3']
-labels=['Oct_BEM_vert_MYJ','cd_low','cd_high'] 
+labels=['Aug_temp_p0','Aug_temp_p2',] 
 # labels=['z0r_decrease','building_decrease','default','ustar_0.01','z0r_increase',]
 i=0
 for urban in urban_dirs:

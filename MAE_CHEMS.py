@@ -153,8 +153,8 @@ fig.subplots_adjust(top=0.85,hspace=0.2)
 simulations_dir='/Users/lmatak/Downloads/temp_foold/all/WRF_CHEM_TIME_SERIES/'
 # simulations_dir='/Users/lmatak/Downloads/temp_foold/all/URBAN_TIME_SERIES_MAE/'
 real_dir='/Users/lmatak/Desktop/WRF_CHEM_obs_data/whole_year_reports/'
-urb=['NU_MYJ','NU_YSU','BEM_MYJ','SL_4.2_YSU_added_anthro_ust_10','SL_4.2_MYJ_added_anthro_ust_10','BEM_MYJ_added_anthro_cd_2.0','BEM_MYJ_added_half_anthro_cd_2.0']
-# urb=['BEM_MYJ','BEM_MYJ_cd_2.0','BEM_MYJ_added_anthro','BEM_MYJ_added_anthro_cd_2.0',]
+# urb=['NU_MYJ','NU_YSU','SL_4.2_YSU_added_anthro_ust_10','SL_4.2_MYJ_added_anthro_ust_10','BEM_MYJ','BEM_MYJ_added_half_anthro_cd_2.0','BEM_MYJ_added_half_anthro_cd_4.0']
+urb=['NU_YSU','NU_MYJ','BEM_MYJ','BEM_MYJ_added_half_anthro_cd_4.0','BEM_BouLac']
 domain=2
 
 
@@ -162,10 +162,10 @@ domain=2
 
 # HOW MANY MONTHS IN CALCULATION, SHOULD ALWAYS BE 12, UNLESS DEBUGGING !!!
 months = 12
-# months =['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] #,'Jul','Aug','Sep','Oct','Nov','Dec']
-months =['Jan','Apr','Jul','Oct']
+months =['Jul'] #,'Jul','Aug','Sep','Oct','Nov','Dec']
+# months =['Apr','Jan','Jul','Oct']
 
-CHEM_ELE='relative_humidity'
+CHEM_ELE='wind'
 
 # CAMS stations taken into consideration
 cams_stations=['CAMS404_WSPD','CAMS1052_WSPD','CAMS695_WSPD',\
@@ -190,7 +190,7 @@ elif CHEM_ELE=='carbon_monoxide':
         'CAMS403_carbon_monoxide']
 elif CHEM_ELE=='relative_humidity':
     cams_stations=['CAMS8_relative_humidity','CAMS416_relative_humidity','CAMS695_relative_humidity',\
-        'CAMS403_relative_humidity']
+        ]
 
 
 elif CHEM_ELE=='wind':
@@ -225,7 +225,7 @@ error_dict={}
 #dictionary used for plotting the averaged error over all the cams
 dict_for_averaging_all_cams = {}
 start=10
-stop=55
+stop=60
 
 ### the loop goes like this: MYJ_Default_No_Urb --> each month --> each cams station, then MYJ_Default_BEM --> each month --> each cams station,
 for urban_simulation in urb:
@@ -255,7 +255,11 @@ for urban_simulation in urb:
         #the mae calculation starts from zero for each month
         mae=0
         for cams_station in cams_stations:
-            # print(cams_station)
+            # if (month == 'Jul' and cams_station[0:7]=='CAMS403'):
+            #     print('I should skip?,',month,cams_station[0:7])
+            #     continue
+                
+            
 
 
             ###############################################################
@@ -376,7 +380,8 @@ for urban_simulation in urb:
             if row==3:
                 continue
                 
-            print(cams[:-(len(CHEM_ELE)+1)])
+            # print(cams[:-(len(CHEM_ELE)+1)])
+            # print(error_dict)
             ax[row,col].bar(bar_x,avg_values(error_dict,cams[:-(len(CHEM_ELE)+1)]),width=0.3,label=urb[run_number],edgecolor='black')
             ax[row,col].set_title(cams[:-(len(CHEM_ELE)+1)])
 
@@ -446,7 +451,7 @@ plt.rc('legend',fontsize=13)
 # ax[0,2].axis("off")
 # ax[0,2].legend(h, l,ncol=2,frameon=False) 
 fig.suptitle(CHEM_ELE+' domain_'+str(domain),size=15)
-ax[0,1].legend(h, l,ncol=6,frameon=False,loc='upper center',bbox_to_anchor=(0.4, 1.55))
+ax[0,1].legend(h, l,ncol=3,frameon=False,loc='upper center',bbox_to_anchor=(0.4, 1.55))
 plt.show()
 
 

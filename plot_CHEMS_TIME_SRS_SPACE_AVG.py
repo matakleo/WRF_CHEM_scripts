@@ -11,7 +11,7 @@ fig, axes = plt.subplots(nrows=5, ncols=3,figsize=(16,9),)
 
 
 # urban_names=['NU_MYJ','BEM_MYJ','BEM_MYJ_cd_2.0','BEM_MYJ_added_anthro','BEM_MYJ_added_anthro_cd_2.0','SL_4.2_MYJ_added_anthro_ust_2.5'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
-urban_names=['NU_MYJ','NU_YSU','BEM_MYJ','BEM_MYJ_added_anthro_cd_2.0','BEM_MYJ_added_half_anthro_cd_2.0'] #'BEM_MYJ','BEM_YSU','No_Urb_old_emiss','SL_MYJ','SL_YSU'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
+urban_names=['NU_MYJ','BEM_MYJ','BEM_YSU','BEM_BouLac'] #'BEM_MYJ','BEM_YSU','No_Urb_old_emiss','SL_MYJ','SL_YSU'] #'SLUC_ust10_YSU'] #,'No_Urb_CLDCHEM','No_Urb_CHEM_IN_OPT','No_Urb_IO_STYL','No_Urb_anth']
 
 PBLS=["MYJ"]
 # simulations_dir='/Users/lmatak/Downloads/temp_foold/all/URBAN_TIME_SERIES_MAE/'
@@ -198,7 +198,6 @@ def get_real_data_chem(cams_station,month,chem_name):
 
 
 
-domain=2
 
 # months=['Apr']#,'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 # months=['Jul','Aug','Sep','Oct','Nov','Dec']
@@ -216,9 +215,10 @@ row=0
 col=0
 for_mae=[]
 # chem_comp='wind'
-chem_comp='temperature'
+domain=2
+chem_comp='ozone'
 #'Jan','Apr','Oct','Aug',
-month='Oct'
+month='Jul'
 
 
 if chem_comp=='ozone':
@@ -253,7 +253,7 @@ elif chem_comp=='temperature':
 # elif chem_comp=='temperature':
 #     cams_stations=[
 #         'CAMS403_temperature']
-no_obs_data=['PBLH','HFX','QFX','LH','vertical_velocity']
+no_obs_data=['PBLH','HFX','QFX','LH','vertical_velocity','AKMS','AKHS']
 if chem_comp in no_obs_data:
     cams_stations=['CAMS403_'+chem_comp]
 # if chem_comp=='QFX':
@@ -415,9 +415,9 @@ else:
                 wspd_sim=np.array(wspd_sim)/1000
 
 
-            axes[0,0].set_xticks(np.arange(0,80,5))
-            # axes[row,col].set_ylim(0,50)
-            axes[0,0].set_xticklabels(np.arange(0,80,5))   
+            # axes[0,0].set_xticks(np.arange(0,80,5))
+            # # axes[row,col].set_ylim(0,50)
+            # axes[0,0].set_xticklabels(np.arange(0,80,5))   
             
             # print(len(wspd_sim),sim_data,cams)
 
@@ -430,7 +430,7 @@ else:
             # wspd_sim=wspd_sim[24:]
             
 
-            axes[row,col].plot(wspd_sim,label=urban,linewidth=2,)
+            axes[row,col].plot(wspd_sim[start:stop],label=urban,linewidth=2,)
             axes[row,col].set_title(month)
             axes[0,0].set_title(cams)
 

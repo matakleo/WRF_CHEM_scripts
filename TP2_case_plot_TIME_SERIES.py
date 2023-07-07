@@ -270,7 +270,7 @@ chem_comp='so'
 month='Aug'
 start=72-72
 stop=-1
-vars_to_plot=['pm25'] #,'nitric_oxide','nitrogen_dioxide','pm25','carbon_monoxide','relative_humidity','wind','temperature']
+vars_to_plot=['temperature'] #,'nitric_oxide','nitrogen_dioxide','pm25','carbon_monoxide','relative_humidity','wind','temperature']
 
 if vars_to_plot[0]!='rainc':
 
@@ -301,7 +301,7 @@ if vars_to_plot[0]!='rainc':
             wspd_sim=np.array(Extract_by_name(sim_data,wspd_sim,var_to_plot))
             print((sim_data,var_to_plot,len(wspd_sim))) 
             
-            plt.plot(wspd_sim,linewidth=3,label=urban)
+            plt.plot(wspd_sim[0:200],linewidth=3,label=urban)
 
     # plt.plot(real_data_to_plot,label='observerd',linestyle=':') 
 else:
@@ -333,9 +333,11 @@ else:
             print(i)
             # print(tmp_rain)
             # plt.bar(i,tmp_rain,label=urban)
-            plt.plot(wspd_sim,label=urban)
+            plt.plot(wspd_sim[0:200],label=urban)
+            
             plt.ylim(0,140)
-       
+plt.xticks(np.arange(0,len(wspd_sim[0:200]),2),np.arange(0,len(wspd_sim[0:200]),2))  
+plt.grid(True,'major')
 plt.title(var_to_plot)
 plt.legend()
 plt.show()        

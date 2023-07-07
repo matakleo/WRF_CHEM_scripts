@@ -34,22 +34,10 @@ for file in glob.glob(dir_with_files+'/TOA5_SonicData*'+'.dat'):
         sonic_winds_files.append(file)
 for file in sonic_winds_files:
 # Read the .dat file into a DataFrame, skipping the first three rows
-        data = pd.read_csv(file, skiprows=1,low_memory=False)  # Assuming tab-separated values
+        data = pd.read_csv(file, skiprows=1)  # Assuming tab-separated values
         time_stamping = str(data[time_stamp][2])
         name_to_save="Winds_"+time_stamping[0:10]+".csv"
 
 
         copy_file(file,name_to_save)
-
-# Access the column containing the data you want to plot
-
-
-# Example usage
-
-
-
-# column_data_rel_hum = np.array(data[rel_hum][3:],dtype=float)
-#
-# plt.title('Plot of ' + column_name)
-# plt.grid(True)
 
